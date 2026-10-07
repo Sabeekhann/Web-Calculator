@@ -51,6 +51,8 @@ Current stage: **Stage 6 — Sprint 1**.
 | 5 | qa-engineer | Re-test DEF-S0-1 and live deploy | PASS; deploy run succeeded; live checks MANUAL (proxy blocks github.io) |
 | 6 | developer | S-1 split the bill (feat/S-1) | Done 95f79b9; 105 tests red→green; mutation check added T-S2.2 unit early |
 | 6 | qa-engineer | Verify S-1 | 8/8 AC PASS, 0 defects; global rules PASS; PO accepted, merged --no-ff to main |
+| 6 | developer | S-2 tip and total (feat/S-2) | Done febcc2b; 125 tests; 9 UI tests red→green |
+| 6 | qa-engineer | Verify S-2 | 8/8 AC PASS, 0 defects; S-1 regression PASS; awaiting PO acceptance |
 
 ## Audit log
 _release-auditor entries from Stage 8 onwards._
