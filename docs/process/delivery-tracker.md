@@ -28,7 +28,7 @@ Current stage: **Stage 5 — Sprint 0**, awaiting GATE 5.
 | 3b — Jobs to be done | 2026-10-07 16:33 | 2026-10-07 16:34 | GATE 3b approved (6 jobs; optional J-7 not added) |
 | 3c — User stories | 2026-10-07 16:35 | 2026-10-07 16:47 | GATE 3c approved after PO decisions Q1–Q4 |
 | 4 — Planning | 2026-10-07 16:49 | 2026-10-07 17:23 | GATE 4 approved (decisions 1–3 as proposed) |
-| 5 — Sprint 0 | 2026-10-07 17:25 | | |
+| 5 — Sprint 0 | 2026-10-07 17:25 | 2026-10-07 17:42 | Awaiting GATE 5 |
 
 ## Session log
 | Session | Date | Environment | Stages covered | Transcript |
