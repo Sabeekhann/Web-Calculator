@@ -1,0 +1,100 @@
+import { describe, expect, it } from 'vitest';
+import { calculateSplit, calculateTip, splitEvenly } from '../../src/logic/split';
+
+const sum = (values: number[]): number => values.reduce((total, value) => total + value, 0);
+
+describe('calculateTip', () => {
+  it('T-S1.1 a tip of 0 basis points adds nothing', () => {
+    expect(calculateTip(10000, 0)).toBe(0);
+  });
+
+  it('T-S2.2 rounds half-up to the cent: 15% of 0.30 is 0.045 → 5 cents', () => {
+    expect(calculateTip(30, 1500)).toBe(5);
+  });
+
+  it('T-G4 the largest tip on the largest bill is an exact integer', () => {
+    expect(calculateTip(100_000_000, 10_000)).toBe(100_000_000);
+  });
+});
+
+describe('splitEvenly', () => {
+  it('T-S1.1 gives the leftover cent to the first share and sums to the total', () => {
+    const { shares, leftover } = splitEvenly(10000, 3);
+    expect(shares).toEqual([
+      { cents: 3334, extraCent: true },
+      { cents: 3333, extraCent: false },
+      { cents: 3333, extraCent: false },
+    ]);
+    expect(leftover).toBe(1);
+    expect(sum(shares.map((share) => share.cents))).toBe(10000);
+  });
+
+  it('T-S1.5 one person gets the whole maximum bill', () => {
+    const { shares, leftover } = splitEvenly(100_000_000, 1);
+    expect(shares).toEqual([{ cents: 100_000_000, extraCent: false }]);
+    expect(leftover).toBe(0);
+  });
+
+  it('T-S1.6 the smallest bill gives 1 / 0 / 0 cents', () => {
+    const { shares, leftover } = splitEvenly(1, 3);
+    expect(shares.map((share) => share.cents)).toEqual([1, 0, 0]);
+    expect(leftover).toBe(1);
+  });
+
+  it('T-S1.7 an even split has no leftover and no extra cent', () => {
+    const { shares, leftover } = splitEvenly(10000, 4);
+    expect(shares).toEqual(Array.from({ length: 4 }, () => ({ cents: 2500, extraCent: false })));
+    expect(leftover).toBe(0);
+  });
+
+  it('T-S1.8 12.50 between 2 people is 6.25 each', () => {
+    expect(splitEvenly(1250, 2).shares.map((share) => share.cents)).toEqual([625, 625]);
+  });
+});
+
+describe('calculateSplit', () => {
+  it('T-S1.1 bill 100.00, tip 0, 3 people → total 10000, shares 3334/3333/3333', () => {
+    const result = calculateSplit({ billCents: 10000, tipBasisPoints: 0, people: 3 });
+    expect(result.tipCents).toBe(0);
+    expect(result.totalCents).toBe(10000);
+    expect(result.shares.map((share) => share.cents)).toEqual([3334, 3333, 3333]);
+    expect(result.leftover).toBe(1);
+  });
+
+  it('T-S1.5 bill 1000000.00, tip 0, 1 person → one share of the whole total', () => {
+    const result = calculateSplit({ billCents: 100_000_000, tipBasisPoints: 0, people: 1 });
+    expect(result.totalCents).toBe(100_000_000);
+    expect(result.shares.map((share) => share.cents)).toEqual([100_000_000]);
+  });
+
+  it('T-S1.6 bill 0.01, tip 0, 3 people → total 1, shares 1/0/0', () => {
+    const result = calculateSplit({ billCents: 1, tipBasisPoints: 0, people: 3 });
+    expect(result.totalCents).toBe(1);
+    expect(result.shares.map((share) => share.cents)).toEqual([1, 0, 0]);
+  });
+
+  it('T-G4 every split over the bounds is made of safe integers that sum to the total', () => {
+    const bills = [1, 2, 99, 10000, 99_999_999, 100_000_000];
+    const tips = [0, 1, 1255, 10_000];
+    const peopleCounts = [1, 2, 3, 7, 99, 100];
+    for (const billCents of bills) {
+      for (const tipBasisPoints of tips) {
+        for (const people of peopleCounts) {
+          const result = calculateSplit({ billCents, tipBasisPoints, people });
+          const amounts = [result.tipCents, result.totalCents, ...result.shares.map((share) => share.cents)];
+          expect(amounts.every((amount) => Number.isSafeInteger(amount) && amount >= 0)).toBe(true);
+          expect(result.shares).toHaveLength(people);
+          expect(sum(result.shares.map((share) => share.cents))).toBe(result.totalCents);
+        }
+      }
+    }
+  });
+
+  it('T-G5 the same inputs always give the same split', () => {
+    const input = { billCents: 8450, tipBasisPoints: 1000, people: 4 };
+    const first = calculateSplit(input);
+    for (let run = 0; run < 5; run += 1) {
+      expect(calculateSplit({ ...input })).toEqual(first);
+    }
+  });
+});

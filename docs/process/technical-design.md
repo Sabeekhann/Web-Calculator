@@ -108,3 +108,13 @@ Tests live in `tests/` mirroring `src/` (`tests/logic/split.test.ts`, `tests/val
 - `index.html` has `<link rel="icon" href="data:,">`. Without it, the browser requests `/favicon.ico`, gets a 404 and logs a console error, which would fail manual check 6.
 - Skeleton files: `src/result.ts`, `src/messages.ts`, `src/types.ts` (types from §2), `src/ui/app.ts`, `src/main.ts`, `src/style.css`. `src/logic/`, `src/validation/` and `src/ui/format.ts` don't exist yet. They are built test-first in S-1…S-6, so the skeleton has no stub functions.
 - The heading and intro line in `src/ui/app.ts` are static page copy, not catalogue messages. `MESSAGES` holds exactly the 18 catalogue IDs that T-G6 checks.
+
+**S-1 (2026-10-07, branch `feat/S-1`)**
+- Built the shared pipeline: `src/validation/parse.ts` (one private `parseDecimal2` for Bill and Tip %, §5 precedence), `src/validation/form.ts`, `src/logic/split.ts`, `src/ui/format.ts` (`formatAmount`, `formatShareLine`), and the form and result rendering in `src/ui/app.ts`.
+- `formatShareLine(index, share)`: `index` is the zero-based array position, shown as `Person {index + 1}`.
+- The result labels `Total: ` and `Person n: ` and the field labels are static UI copy (in `app.ts` / `format.ts`), not catalogue entries. T-G6 keeps `MESSAGES` at exactly 18 IDs.
+- Deferred to S-2, as the brief scoped: the `#tip-hint` element and the `Tip:` line. Until then, Tip % has `aria-describedby="tip-msg"` (§7 lists `tip-hint tip-msg`), and S-2 adds `tip-hint`. Not built: the S-3 marker and the S-6 note (`buildNote`).
+- `calculateTip` (half-up) is part of the S-1 pipeline, so its unit-logic test `T-S2.2` (`calculateTip(30, 1500) = 5`) was written with it. S-2 adds the ui-dom half of T-S2.2.
+- On `input`, a field's message is cleared whenever that field's own parser returns `ok` (clearing an empty message does nothing). Messages are only set in the submit handler (T-G2).
+- ui-dom helpers live in `tests/ui/harness.ts` (not a test file). `expectShares` matches each line's start (`^Person n: amount( |$)`), so the S-3 marker won't break S-1 tests.
+- `#result` is a `<div aria-live="polite">`. `#result-shares` is an `<ol>` with `list-style: none`, because the person number is already in each line's text.
