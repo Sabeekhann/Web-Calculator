@@ -30,6 +30,12 @@ Approved by the Product Owner at the start of the project:
   - Limits: 1–100 people (whole numbers), a bill from 0.01 to 1,000,000.00, and a tip from 0% to 100% with up to 2 decimals.
   - A decimal comma (`12,50`) and a bill of `0.00` are rejected with a message.
 - **Role decisions (GATE 3a).** The app shows which shares carry an extra cent but doesn't assign shares to named people; the group decides who takes them. The same bill, tip and number of people always give the same split.
+- **Interaction decisions (GATE 3c).**
+  - Press the Calculate button, or Enter in any field, to calculate.
+  - Editing any field hides the old result until the next calculation.
+  - Error messages appear on Calculate. Each one clears as soon as its field is valid.
+  - The tip field starts at 0, with the hint "Use 0 for no tip."
+  - Accepted input forms: `.5` → 0.50 and `5.` → 5.00. `+5`, `15%` and `1,000.00` are rejected with a message.
 - **Package folder.** The repo `Web-Calculator` is cloned as `sabee-khan-calculator/` to match the required layout.
 
 ## Known limitations
