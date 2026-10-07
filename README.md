@@ -29,6 +29,7 @@ Approved by the Product Owner at the start of the project:
   - The tip is calculated on the bill as entered. There is no tax handling and no currency symbols.
   - Limits: 1–100 people (whole numbers), a bill from 0.01 to 1,000,000.00, and a tip from 0% to 100% with up to 2 decimals.
   - A decimal comma (`12,50`) and a bill of `0.00` are rejected with a message.
+- **Role decisions (GATE 3a).** The app shows which shares carry an extra cent but doesn't assign shares to named people; the group decides who takes them. The same bill, tip and number of people always give the same split.
 - **Package folder.** The repo `Web-Calculator` is cloned as `sabee-khan-calculator/` to match the required layout.
 
 ## Known limitations
