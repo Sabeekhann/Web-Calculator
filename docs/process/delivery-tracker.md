@@ -1,6 +1,6 @@
 # Delivery Tracker
 
-Current stage: **Stage 1 — Initiation**, awaiting GATE 1.
+Current stage: **Stage 3a — App roles**.
 
 ## Deliverables checklist (D1–D12)
 | ID | Deliverable | Status | Evidence |
@@ -22,17 +22,19 @@ Current stage: **Stage 1 — Initiation**, awaiting GATE 1.
 | Stage | Start | End | Notes |
 |---|---|---|---|
 | Preflight | 2026-10-07 16:18 | 2026-10-07 16:21 | Node 22.22.0, npm 10.9.4, git 2.43.0; gh not signed in (not needed) |
-| 1 — Initiation | 2026-10-07 16:21 | 2026-10-07 16:25 | Awaiting GATE 1 |
+| 1 — Initiation | 2026-10-07 16:21 | 2026-10-07 16:25 | GATE 1 approved |
+| 2 — Discovery | 2026-10-07 16:27 | 2026-10-07 16:29 | GATE 2 approved (Q1–Q7 as proposed) |
 
 ## Session log
 | Session | Date | Environment | Stages covered | Transcript |
 |---|---|---|---|---|
-| session-01 | 2026-10-07 | Claude Code cloud session (claude.ai/code), Claude Opus 5.5 | Preflight, 1 | Pending: PO export at Gate 9 |
+| session-01 | 2026-10-07 | Claude Code cloud session (claude.ai/code), Claude Opus 5.5 | Preflight, 1, 2 | Pending: PO export at Gate 9 |
 
 ## Agent activity log
 | Stage | Agent | Task | Result |
 |---|---|---|---|
-| 1 | Orchestrator | Preflight, repo check, structure, CLAUDE.md, six agent definitions | Done; awaiting GATE 1 |
+| 1 | Orchestrator | Preflight, repo check, structure, CLAUDE.md, six agent definitions | Done; GATE 1 approved |
+| 2 | product-analyst (run as general-purpose with its system prompt; custom types not selectable in cloud session) | Write product-brief.md | Done first pass, 77 lines; Orchestrator fixed SC-8 dependency on Q1 |
 
 ## Audit log
 _release-auditor entries from Stage 8 onwards._

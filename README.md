@@ -24,6 +24,11 @@ It is cloned locally as **`sabee-khan-calculator/`**, which is the package folde
 Approved by the Product Owner at the start of the project:
 - **Cloud session.** The project is built in a Claude Code cloud session (claude.ai/code), not the desktop app. A local dev server isn't reachable from the PO's browser, so stories are reviewed through browser screenshots (Chromium via Playwright) plus a free GitHub Pages deploy of `main`.
 - **Node version.** The project targets Node 20 LTS or later (`.nvmrc` = 20). The build environment runs Node 22.22.0.
+- **Product decisions (GATE 2).**
+  - Leftover cents: amounts are rounded half-up to the cent, and any leftover cents go one at a time to the first shares, so the shares always add up to the total.
+  - The tip is calculated on the bill as entered. There is no tax handling and no currency symbols.
+  - Limits: 1–100 people (whole numbers), a bill from 0.01 to 1,000,000.00, and a tip from 0% to 100% with up to 2 decimals.
+  - A decimal comma (`12,50`) and a bill of `0.00` are rejected with a message.
 - **Package folder.** The repo `Web-Calculator` is cloned as `sabee-khan-calculator/` to match the required layout.
 
 ## Known limitations
