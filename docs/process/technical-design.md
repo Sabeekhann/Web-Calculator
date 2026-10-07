@@ -101,3 +101,10 @@ Tests live in `tests/` mirroring `src/` (`tests/logic/split.test.ts`, `tests/val
 **ADR-007 Number formatting.** Context: `toFixed` works on floats and `Intl.NumberFormat` output depends on locale and browser. Decision: own integer-only `formatAmount` (§4): dot decimals, comma thousands, no currency symbol. Consequences: identical output everywhere (`1,000,000.00`); formatting never changes the computed value.
 
 ## Developer notes
+**Sprint 0 (2026-10-07)**
+- Tool versions (dev only, all support Node 20): `vite` 8.3.3, `vitest` 4.1.11, `typescript` 6.0.3, `jsdom` 29.1.1. Newer majors were not used: `vitest` 5 and `jsdom` 30 require Node 22.
+- `engines` is `">=20.19"`, not `">=20"`: `vite` 8 and `jsdom` 29 need Node `^20.19.0`. `.nvmrc` stays `20`, which installs the latest 20.x.
+- npm 10.9.4 (bundled with Node 22.22) crashes with `Cannot read properties of null (reading 'edgesOut')` when it resolves `vitest` 4.1 with no lockfile. The lockfile was generated once with npm 11. With it, `npm install` and `npm ci` on npm 10 both work and leave the lockfile unchanged. Keep `package-lock.json` committed.
+- `index.html` has `<link rel="icon" href="data:,">`. Without it, the browser requests `/favicon.ico`, gets a 404 and logs a console error, which would fail manual check 6.
+- Skeleton files: `src/result.ts`, `src/messages.ts`, `src/types.ts` (types from §2), `src/ui/app.ts`, `src/main.ts`, `src/style.css`. `src/logic/`, `src/validation/` and `src/ui/format.ts` don't exist yet. They are built test-first in S-1…S-6, so the skeleton has no stub functions.
+- The heading and intro line in `src/ui/app.ts` are static page copy, not catalogue messages. `MESSAGES` holds exactly the 18 catalogue IDs that T-G6 checks.

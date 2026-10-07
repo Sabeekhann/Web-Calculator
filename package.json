@@ -1,0 +1,22 @@
+{
+  "name": "web-calculator",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Tip & bill splitter: fair, correctly rounded shares of a shared bill.",
+  "type": "module",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "jsdom": "^29.1.1",
+    "typescript": "^6.0.3",
+    "vite": "^8.3.3",
+    "vitest": "^4.1.11"
+  }
+}
