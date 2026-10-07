@@ -73,6 +73,41 @@ describe('calculateSplit', () => {
     expect(result.shares.map((share) => share.cents)).toEqual([1, 0, 0]);
   });
 
+  it('T-S2.1 bill 100.00, tip 15%, 3 people → tip 1500, total 11500, shares 3834/3833/3833', () => {
+    const result = calculateSplit({ billCents: 10000, tipBasisPoints: 1500, people: 3 });
+    expect(result.tipCents).toBe(1500);
+    expect(result.totalCents).toBe(11500);
+    expect(result.shares.map((share) => share.cents)).toEqual([3834, 3833, 3833]);
+  });
+
+  it('T-S2.2 bill 0.30, tip 15%, 1 person → tip 5, total 35, one share of 35', () => {
+    const result = calculateSplit({ billCents: 30, tipBasisPoints: 1500, people: 1 });
+    expect(result.tipCents).toBe(5);
+    expect(result.totalCents).toBe(35);
+    expect(result.shares.map((share) => share.cents)).toEqual([35]);
+  });
+
+  it('T-S2.5 bill 1000000.00, tip 100%, 3 people → tip 100000000, total 200000000, shares 66666667/66666667/66666666', () => {
+    const result = calculateSplit({ billCents: 100_000_000, tipBasisPoints: 10_000, people: 3 });
+    expect(result.tipCents).toBe(100_000_000);
+    expect(result.totalCents).toBe(200_000_000);
+    expect(result.shares.map((share) => share.cents)).toEqual([66_666_667, 66_666_667, 66_666_666]);
+  });
+
+  it('T-S2.7 bill 100.00, tip 12.5%, 3 people → tip 1250, total 11250, three shares of 3750', () => {
+    const result = calculateSplit({ billCents: 10000, tipBasisPoints: 1250, people: 3 });
+    expect(result.tipCents).toBe(1250);
+    expect(result.totalCents).toBe(11250);
+    expect(result.shares.map((share) => share.cents)).toEqual([3750, 3750, 3750]);
+  });
+
+  it('T-S2.8 bill 100.00, tip 12.55%, 3 people → tip 1255, total 11255, shares 3752/3752/3751', () => {
+    const result = calculateSplit({ billCents: 10000, tipBasisPoints: 1255, people: 3 });
+    expect(result.tipCents).toBe(1255);
+    expect(result.totalCents).toBe(11255);
+    expect(result.shares.map((share) => share.cents)).toEqual([3752, 3752, 3751]);
+  });
+
   it('T-G4 every split over the bounds is made of safe integers that sum to the total', () => {
     const bills = [1, 2, 99, 10000, 99_999_999, 100_000_000];
     const tips = [0, 1, 1255, 10_000];

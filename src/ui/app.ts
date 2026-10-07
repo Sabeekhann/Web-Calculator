@@ -1,5 +1,5 @@
 import { calculateSplit } from '../logic/split';
-import { MESSAGES } from '../messages';
+import { MESSAGES, type MessageId } from '../messages';
 import type { Result } from '../result';
 import type { FieldErrors, RawInputs, SplitResult } from '../types';
 import { validateInputs } from '../validation/form';
@@ -13,6 +13,7 @@ type FieldConfig = {
   inputMode: 'decimal' | 'numeric';
   initialValue: string;
   parse: (raw: string) => Result<number, unknown>;
+  hint?: MessageId;
 };
 
 type Field = { wrapper: HTMLDivElement; input: HTMLInputElement; message: HTMLParagraphElement };
@@ -20,13 +21,14 @@ type Field = { wrapper: HTMLDivElement; input: HTMLInputElement; message: HTMLPa
 const TITLE = 'Tip & Bill Splitter';
 const INTRO = 'Split a bill and tip fairly between friends.';
 const CALCULATE_LABEL = 'Calculate';
+const TIP_LABEL = 'Tip: ';
 const TOTAL_LABEL = 'Total: ';
 
 const FIELD_NAMES: FieldName[] = ['bill', 'tip', 'people'];
 
 const FIELD_CONFIGS: Record<FieldName, FieldConfig> = {
   bill: { label: 'Bill', inputMode: 'decimal', initialValue: '', parse: parseMoney },
-  tip: { label: 'Tip %', inputMode: 'decimal', initialValue: '0', parse: parsePercent },
+  tip: { label: 'Tip %', inputMode: 'decimal', initialValue: '0', parse: parsePercent, hint: 'H-TIP-HINT' },
   people: { label: 'People', inputMode: 'numeric', initialValue: '', parse: parsePeople },
 };
 
@@ -36,9 +38,17 @@ function createTextElement<K extends keyof HTMLElementTagNameMap>(tag: K, text: 
   return element;
 }
 
+function createHint(name: FieldName, hint: MessageId): HTMLParagraphElement {
+  const element = createTextElement('p', MESSAGES[hint]);
+  element.id = `${name}-hint`;
+  element.className = 'hint';
+  return element;
+}
+
 function createField(name: FieldName): Field {
   const config = FIELD_CONFIGS[name];
   const messageId = `${name}-msg`;
+  const hints = config.hint ? [createHint(name, config.hint)] : [];
 
   const label = createTextElement('label', config.label);
   label.htmlFor = name;
@@ -49,7 +59,7 @@ function createField(name: FieldName): Field {
   input.type = 'text';
   input.inputMode = config.inputMode;
   input.value = config.initialValue;
-  input.setAttribute('aria-describedby', messageId);
+  input.setAttribute('aria-describedby', [...hints.map((hint) => hint.id), messageId].join(' '));
 
   const message = document.createElement('p');
   message.id = messageId;
@@ -58,7 +68,7 @@ function createField(name: FieldName): Field {
 
   const wrapper = document.createElement('div');
   wrapper.className = 'field';
-  wrapper.append(label, input, message);
+  wrapper.append(label, input, ...hints, message);
   return { wrapper, input, message };
 }
 
@@ -84,12 +94,14 @@ function showFieldErrors(fields: Record<FieldName, Field>, errors: FieldErrors):
 }
 
 function renderResult(region: HTMLElement, result: SplitResult): void {
+  const tip = createTextElement('p', `${TIP_LABEL}${formatAmount(result.tipCents)}`);
+  tip.id = 'result-tip';
   const total = createTextElement('p', `${TOTAL_LABEL}${formatAmount(result.totalCents)}`);
   total.id = 'result-total';
   const shares = document.createElement('ol');
   shares.id = 'result-shares';
   shares.append(...result.shares.map((share, index) => createTextElement('li', formatShareLine(index, share))));
-  region.replaceChildren(total, shares);
+  region.replaceChildren(tip, total, shares);
 }
 
 function clearResult(region: HTMLElement): void {
