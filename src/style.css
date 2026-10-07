@@ -65,6 +65,11 @@ input[aria-invalid='true'] {
   border: 2px solid #b3261e;
 }
 
+.hint {
+  margin: 0.25rem 0 0;
+  color: #4a4a4a;
+}
+
 .message {
   margin: 0.25rem 0 0;
   color: #b3261e;
@@ -98,6 +103,11 @@ button:hover {
 
 .result li {
   padding: 0.25rem 0;
+  font-variant-numeric: tabular-nums;
+}
+
+#result-tip {
+  margin-bottom: 0.25rem;
   font-variant-numeric: tabular-nums;
 }
 

@@ -37,6 +37,27 @@ describe('parsePercent (Tip %)', () => {
   it('T-G4 accepts the maximum 100 as 10000 basis points', () => {
     expect(parsePercent('100')).toEqual({ ok: true, value: 10_000 });
   });
+
+  it('T-S2.1 accepts 15 as 1500 basis points', () => {
+    expect(parsePercent('15')).toEqual({ ok: true, value: 1500 });
+  });
+
+  it('T-S2.4 rejects 100.01 with E-TIP-RANGE', () => {
+    expect(parsePercent('100.01')).toEqual({ ok: false, error: 'E-TIP-RANGE' });
+  });
+
+  it('T-S2.6 rejects -5 with E-TIP-NEGATIVE', () => {
+    expect(parsePercent('-5')).toEqual({ ok: false, error: 'E-TIP-NEGATIVE' });
+  });
+
+  it('T-S2.7 accepts 12.5 as 1250 basis points', () => {
+    expect(parsePercent('12.5')).toEqual({ ok: true, value: 1250 });
+  });
+
+  it('T-S2.8 rejects 12.555 with E-TIP-DECIMALS and accepts 12.55 as 1255 basis points', () => {
+    expect(parsePercent('12.555')).toEqual({ ok: false, error: 'E-TIP-DECIMALS' });
+    expect(parsePercent('12.55')).toEqual({ ok: true, value: 1255 });
+  });
 });
 
 describe('parsePeople (People)', () => {

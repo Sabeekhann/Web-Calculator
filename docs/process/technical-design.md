@@ -118,3 +118,9 @@ Tests live in `tests/` mirroring `src/` (`tests/logic/split.test.ts`, `tests/val
 - On `input`, a field's message is cleared whenever that field's own parser returns `ok` (clearing an empty message does nothing). Messages are only set in the submit handler (T-G2).
 - ui-dom helpers live in `tests/ui/harness.ts` (not a test file). `expectShares` matches each line's start (`^Person n: amount( |$)`), so the S-3 marker won't break S-1 tests.
 - `#result` is a `<div aria-live="polite">`. `#result-shares` is an `<ol>` with `list-style: none`, because the person number is already in each line's text.
+
+**S-2 (2026-10-07, branch `feat/S-2`)**
+- UI only: S-1 already built `calculateTip` and `parsePercent`, so the S-2 unit tests (logic and validation) passed when they were written. The RED step was the ui-dom tests: 9 failed (T-S2.1, T-S2.2, T-S2.3 ×3, T-S2.5, T-S2.7, T-S2.8, T-G4), because there was no `#result-tip` and no `#tip-hint`. The ui-dom tests T-S2.4 and T-S2.6 were already green: the S-1 validation shows those Tip % messages.
+- `#result-tip` (`Tip: {tip}`, a `<p>`) is the first child of `#result`, before `#result-total`. The `Tip: ` label is static UI copy, like `Total: `.
+- Hint: `FieldConfig` has an optional `hint: MessageId`. Only Tip % uses it (`H-TIP-HINT`). `createField` renders `<p id="tip-hint" class="hint">` between the input and `#tip-msg`, and sets `aria-describedby="tip-hint tip-msg"`. The hint is not aria-live, because it never changes.
+- T-G4 now also checks that the Tip line matches `^Tip: amount$`. The harness has `tipText` and `expectTipAndTotal`, which assert the exact Tip and Total text and their order.

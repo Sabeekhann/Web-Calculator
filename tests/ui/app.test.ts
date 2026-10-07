@@ -8,6 +8,7 @@ import {
   expectNoMessage,
   expectNoResult,
   expectShares,
+  expectTipAndTotal,
   fill,
   form,
   input,
@@ -15,6 +16,7 @@ import {
   mount,
   result,
   shareLines,
+  tipText,
   totalText,
   type,
 } from './harness';
@@ -120,6 +122,111 @@ describe('S-1 split the bill (ui-dom)', () => {
   });
 });
 
+const TIP_RANGE = 'Enter a tip percentage from 0 to 100.';
+const TIP_NEGATIVE = "The tip can't be negative. Enter a percentage from 0 to 100.";
+const TIP_DECIMALS = 'Enter the tip percentage with no more than 2 decimals, for example 12.5.';
+const TIP_HINT = 'Use 0 for no tip.';
+
+describe('S-2 tip and total (ui-dom)', () => {
+  it('T-S2.1 bill 100.00, tip 15, 3 people → Tip 15.00, Total 115.00 and 38.34 / 38.33 / 38.33', () => {
+    const root = mount();
+    fill(root, { bill: '100.00', tip: '15', people: '3' });
+    calculate(root);
+    expectTipAndTotal(root, '15.00', '115.00');
+    expectShares(root, ['38.34', '38.33', '38.33']);
+    FIELDS.forEach((field) => expectNoMessage(root, field));
+  });
+
+  it('T-S2.2 bill 0.30, tip 15, 1 person → Tip 0.05 (0.045 half-up), Total 0.35 and Person 1 0.35', () => {
+    const root = mount();
+    fill(root, { bill: '0.30', tip: '15', people: '1' });
+    calculate(root);
+    expectTipAndTotal(root, '0.05', '0.35');
+    expectShares(root, ['0.35']);
+  });
+
+  it('T-S2.3 on load Tip % shows 0 with the hint, described by tip-hint and tip-msg', () => {
+    const root = mount();
+    expect(input(root, 'tip').value).toBe('0');
+    const hint = root.querySelector('#tip-hint');
+    expect(hint?.textContent).toBe(TIP_HINT);
+    expect(hint?.closest('.field')?.contains(input(root, 'tip'))).toBe(true);
+    expect(input(root, 'tip').getAttribute('aria-describedby')).toBe('tip-hint tip-msg');
+  });
+
+  it('T-S2.3 bill 50.00 and people 2 with Tip % untouched → Tip 0.00, Total 50.00 and 25.00 / 25.00', () => {
+    const root = mount();
+    type(root, 'bill', '50.00');
+    type(root, 'people', '2');
+    calculate(root);
+    expectTipAndTotal(root, '0.00', '50.00');
+    expectShares(root, ['25.00', '25.00']);
+  });
+
+  it('T-S2.3 the hint stays visible after an error and after a result', () => {
+    const root = mount();
+    fill(root, { bill: '100.00', tip: '-5', people: '3' });
+    calculate(root);
+    expect(root.querySelector('#tip-hint')?.textContent).toBe(TIP_HINT);
+    type(root, 'tip', '15');
+    calculate(root);
+    expect(root.querySelector('#tip-hint')?.textContent).toBe(TIP_HINT);
+  });
+
+  it('T-S2.4 tip 100.01 → range message next to Tip % and no result', () => {
+    const root = mount();
+    fill(root, { bill: '100.00', tip: '100.01', people: '3' });
+    calculate(root);
+    expectMessage(root, 'tip', TIP_RANGE);
+    expectNoMessage(root, 'bill');
+    expectNoMessage(root, 'people');
+    expectNoResult(root);
+  });
+
+  it('T-S2.5 bill 1000000.00, tip 100, 3 people → Tip 1,000,000.00, Total 2,000,000.00 and 666,666.67 / 666,666.67 / 666,666.66', () => {
+    const root = mount();
+    fill(root, { bill: '1000000.00', tip: '100', people: '3' });
+    calculate(root);
+    expectTipAndTotal(root, '1,000,000.00', '2,000,000.00');
+    expectShares(root, ['666,666.67', '666,666.67', '666,666.66']);
+  });
+
+  it('T-S2.6 tip -5 → negative message next to Tip % and no result', () => {
+    const root = mount();
+    fill(root, { bill: '100.00', tip: '-5', people: '3' });
+    calculate(root);
+    expectMessage(root, 'tip', TIP_NEGATIVE);
+    expectNoMessage(root, 'bill');
+    expectNoMessage(root, 'people');
+    expectNoResult(root);
+  });
+
+  it('T-S2.7 after the S-2.1 result, tip 12.5 → Tip 12.50, Total 112.50 and three shares of 37.50', () => {
+    const root = mount();
+    fill(root, { bill: '100.00', tip: '15', people: '3' });
+    calculate(root);
+    expectTipAndTotal(root, '15.00', '115.00');
+    type(root, 'tip', '12.5');
+    calculate(root);
+    expectTipAndTotal(root, '12.50', '112.50');
+    expectShares(root, ['37.50', '37.50', '37.50']);
+  });
+
+  it('T-S2.8 after the decimals message, tip 12.55 clears it; then Tip 12.55, Total 112.55 and 37.52 / 37.52 / 37.51', () => {
+    const root = mount();
+    fill(root, { bill: '100.00', tip: '12.555', people: '3' });
+    calculate(root);
+    expectMessage(root, 'tip', TIP_DECIMALS);
+    expectNoResult(root);
+    type(root, 'tip', '12.55');
+    expectNoMessage(root, 'tip');
+    calculate(root);
+    expectNoMessage(root, 'tip');
+    expectTipAndTotal(root, '12.55', '112.55');
+    expectShares(root, ['37.52', '37.52', '37.51']);
+  });
+});
+
 describe('global rules built with S-1 (ui-dom)', () => {
   it.each(FIELDS)('T-G1 editing %s after a result empties #result at once', (field) => {
     const root = mount();
@@ -196,6 +303,7 @@ describe('global rules built with S-1 (ui-dom)', () => {
       calculate(root);
       expect(root.textContent).not.toMatch(/NaN|Infinity|undefined/);
       if (result(root).childNodes.length > 0) {
+        expect(tipText(root)).toMatch(new RegExp(`^Tip: ${AMOUNT}$`));
         expect(totalText(root)).toMatch(new RegExp(`^Total: ${AMOUNT}$`));
         const lines = shareLines(root);
         expect(lines).toHaveLength(Number(values.people.trim()));

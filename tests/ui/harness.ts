@@ -52,6 +52,18 @@ export function calculate(root: HTMLElement): void {
   query<HTMLButtonElement>(root, 'button[type="submit"]').click();
 }
 
+export function tipText(root: HTMLElement): string | null | undefined {
+  return root.querySelector('#result #result-tip')?.textContent;
+}
+
+export function expectTipAndTotal(root: HTMLElement, tip: string, total: string): void {
+  expect(tipText(root)).toBe(`Tip: ${tip}`);
+  expect(totalText(root)).toBe(`Total: ${total}`);
+  const lines = Array.from(result(root).children, (child) => child.id);
+  expect(lines.indexOf('result-tip')).toBe(0);
+  expect(lines.indexOf('result-total')).toBe(1);
+}
+
 export function totalText(root: HTMLElement): string | null | undefined {
   return root.querySelector('#result #result-total')?.textContent;
 }
