@@ -227,6 +227,89 @@ describe('S-2 tip and total (ui-dom)', () => {
   });
 });
 
+const MARKER = '(+0.01)';
+const S3_1_LINES = ['Person 1: 38.34 (+0.01)', 'Person 2: 38.33', 'Person 3: 38.33'];
+
+const evenLines = (people: number, amount: string): string[] =>
+  Array.from({ length: people }, (_, index) => `Person ${index + 1}: ${amount}`);
+
+describe('S-3 leftover-cent markers (ui-dom)', () => {
+  it('T-S3.1 bill 100.00, tip 15, 3 people → Person 1: 38.34 (+0.01), Person 2: 38.33, Person 3: 38.33', () => {
+    const root = mount();
+    fill(root, { bill: '100.00', tip: '15', people: '3' });
+    calculate(root);
+    expect(shareLines(root)).toEqual(S3_1_LINES);
+    expect(totalText(root)).toBe('Total: 115.00');
+  });
+
+  it('T-S3.2 bill 120.00, tip 0, 4 people → four lines of 30.00 and no marker', () => {
+    const root = mount();
+    fill(root, { bill: '120.00', tip: '0', people: '4' });
+    calculate(root);
+    expect(shareLines(root)).toEqual(evenLines(4, '30.00'));
+    expect(result(root).textContent).not.toContain(MARKER);
+  });
+
+  it('T-S3.3 bill 999999.99, tip 0, 100 people → Persons 1–99 10,000.00 (+0.01), Person 100: 9,999.99', () => {
+    const root = mount();
+    fill(root, { bill: '999999.99', tip: '0', people: '100' });
+    calculate(root);
+    const expected = [
+      ...Array.from({ length: 99 }, (_, index) => `Person ${index + 1}: 10,000.00 (+0.01)`),
+      'Person 100: 9,999.99',
+    ];
+    expect(shareLines(root)).toEqual(expected);
+    expect(totalText(root)).toBe('Total: 999,999.99');
+  });
+
+  it('T-S3.4 bill 0.01, tip 0, 3 people → Person 1: 0.01 (+0.01), Person 2: 0.00, Person 3: 0.00', () => {
+    const root = mount();
+    fill(root, { bill: '0.01', tip: '0', people: '3' });
+    calculate(root);
+    expect(shareLines(root)).toEqual(['Person 1: 0.01 (+0.01)', 'Person 2: 0.00', 'Person 3: 0.00']);
+  });
+
+  it('T-S3.5 bill 33.33, tip 0, 1 person → Person 1: 33.33 with no marker', () => {
+    const root = mount();
+    fill(root, { bill: '33.33', tip: '0', people: '1' });
+    calculate(root);
+    expect(shareLines(root)).toEqual(['Person 1: 33.33']);
+  });
+
+  it('T-S3.6 people abc → people message next to People and no shares or markers', () => {
+    const root = mount();
+    fill(root, { bill: '100.00', tip: '15', people: 'abc' });
+    calculate(root);
+    expectMessage(root, 'people', PEOPLE_INVALID);
+    expectNoResult(root);
+    expect(root.querySelector('#result-shares')).toBeNull();
+    expect(root.textContent).not.toContain(MARKER);
+  });
+
+  it('T-S3.7 after the S-3.1 result, people 4 → four lines of 28.75 and no marker', () => {
+    const root = mount();
+    fill(root, { bill: '100.00', tip: '15', people: '3' });
+    calculate(root);
+    expect(shareLines(root)).toEqual(S3_1_LINES);
+    type(root, 'people', '4');
+    calculate(root);
+    expect(shareLines(root)).toEqual(evenLines(4, '28.75'));
+    expect(result(root).textContent).not.toContain(MARKER);
+  });
+
+  it('T-S3.8 after the people 0 message, people 3 → message gone and the S-3.1 lines', () => {
+    const root = mount();
+    fill(root, { bill: '100.00', tip: '15', people: '0' });
+    calculate(root);
+    expectMessage(root, 'people', PEOPLE_INVALID);
+    expectNoResult(root);
+    type(root, 'people', '3');
+    calculate(root);
+    expectNoMessage(root, 'people');
+    expect(shareLines(root)).toEqual(S3_1_LINES);
+  });
+});
+
 describe('global rules built with S-1 (ui-dom)', () => {
   it.each(FIELDS)('T-G1 editing %s after a result empties #result at once', (field) => {
     const root = mount();

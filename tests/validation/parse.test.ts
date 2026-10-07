@@ -76,6 +76,14 @@ describe('parsePeople (People)', () => {
   it('T-S1.7 accepts 4', () => {
     expect(parsePeople('4')).toEqual({ ok: true, value: 4 });
   });
+
+  it('T-S3.6 rejects abc with E-PEOPLE-INVALID', () => {
+    expect(parsePeople('abc')).toEqual({ ok: false, error: 'E-PEOPLE-INVALID' });
+  });
+
+  it('T-S3.8 rejects 0 with E-PEOPLE-INVALID', () => {
+    expect(parsePeople('0')).toEqual({ ok: false, error: 'E-PEOPLE-INVALID' });
+  });
 });
 
 type Expected = number | string;

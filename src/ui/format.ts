@@ -2,6 +2,7 @@ import type { Share } from '../types';
 
 const CENTS_PER_UNIT = 100;
 const THOUSANDS_BOUNDARY = /\B(?=(\d{3})+(?!\d))/g;
+const EXTRA_CENT_MARKER = ' (+0.01)';
 
 export function formatAmount(cents: number): string {
   const whole = Math.floor(cents / CENTS_PER_UNIT);
@@ -10,5 +11,6 @@ export function formatAmount(cents: number): string {
 }
 
 export function formatShareLine(index: number, share: Share): string {
-  return `Person ${index + 1}: ${formatAmount(share.cents)}`;
+  const marker = share.extraCent ? EXTRA_CENT_MARKER : '';
+  return `Person ${index + 1}: ${formatAmount(share.cents)}${marker}`;
 }

@@ -133,3 +133,40 @@ describe('calculateSplit', () => {
     }
   });
 });
+
+const flags = (people: number, marked: number): boolean[] =>
+  Array.from({ length: people }, (_, index) => index < marked);
+
+describe('extraCent flags for the leftover-cent marker (S-3)', () => {
+  it('T-S3.1 bill 100.00, tip 15%, 3 people → only the first share carries the extra cent', () => {
+    const result = calculateSplit({ billCents: 10000, tipBasisPoints: 1500, people: 3 });
+    expect(result.shares.map((share) => share.extraCent)).toEqual([true, false, false]);
+    expect(sum(result.shares.map((share) => share.cents))).toBe(11500);
+  });
+
+  it('T-S3.2 bill 120.00, tip 0, 4 people → leftover 0 and no extra cent', () => {
+    const result = calculateSplit({ billCents: 12000, tipBasisPoints: 0, people: 4 });
+    expect(result.leftover).toBe(0);
+    expect(result.shares).toEqual(Array.from({ length: 4 }, () => ({ cents: 3000, extraCent: false })));
+  });
+
+  it('T-S3.3 bill 999999.99, tip 0, 100 people → 99 extra cents, shares sum to 99999999', () => {
+    const result = calculateSplit({ billCents: 99_999_999, tipBasisPoints: 0, people: 100 });
+    expect(result.leftover).toBe(99);
+    expect(result.shares.map((share) => share.extraCent)).toEqual(flags(100, 99));
+    expect(result.shares.slice(0, 99).every((share) => share.cents === 1_000_000)).toBe(true);
+    expect(result.shares[99]).toEqual({ cents: 999_999, extraCent: false });
+    expect(sum(result.shares.map((share) => share.cents))).toBe(99_999_999);
+  });
+
+  it('T-S3.4 bill 0.01, tip 0, 3 people → only the first share carries the extra cent', () => {
+    const result = calculateSplit({ billCents: 1, tipBasisPoints: 0, people: 3 });
+    expect(result.shares.map((share) => share.extraCent)).toEqual([true, false, false]);
+  });
+
+  it('T-S3.5 bill 33.33, tip 0, 1 person → leftover 0 and no extra cent', () => {
+    const result = calculateSplit({ billCents: 3333, tipBasisPoints: 0, people: 1 });
+    expect(result.leftover).toBe(0);
+    expect(result.shares).toEqual([{ cents: 3333, extraCent: false }]);
+  });
+});
