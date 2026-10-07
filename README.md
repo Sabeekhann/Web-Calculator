@@ -23,7 +23,7 @@ It is cloned locally as **`sabee-khan-calculator/`**, which is the package folde
 ## Assumptions
 Approved by the Product Owner at the start of the project:
 - **Cloud session.** The project is built in a Claude Code cloud session (claude.ai/code), not the desktop app. A local dev server isn't reachable from the PO's browser, so stories are reviewed through browser screenshots (Chromium via Playwright) plus a free GitHub Pages deploy of `main`.
-- **Node version.** The project targets Node 20 LTS or later (`.nvmrc` = 20). The build environment runs Node 22.22.0.
+- **Node version (amended at GATE 5).** The project needs Node 20.19+, 22.13+ or 24+ (`engines` "^20.19.0 || ^22.13.0 || >=24.0.0", `.nvmrc` = 20), because the build tools (Vite 8, jsdom 29) require it. Node 20 itself reached end of life in April 2026. It was verified on Node 20.20.0 and 22.22.0.
 - **Product decisions (GATE 2).**
   - Leftover cents: amounts are rounded half-up to the cent, and any leftover cents go one at a time to the first shares, so the shares always add up to the total.
   - The tip is calculated on the bill as entered. There is no tax handling and no currency symbols.

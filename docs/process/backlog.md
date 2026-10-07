@@ -23,7 +23,7 @@ Buckets: Sprint 1 = 4 stories · Sprint 2 = 2 stories + hardening · Future = 3 
 - **Sprint 2:** a Group Member can check their share and understand a 1-cent difference; every input survives the edge sweep.
 
 ## Sprint 0 scope (no features)
-- `package.json` (`engines` ">=20", scripts `dev`, `build`, `preview`, `test`), `package-lock.json`, `.nvmrc` = `20`, `tsconfig.json` (strict), `vite.config.ts`.
+- `package.json` (`engines` "^20.19.0 || ^22.13.0 || >=24.0.0" as amended at GATE 5, scripts `dev`, `build`, `preview`, `test`), `package-lock.json`, `.nvmrc` = `20`, `tsconfig.json` (strict), `vite.config.ts`.
 - Dev dependencies only: `vite`, `typescript`, `vitest`, `jsdom` (ADR-005). No runtime dependencies. No Playwright.
 - Skeleton files from technical-design §2 with the agreed signatures; `src/messages.ts` filled with the full catalogue (it is data, not a feature).
 - `index.html` + `src/main.ts` mounting an empty shell; one smoke test so `npm test` is green.

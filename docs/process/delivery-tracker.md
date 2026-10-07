@@ -1,6 +1,6 @@
 # Delivery Tracker
 
-Current stage: **Stage 5 — Sprint 0**, awaiting GATE 5.
+Current stage: **Stage 6 — Sprint 1**.
 
 ## Deliverables checklist (D1–D12)
 | ID | Deliverable | Status | Evidence |
@@ -28,12 +28,13 @@ Current stage: **Stage 5 — Sprint 0**, awaiting GATE 5.
 | 3b — Jobs to be done | 2026-10-07 16:33 | 2026-10-07 16:34 | GATE 3b approved (6 jobs; optional J-7 not added) |
 | 3c — User stories | 2026-10-07 16:35 | 2026-10-07 16:47 | GATE 3c approved after PO decisions Q1–Q4 |
 | 4 — Planning | 2026-10-07 16:49 | 2026-10-07 17:23 | GATE 4 approved (decisions 1–3 as proposed) |
-| 5 — Sprint 0 | 2026-10-07 17:25 | 2026-10-07 17:42 | Awaiting GATE 5 |
+| 5 — Sprint 0 | 2026-10-07 17:25 | 2026-10-07 17:42 | GATE 5 approved; Node range amendment approved. PO's live browser check result not separately reported |
+| 6 — Sprint 1 | 2026-10-07 17:43 | | |
 
 ## Session log
 | Session | Date | Environment | Stages covered | Transcript |
 |---|---|---|---|---|
-| session-01 | 2026-10-07 | Claude Code cloud session (claude.ai/code), Claude Opus 5.5 | Preflight, 1, 2, 3a, 3b, 3c, 4, 5 | Pending: PO export at Gate 9 |
+| session-01 | 2026-10-07 | Claude Code cloud session (claude.ai/code), Claude Opus 5.5 | Preflight, 1, 2, 3a, 3b, 3c, 4, 5, 6 | Pending: PO export at Gate 9 |
 
 ## Agent activity log
 | Stage | Agent | Task | Result |

@@ -3,7 +3,7 @@
 _Stage 4 (Planning). Owner: solution-architect. Approved by PO at GATE 4 (2026-10-07). Behaviour and exact text come from [user-stories.md](../user-stories.md); this file says how to build it._
 
 ## 1. Stack
-- Node >=20 (`engines` ">=20", `.nvmrc` `20`), Vite, vanilla TypeScript (`strict`, plus `noUncheckedIndexedAccess`, `noUnusedLocals`, `noUnusedParameters`), Vitest. `build` = `tsc --noEmit && vite build`.
+- Node 20.19+, 22.13+ or 24+ (`engines` "^20.19.0 || ^22.13.0 || >=24.0.0", `.nvmrc` `20`; amended at GATE 5, see Developer notes), Vite, vanilla TypeScript (`strict`, plus `noUncheckedIndexedAccess`, `noUnusedLocals`, `noUnusedParameters`), Vitest. `build` = `tsc --noEmit && vite build`.
 - Dev dependencies only: `vite`, `typescript`, `vitest`, `jsdom`. **No runtime dependencies**, no framework, no backend, no network call, no paid service, no API key.
 - **Playwright is not a project dependency.** QA drives the pre-installed Chromium (`/opt/pw-browsers/chromium`) with throwaway scripts kept outside the repo.
 
@@ -86,7 +86,7 @@ Tests live in `tests/` mirroring `src/` (`tests/logic/split.test.ts`, `tests/val
 - **PO/Orchestrator action:** in the repo, Settings → Pages → Source: "GitHub Actions" (the workflow cannot enable this itself).
 
 ## 9. ADRs
-**ADR-001 Stack and layout.** Context: 2–4 h budget, reviewers run it from the README on a clean machine. Decision: Vite + vanilla TS strict + Vitest, Node >=20, no runtime dependencies; layout per §2, which amends CLAUDE.md §9 by adding `src/result.ts`, `src/validation/form.ts` and `src/ui/format.ts` (pure formatting kept out of logic, which has no user text). Consequences: tiny bundle, nothing to configure, fast tests; the DOM code is hand-written, so it stays small.
+**ADR-001 Stack and layout.** Context: 2–4 h budget, reviewers run it from the README on a clean machine. Decision: Vite + vanilla TS strict + Vitest, Node 20.19+/22.13+/24+ (amended at GATE 5), no runtime dependencies; layout per §2, which amends CLAUDE.md §9 by adding `src/result.ts`, `src/validation/form.ts` and `src/ui/format.ts` (pure formatting kept out of logic, which has no user text). Consequences: tiny bundle, nothing to configure, fast tests; the DOM code is hand-written, so it stays small.
 
 **ADR-002 Money as integer cents, percent as basis points.** Context: floats give `0.30000000000000004`. Decision: parse strings straight to integer cents and integer basis points (§4); never `parseFloat`. Consequences: exact maths; max value `≈ 1e12` is far below `2^53`; limits from brief Q3 are enforced in validation.
 

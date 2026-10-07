@@ -191,7 +191,7 @@ Definition of Done (story may be accepted):
 - [ ] Committed as `feat(S-x): …`, branch pushed, PO accepted, merged `--no-ff` to main
 
 ## 9. Technical standards
-- Stack: Node 20 LTS or later (`engines` ">=20", `.nvmrc` 20), Vite, vanilla TypeScript in `strict` mode, Vitest. No framework, no backend, no network calls, no paid services or API keys.
+- Stack: Node 20.19+, 22.13+ or 24+ (`engines` "^20.19.0 || ^22.13.0 || >=24.0.0", `.nvmrc` 20; PO-approved at GATE 5), Vite, vanilla TypeScript in `strict` mode, Vitest. No framework, no backend, no network calls, no paid services or API keys.
 - Architecture: pure calculation module → validation layer → UI layer. No DOM in logic. No logic in UI handlers: handlers read inputs, call validation and calculation, and render the result.
 - Decimal strategy: parse inputs as strings into integer minor units (cents) and do the maths in integers, so the app never shows floating-point artefacts such as `0.30000000000000004`. Percentages use integer basis points. Rounding: half-up to the cent. A remainder of cents is distributed one cent at a time to the first shares, so the shares always sum to exactly the total. The final rule is confirmed in an ADR at Stage 4.
 - Error handling: functions return typed results `{ ok: true, value } | { ok: false, error }` and never throw to the UI. All message text lives in one catalogue file. A message is shown next to the field it concerns and clears as soon as the input is valid. The output can never be NaN, Infinity, undefined or blank.
