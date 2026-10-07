@@ -49,6 +49,8 @@ Current stage: **Stage 6 — Sprint 1**.
 | 5 | qa-engineer | Independent Sprint 0 verification | 26/27 PASS; DEF-S0-1 (engines) and DEF-S0-2 (README wording) raised |
 | 5 | developer | Fix DEF-S0-1 (engines = ^20.19.0 \|\| ^22.13.0 \|\| >=24.0.0) | Done f91282d |
 | 5 | qa-engineer | Re-test DEF-S0-1 and live deploy | PASS; deploy run succeeded; live checks MANUAL (proxy blocks github.io) |
+| 6 | developer | S-1 split the bill (feat/S-1) | Done 95f79b9; 105 tests red→green; mutation check added T-S2.2 unit early |
+| 6 | qa-engineer | Verify S-1 | 8/8 AC PASS, 0 defects; global rules PASS; awaiting PO acceptance |
 
 ## Audit log
 _release-auditor entries from Stage 8 onwards._
