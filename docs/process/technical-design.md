@@ -1,6 +1,6 @@
 # Technical Design
 
-_Stage 4 (Planning). Owner: solution-architect. Behaviour and exact text come from [user-stories.md](../user-stories.md); this file says how to build it._
+_Stage 4 (Planning). Owner: solution-architect. Approved by PO at GATE 4 (2026-10-07). Behaviour and exact text come from [user-stories.md](../user-stories.md); this file says how to build it._
 
 ## 1. Stack
 - Node >=20 (`engines` ">=20", `.nvmrc` `20`), Vite, vanilla TypeScript (`strict`, plus `noUncheckedIndexedAccess`, `noUnusedLocals`, `noUnusedParameters`), Vitest. `build` = `tsc --noEmit && vite build`.

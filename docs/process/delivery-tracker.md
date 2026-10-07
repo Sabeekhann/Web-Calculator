@@ -1,6 +1,6 @@
 # Delivery Tracker
 
-Current stage: **Stage 4 — Planning**.
+Current stage: **Stage 5 — Sprint 0**.
 
 ## Deliverables checklist (D1–D12)
 | ID | Deliverable | Status | Evidence |
@@ -27,7 +27,8 @@ Current stage: **Stage 4 — Planning**.
 | 3a — App roles | 2026-10-07 16:31 | 2026-10-07 16:32 | GATE 3a approved |
 | 3b — Jobs to be done | 2026-10-07 16:33 | 2026-10-07 16:34 | GATE 3b approved (6 jobs; optional J-7 not added) |
 | 3c — User stories | 2026-10-07 16:35 | 2026-10-07 16:47 | GATE 3c approved after PO decisions Q1–Q4 |
-| 4 — Planning | 2026-10-07 16:49 | 2026-10-07 17:23 | Awaiting GATE 4 |
+| 4 — Planning | 2026-10-07 16:49 | 2026-10-07 17:23 | GATE 4 approved (decisions 1–3 as proposed) |
+| 5 — Sprint 0 | 2026-10-07 17:25 | | |
 
 ## Session log
 | Session | Date | Environment | Stages covered | Transcript |

@@ -1,6 +1,6 @@
 # Backlog
 
-_Stage 4 (Planning). Owner: solution-architect. Source of truth for behaviour: [user-stories.md](../user-stories.md) (approved at GATE 3c)._
+_Stage 4 (Planning). Owner: solution-architect. Approved by PO at GATE 4 (2026-10-07). Source of truth for behaviour: [user-stories.md](../user-stories.md) (approved at GATE 3c)._
 
 | Story | Job | Priority | Size | Sprint | Notes |
 |---|---|---|---|---|---|

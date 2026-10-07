@@ -36,9 +36,11 @@ Approved by the Product Owner at the start of the project:
   - Error messages appear on Calculate. Each one clears as soon as its field is valid.
   - The tip field starts at 0, with the hint "Use 0 for no tip."
   - Accepted input forms: `.5` → 0.50 and `5.` → 5.00. `+5`, `15%` and `1,000.00` are rejected with a message.
+- **Input decisions (GATE 4).** A bill or tip of just `.` is rejected with the "digits and one dot" message. People `007` counts as 7. The form doesn't remember typed values between visits, so the tip always starts at 0.
 - **Package folder.** The repo `Web-Calculator` is cloned as `sabee-khan-calculator/` to match the required layout.
 
 ## Known limitations
+- On iPhones set to a region that writes decimals with a comma, the number keypad may show only a comma. The app accepts only a dot, so typing `12.50` there may need the full keyboard.
 
 ## Browser support
 

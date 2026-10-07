@@ -1,6 +1,6 @@
 # Test Plan
 
-_Stage 4 (Planning). Owner: solution-architect. ACs from [user-stories.md](../user-stories.md); design from [technical-design.md](technical-design.md)._
+_Stage 4 (Planning). Owner: solution-architect. Approved by PO at GATE 4 (2026-10-07). ACs from [user-stories.md](../user-stories.md); design from [technical-design.md](technical-design.md)._
 
 ## 1. Levels and conventions
 | Level | Tool | Covers |
