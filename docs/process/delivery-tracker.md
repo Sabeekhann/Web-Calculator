@@ -50,7 +50,7 @@ Current stage: **Stage 6 — Sprint 1**.
 | 5 | developer | Fix DEF-S0-1 (engines = ^20.19.0 \|\| ^22.13.0 \|\| >=24.0.0) | Done f91282d |
 | 5 | qa-engineer | Re-test DEF-S0-1 and live deploy | PASS; deploy run succeeded; live checks MANUAL (proxy blocks github.io) |
 | 6 | developer | S-1 split the bill (feat/S-1) | Done 95f79b9; 105 tests red→green; mutation check added T-S2.2 unit early |
-| 6 | qa-engineer | Verify S-1 | 8/8 AC PASS, 0 defects; global rules PASS; awaiting PO acceptance |
+| 6 | qa-engineer | Verify S-1 | 8/8 AC PASS, 0 defects; global rules PASS; PO accepted, merged --no-ff to main |
 
 ## Audit log
 _release-auditor entries from Stage 8 onwards._
