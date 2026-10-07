@@ -103,7 +103,7 @@ Tests live in `tests/` mirroring `src/` (`tests/logic/split.test.ts`, `tests/val
 ## Developer notes
 **Sprint 0 (2026-10-07)**
 - Tool versions (dev only, all support Node 20): `vite` 8.3.3, `vitest` 4.1.11, `typescript` 6.0.3, `jsdom` 29.1.1. Newer majors were not used: `vitest` 5 and `jsdom` 30 require Node 22.
-- `engines` is `">=20.19"`, not `">=20"`: `vite` 8 and `jsdom` 29 need Node `^20.19.0`. `.nvmrc` stays `20`, which installs the latest 20.x.
+- `engines` is `"^20.19.0 || ^22.13.0 || >=24.0.0"`: the intersection of the tools' own ranges (`vite` `^20.19.0 || >=22.12.0`, `vitest` `^20 || ^22 || >=24`, `jsdom` `^20.19.0 || ^22.13.0 || >=24.0.0`), so Node 22.0–22.12 and 23.x are excluded (DEF-S0-1). `.nvmrc` stays `20`, which installs the latest 20.x.
 - npm 10.9.4 (bundled with Node 22.22) crashes with `Cannot read properties of null (reading 'edgesOut')` when it resolves `vitest` 4.1 with no lockfile. The lockfile was generated once with npm 11. With it, `npm install` and `npm ci` on npm 10 both work and leave the lockfile unchanged. Keep `package-lock.json` committed.
 - `index.html` has `<link rel="icon" href="data:,">`. Without it, the browser requests `/favicon.ico`, gets a 404 and logs a console error, which would fail manual check 6.
 - Skeleton files: `src/result.ts`, `src/messages.ts`, `src/types.ts` (types from §2), `src/ui/app.ts`, `src/main.ts`, `src/style.css`. `src/logic/`, `src/validation/` and `src/ui/format.ts` don't exist yet. They are built test-first in S-1…S-6, so the skeleton has no stub functions.
