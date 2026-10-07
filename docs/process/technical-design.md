@@ -124,3 +124,10 @@ Tests live in `tests/` mirroring `src/` (`tests/logic/split.test.ts`, `tests/val
 - `#result-tip` (`Tip: {tip}`, a `<p>`) is the first child of `#result`, before `#result-total`. The `Tip: ` label is static UI copy, like `Total: `.
 - Hint: `FieldConfig` has an optional `hint: MessageId`. Only Tip % uses it (`H-TIP-HINT`). `createField` renders `<p id="tip-hint" class="hint">` between the input and `#tip-msg`, and sets `aria-describedby="tip-hint tip-msg"`. The hint is not aria-live, because it never changes.
 - T-G4 now also checks that the Tip line matches `^Tip: amount$`. The harness has `tipText` and `expectTipAndTotal`, which assert the exact Tip and Total text and their order.
+
+**S-3 (2026-10-07, branch `feat/S-3`)**
+- One change in `src/ui/format.ts`: `formatShareLine` appends `EXTRA_CENT_MARKER` (`' (+0.01)'`) when `share.extraCent` is true. The marker reads only the flag and never compares amounts (ADR-003). T-S3.5 (format) proves this: the same 33.33 share is marked when the flag is true and unmarked when it is false.
+- The marker is static presentation text, like `Person n: `, so it stays in `format.ts` and is not a catalogue entry. `MESSAGES` stays at 18 IDs (T-G6).
+- RED: 9 tests failed, the marker cases of T-S3.1/3.3/3.4/3.5 (format) and T-S3.1/3.3/3.4/3.7/3.8 (ui-dom). The logic tests for `extraCent`, the validation tests (`parsePeople('abc')`, `parsePeople('0')`) and the no-marker ui-dom tests (T-S3.2, T-S3.5, T-S3.6) were already green, because S-1 built `extraCent` and the validation.
+- The S-3 ui-dom tests assert each full line with `toEqual`. The S-1/S-2 tests match line starts, so they still pass.
+- Chromium check at 375px for S-3.3: no horizontal scroll, and each `Person n: 10,000.00 (+0.01)` line fits on one line.
