@@ -53,6 +53,8 @@ Current stage: **Stage 6 — Sprint 1**.
 | 6 | qa-engineer | Verify S-1 | 8/8 AC PASS, 0 defects; global rules PASS; PO accepted, merged --no-ff to main |
 | 6 | developer | S-2 tip and total (feat/S-2) | Done febcc2b; 125 tests; 9 UI tests red→green |
 | 6 | qa-engineer | Verify S-2 | 8/8 AC PASS, 0 defects; S-1 regression PASS; PO accepted, merged --no-ff to main |
+| 6 | developer | S-3 leftover-cent markers (feat/S-3) | Done 42f4996; 145 tests; 9 red→green |
+| 6 | qa-engineer | Verify S-3 | 8/8 AC PASS, 0 defects; 32-input property check PASS; S-1/S-2 regression PASS; awaiting PO acceptance |
 
 ## Audit log
 _release-auditor entries from Stage 8 onwards._
