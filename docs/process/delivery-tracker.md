@@ -1,6 +1,6 @@
 # Delivery Tracker
 
-Current stage: **Stage 5 — Sprint 0**.
+Current stage: **Stage 5 — Sprint 0**, awaiting GATE 5.
 
 ## Deliverables checklist (D1–D12)
 | ID | Deliverable | Status | Evidence |
@@ -33,7 +33,7 @@ Current stage: **Stage 5 — Sprint 0**.
 ## Session log
 | Session | Date | Environment | Stages covered | Transcript |
 |---|---|---|---|---|
-| session-01 | 2026-10-07 | Claude Code cloud session (claude.ai/code), Claude Opus 5.5 | Preflight, 1, 2, 3a, 3b, 3c, 4 | Pending: PO export at Gate 9 |
+| session-01 | 2026-10-07 | Claude Code cloud session (claude.ai/code), Claude Opus 5.5 | Preflight, 1, 2, 3a, 3b, 3c, 4, 5 | Pending: PO export at Gate 9 |
 
 ## Agent activity log
 | Stage | Agent | Task | Result |
@@ -44,6 +44,10 @@ Current stage: **Stage 5 — Sprint 0**.
 | 3b | product-analyst (as general-purpose) | Write jobs-to-be-done.md | Done, 6 jobs (4 R-1, 2 R-2), purity grep clean; Orchestrator aligned CLAUDE.md §8 job template to the format used |
 | 3c | product-analyst (as general-purpose) | Write user-stories.md | Done, 9 stories (6 MVP × 8 ACs, 3 future), 55 ACs, 41 numeric ACs script-verified; Orchestrator re-checked key arithmetic by hand and fixed note wording (N-MANY); PO decisions Q1–Q4 applied by product-analyst (S-1.8, S-2.3, S-4.1, catalogue, assumptions) |
 | 4 | solution-architect (as general-purpose) | backlog.md, technical-design.md (7 ADRs), test-plan.md | Done; 55/55 ACs mapped, 0 MANUAL-only, 48 in-scope ACs recomputed 0 mismatches; Orchestrator fixed a section cross-reference in backlog |
+| 5 | developer (custom type, now selectable) | Sprint 0 scaffold, skeleton, catalogue, shell, Pages workflow | Done 433f847; tests red→green 20/20 |
+| 5 | qa-engineer | Independent Sprint 0 verification | 26/27 PASS; DEF-S0-1 (engines) and DEF-S0-2 (README wording) raised |
+| 5 | developer | Fix DEF-S0-1 (engines = ^20.19.0 \|\| ^22.13.0 \|\| >=24.0.0) | Done f91282d |
+| 5 | qa-engineer | Re-test DEF-S0-1 and live deploy | PASS; deploy run succeeded; live checks MANUAL (proxy blocks github.io) |
 
 ## Audit log
 _release-auditor entries from Stage 8 onwards._
