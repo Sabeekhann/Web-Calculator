@@ -1,6 +1,6 @@
 # Delivery Tracker
 
-Current stage: **Stage 3b — Jobs to be done**.
+Current stage: **Stage 3c — User stories**.
 
 ## Deliverables checklist (D1–D12)
 | ID | Deliverable | Status | Evidence |
@@ -25,11 +25,12 @@ Current stage: **Stage 3b — Jobs to be done**.
 | 1 — Initiation | 2026-10-07 16:21 | 2026-10-07 16:25 | GATE 1 approved |
 | 2 — Discovery | 2026-10-07 16:27 | 2026-10-07 16:29 | GATE 2 approved (Q1–Q7 as proposed) |
 | 3a — App roles | 2026-10-07 16:31 | 2026-10-07 16:32 | GATE 3a approved |
+| 3b — Jobs to be done | 2026-10-07 16:33 | 2026-10-07 16:34 | GATE 3b approved (6 jobs; optional J-7 not added) |
 
 ## Session log
 | Session | Date | Environment | Stages covered | Transcript |
 |---|---|---|---|---|
-| session-01 | 2026-10-07 | Claude Code cloud session (claude.ai/code), Claude Opus 5.5 | Preflight, 1, 2, 3a | Pending: PO export at Gate 9 |
+| session-01 | 2026-10-07 | Claude Code cloud session (claude.ai/code), Claude Opus 5.5 | Preflight, 1, 2, 3a, 3b | Pending: PO export at Gate 9 |
 
 ## Agent activity log
 | Stage | Agent | Task | Result |
@@ -37,6 +38,7 @@ Current stage: **Stage 3b — Jobs to be done**.
 | 1 | Orchestrator | Preflight, repo check, structure, CLAUDE.md, six agent definitions | Done; GATE 1 approved |
 | 2 | product-analyst (run as general-purpose with its system prompt; custom types not selectable in cloud session) | Write product-brief.md | Done first pass, 77 lines; Orchestrator fixed SC-8 dependency on Q1 |
 | 3a | product-analyst (as general-purpose) | Write app-roles.md | Done, 2 roles, 19 lines; Orchestrator review: no changes |
+| 3b | product-analyst (as general-purpose) | Write jobs-to-be-done.md | Done, 6 jobs (4 R-1, 2 R-2), purity grep clean; Orchestrator aligned CLAUDE.md §8 job template to the format used |
 
 ## Audit log
 _release-auditor entries from Stage 8 onwards._

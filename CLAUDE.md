@@ -155,7 +155,7 @@ Stage notes:
 ## 8. Document standards
 Templates (exact):
 - Role (D7): `A [role] is [who/situation]. They can [see/do]. They must never [prevent].` The last sentence only where it applies.
-- Job (D8): `J-n (Role R-n): When [situation], I want to [motivation], so I can [outcome].`
+- Job (D8): `**J-n (R-n Role name).** When [situation], I want to [motivation], so I can [outcome].`
 - Story (D9): `S-n (serves J-n, Status): As a [role], I want [capability], so that [benefit].` followed by its ACs.
 
 ID conventions: roles `R-1`, jobs `J-1`, stories `S-1`, acceptance criteria `AC S-1.1`, tests `T-S1.1`, decisions `ADR-001`.
