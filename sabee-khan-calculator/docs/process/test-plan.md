@@ -76,14 +76,17 @@ Future, not mapped: S-5 (S-5.1, S-5.2) and S-6 (S-6.1..S-6.3).
 | Bare "." / "-" (Q-13) | "." and "-" in each field | T-EDGE.1, E-EDGE.6 (expected value follows the Q-13 answer) |
 
 ## Browser matrix
-| Engine (Playwright 1.56.1) | Stands for | Runs |
-|----------------------------|-----------|------|
-| Chromium | Chrome, Edge | every E test (shell, S-1..S-4, edge, a11y with axe) |
-| Firefox | Firefox | same |
-| WebKit | Safari | same |
+| Engine (Playwright 1.56.1) | Stands for | Runs | Where (ADR-009) |
+|----------------------------|-----------|------|-----------------|
+| Chromium | Chrome, Edge | every E test (shell, S-1..S-4, edge, a11y with axe) | build container (local QA) + GitHub Actions CI |
+| Firefox | Firefox | same | GitHub Actions CI only |
+| WebKit | Safari | same | GitHub Actions CI only |
 
 - `playwright.config.ts`: 3 projects; `webServer` = `npm run build && npm run preview -- --host 127.0.0.1 --port 4173 --strictPort`, so e2e checks the real bundle with `base: './'`.
-- **PO manual checks** (DoD, D1): this cloud session cannot expose `localhost` to the PO (Q-4). The PO checks in real Chrome, Edge, Firefox and Safari through the GitHub Pages URL (if approved) or a local run on their machine using the README. Script per story: the AC examples, a real paste, Tab/Escape, phone keypad (`inputmode`), dark mode.
+- The build container cannot download Playwright's Firefox/WebKit builds (proxy 403, DEC-13), so `.github/workflows/ci.yml` runs all 3 projects on ubuntu-latest with Node 20 from `.nvmrc` on every push/PR.
+- **QA evidence rule:** a Firefox or WebKit cell in a QA report is PASS only when the CI run on the **exact commit under test** (story branch head) is green for that project; record the run URL and commit hash in Evidence. Chromium needs the local run and the same CI run. The CI run is also the evidence for Node 20 (container runs Node 22). A missing, failed or older-commit run = not verified.
+- qa-engineer reads CI results through the GitHub REST API: the run for the head SHA (`GET /repos/Sabeekhann/Web-Calculator/actions/runs?head_sha=<sha>`), its job logs, and the Playwright HTML report artifact; QA never edits the workflow.
+- **PO manual checks** (DoD, D1): this cloud session cannot expose `localhost` to the PO (Q-4). The PO checks in real Chrome, Edge, Firefox and Safari through the GitHub Pages URL (if approved) or a local run on their machine using the README; these are in addition to CI, never replaced by it. Script per story: the AC examples, a real paste, Tab/Escape, phone keypad (`inputmode`), dark mode.
 
 ## Visual review and accessibility audit
 - ux-ui-designer runs headless Chromium screenshots at 375, 768 and 1280 px, light and dark (`colorScheme`), for idle, result (Pass and Fail), pass-mark-empty and error, plus a 320 px overflow check (`scrollWidth` = 320); walks the visual review checklist in ui-design.md; card height and button position must not change between states.

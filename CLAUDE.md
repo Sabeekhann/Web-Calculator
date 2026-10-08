@@ -135,6 +135,7 @@ Web-Calculator/
   .claude/agents/*.md       # 7 subagent definitions
   .gitignore                # deps, build, reports, .env*, .DS_Store, .private/
   .private/                 # gitignored: hr-ack-email.md, submission-email.md, walkthrough-notes.md
+  .github/workflows/ci.yml     # CI: unit, build, e2e on Chromium/Firefox/WebKit, Node 20 (ADR-009)
   .github/workflows/pages.yml  # only if PO approves the live URL
   sabee-khan-calculator/    # THE PACKAGE (D17)
     README.md               # every D11 item
@@ -226,11 +227,11 @@ Web-Calculator/
 - Tests before code: write failing unit tests and e2e specs from the ACs, show them failing, then implement.
 - Every AC maps to a T-ID, an E-ID, or MANUAL with a reason (test-plan.md).
 - **Edge sweep**: empty, whitespace, letters, symbols, "1e400", "-0", multiple dots, leading zeros, negatives, 0, maximum allowed, very long input, pasted values (spaces, currency symbols), repeated Enter, rapid clicking, recovery after an error, page reload.
-- **Browser matrix**: Chromium (≈ Chrome/Edge), Firefox, WebKit (≈ Safari) via Playwright; plus PO manual checks in real browsers.
+- **Browser matrix**: Chromium (≈ Chrome/Edge), Firefox, WebKit (≈ Safari) via Playwright; Chromium locally + CI, Firefox/WebKit only in GitHub Actions CI on the exact commit (ADR-009); plus PO manual checks in real browsers.
 - **QA report** (`qa-reports/S-x.md`) skeleton:
 ```
 # QA report — S-x <title>
-Build: <commit hash> · Date: <date> · Verifier: qa-engineer
+Build: <commit hash> · CI run: <Actions run URL for that commit> · Date: <date> · Verifier: qa-engineer
 | AC | Test IDs | Chromium | Firefox | WebKit | Manual | Result | Evidence |
 |----|----------|----------|---------|--------|--------|--------|----------|
 ## Edge sweep (input → observed → PASS/FAIL)
@@ -275,7 +276,7 @@ Auto-approving gates · skipping or disabling tests · marking unverified storie
 | Install | `npm ci` (or `npm install` the first time) |
 | Dev server (background) | `npm run dev -- --host 127.0.0.1 --port 5173` |
 | Unit tests | `npm test` |
-| Playwright browsers (once) | `npx playwright install` (cloud: preinstalled, skip) |
+| Playwright browsers (once) | `npx playwright install` (this cloud container: Chromium preinstalled; Firefox/WebKit blocked → run in CI, ADR-009) |
 | E2E tests | `npm run test:e2e` |
 | Build / preview | `npm run build` · `npm run preview` |
 | Clean-clone audit | `git clone https://github.com/Sabeekhann/Web-Calculator.git /tmp/audit && cd /tmp/audit/sabee-khan-calculator && npm ci && npm test && npm run test:e2e && npm run build` |
