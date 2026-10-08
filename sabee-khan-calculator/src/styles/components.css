@@ -33,6 +33,7 @@
   line-height: var(--leading-tight);
   font-weight: var(--weight-regular);
   color: var(--color-muted);
+  text-wrap: pretty;
 }
 
 /* ---- Fields: stacked at every width ---- */
