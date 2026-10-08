@@ -18,7 +18,7 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 | D10 | Source without node_modules/dist/coverage/reports | IN PROGRESS | `.gitignore` in place |
 | D11 | Package README covers every brief item | IN PROGRESS | Headings only; choice + reasons ready in product-brief.md |
 | D12 | docs/app-roles.md | DONE | R-1 Learner, R-2 Instructor + needs table; approved Gate 3a |
-| D13 | docs/jobs-to-be-done.md | IN PROGRESS | J-1..J-5, purity check PASS; awaiting Gate 3b |
+| D13 | docs/jobs-to-be-done.md | DONE | J-1..J-5, purity check PASS; approved Gate 3b |
 | D14 | docs/user-stories.md | OPEN | Placeholder |
 | D15 | Acceptance criteria (Given/When/Then, edges) | OPEN | |
 | D16 | Status per story | OPEN | |
@@ -38,7 +38,8 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 | 1 Fresh start & initiation | 08:12 | 08:17 | 5 |
 | 2 Discovery | 08:17 | 08:55 | 38 |
 | 3a App roles | 08:55 | 09:10 | 15 |
-| 3b Jobs to be done | 09:10 | | |
+| 3b Jobs to be done | 09:10 | 09:25 | 15 |
+| 3c User stories | 09:25 | | |
 
 ## Session log
 
