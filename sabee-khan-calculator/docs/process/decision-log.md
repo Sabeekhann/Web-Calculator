@@ -20,6 +20,7 @@ Decisions (DEC-x), open questions (Q-x) and assumptions (A-x). An assumption goe
 | DEC-12 | 2026-10-08 | Plan approved: backlog (Sprint 0 → S-1, S-2, S-3 → S-4 + hardening), technical design ADR-001..008 (incl. Vite 6, axe devDependency), test plan. Q-13 answered: a field holding only "." is treated as empty; a lone "-" shows the can't-be-negative message. Code freeze lifted. | PO | Gate 5 approval |
 | DEC-13 | 2026-10-08 | Gate 6 approved; ADR-005 amendment (Vitest 4.1.11) accepted. Firefox/WebKit hosts will not be unblocked here, so the 3-engine e2e runs in GitHub Actions CI (ADR-009); local QA stays on Chromium. | PO | Gate 6 approval |
 | DEC-14 | 2026-10-08 | S-1 accepted on QA PASS (3 engines via CI run 37764220926) and visual review; PO real-browser manual checks deferred to the live URL / local run before release (option 1). | PO | S-1 acceptance |
+| DEC-15 | 2026-10-08 | S-2 accepted on QA PASS (3 engines via CI run 37796019119 on 8d496d6, code identical to 143c61e) and visual review; manual checks deferred as for S-1. | PO | S-2 acceptance |
 
 ## Open questions
 

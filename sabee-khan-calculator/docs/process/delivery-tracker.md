@@ -9,7 +9,7 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 | D1 | Browser app (Chrome, Edge, Firefox, Safari) | IN PROGRESS | Chromium local + Chromium/Firefox/WebKit in GitHub Actions CI on Node 20 (ADR-009); S-1 36/36 e2e green; PO real-browser checks pending |
 | D2 | Local run from README, no paid accounts/keys/cloud | IN PROGRESS | Clean `npm ci` copy: test, build, dev, preview all work (qa-reports/sprint-0.md) |
 | D3 | Live URL (optional, in addition to local run) | OPEN | Decided at Stage 10 |
-| D4 | Correctness: every Implemented story matches its ACs | IN PROGRESS | S-1 accepted (qa-reports/S-1.md) |
+| D4 | Correctness: every Implemented story matches its ACs | IN PROGRESS | S-1, S-2 accepted (qa-reports/S-1.md, S-2.md) |
 | D5 | Error handling: clear messages, no crash or wrong result | OPEN | |
 | D6 | UI quality: design spec, 375px+, light/dark, WCAG 2.2 AA | IN PROGRESS | ui-design.md + mockup.html approved Gate 4; build + visual review pending |
 | D7 | AI writes the code | IN PROGRESS | All files so far written by Claude Code |
@@ -80,3 +80,7 @@ Derived from commit timestamps (start = previous gate approval, end = this gate'
 | 7 | ux-ui-designer | S-1 visual review | PASS, 0 issues | Accepted |
 | 7 | qa-engineer | S-1 verification (first attempt cut off by account rate limit; retried) | PASS all 8 ACs, 3 engines, edge sweep 23/23 | Accepted |
 | 7 | PO | S-1 acceptance | Accepted; manual checks deferred (DEC-14) | Merged --no-ff |
+| 7 | developer | S-2 on feat/S-2, tests first | Done: 91 unit, 21 e2e | Accepted |
+| 7 | ux-ui-designer | S-2 visual review | PASS, 0 issues (cosmetic orphan noted for Sprint 2) | Accepted |
+| 7 | qa-engineer | S-2 verification | PASS 8/8, 300 random inputs 0 mismatches | Accepted; QA caught that the Orchestrator's screenshot push cancelled CI on the code commit (concurrency) — process changed: screenshots commit with the QA report |
+| 7 | PO | S-2 acceptance | Accepted (DEC-15) | Merged --no-ff |
