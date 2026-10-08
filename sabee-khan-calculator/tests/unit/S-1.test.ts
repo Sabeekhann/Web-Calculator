@@ -190,7 +190,7 @@ describe('S-1 supporting: states around the result', () => {
     expect(shown(model)).toBeNull();
   });
 
-  // Until S-3 adds the error state and messages, invalid or impossible input simply shows no score.
+  // Invalid or impossible input never shows a score or verdict (S-3 covers the error state and its messages).
   it.each([
     ['abc', '23', '70'],
     ['17.5', '0', '70'],

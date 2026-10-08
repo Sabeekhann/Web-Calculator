@@ -1,7 +1,7 @@
 # Backlog
 
 Stage 5, solution-architect. Priorities from `docs/user-stories.md` (DEC-9). Design in `technical-design.md`, tests in `test-plan.md`.
-Time left for building: about 2 h. If time runs short, cut S-4 or polish first, never tests or quality (CLAUDE.md A.7).
+Time left for building: about 2 h. If time runs short, cut S-4 or polish first, never tests or quality (CLAUDE.md A.7). **DEC-17 (Gate 7): S-4 cut; Sprint 2 = polish + hardening + Pages.**
 
 ## Priority order
 
@@ -11,9 +11,10 @@ Time left for building: about 2 h. If time runs short, cut S-4 or polish first, 
 | 2 | Score and pass/fail verdict | S-1 · J-1, J-3 · R-1, R-2 | Must | M | 25 min | 1 | `feat/S-1` |
 | 3 | Marks short of or above the pass mark | S-2 · J-2 · R-1 | Must | M | 15 min | 1 | `feat/S-2` |
 | 4 | Clear message for an invalid or impossible entry | S-3 · J-4 · R-2 | Must | M | 25 min | 1 | `feat/S-3` |
-| 5 | Next learner in one step | S-4 · J-5 · R-2 | Should | S | 10 min | 2 | `feat/S-4` |
-| 6 | Hardening: edge sweep, axe audit, console check, 320 px check | D1, D5, D6 | — | S | 10 min | 2 | `main` (test/fix) |
-| 7 | Polish: visual review fixes, final screenshots 375/768/1280 light + dark | D6 | — | S | 5 min | 2 | `main` (style) |
+| 5 | Next learner in one step (cut, DEC-17) | S-4 · J-5 · R-2 | Should | S | — | Future | — |
+| 6 | Hardening: axe spec on 3 engines, final QA sweep (edge, console, 320 px) | D1, D5, D6 | — | S | 10 min | 2 | `chore/sprint-2-polish` |
+| 7 | Polish: remove button/Esc hint, text-wrap pretty, proportional input digits, favicon, final screenshots | D6 | — | S | 10 min | 2 | `chore/sprint-2-polish` |
+| 7a | GitHub Pages deploy (ADR-010) | D3 | — | S | 5 min | 2 | `chore/sprint-2-polish` |
 | 8 | Copy the outcome as one line | S-5 · J-5 · R-2 | Could | S | — | Future | — |
 | 9 | Marks needed to pass | S-6 · J-2 · R-1 | Could | S | — | Future | — |
 
@@ -36,13 +37,14 @@ Recommended build order: **S-1 → S-2 → S-3** (one branch and one QA loop eac
 - **S-3 last in the sprint** because its ACs mix error states with results ("76.0%" for " 017.5 ", "0.0%" for total "1000000", gap lines after recovery), so it can only pass in full once S-1 and S-2 exist. It adds the range and cross-field checks, the per-field messages, `aria-invalid`/`aria-describedby`, and the pass-mark-empty state (S-3.2).
 - A validation-first order (S-3 first) was rejected: S-3 could not be accepted on its own because four of its eight ACs show a score or gap.
 
-## Sprint 2 — Should, hardening, polish
-**Goal:** an instructor can move through a cohort in one keystroke, and the app passes the full edge sweep, an axe audit and the visual review on all three engines.
-- S-4 (Next learner button + Escape in marks earned).
-- Hardening: `tests/e2e/edge.spec.ts` and `tests/e2e/a11y.spec.ts` (axe, ADR-006), every state in light and dark; fix any defect on its story branch or as `fix:` on `main` before release.
-- Polish: ux-ui-designer visual review at 375/768/1280, light and dark; final screenshots to `design/screenshots/`.
+## Sprint 2 — S-4 cut (DEC-17); polish + hardening + Pages
+**Goal:** the MVP passes an axe audit, the final QA sweep and the visual review on all three engines, and is live on GitHub Pages.
+- Polish: "Next learner" button and Esc hint removed (S-4 not built); `text-wrap: pretty` on text; proportional digits in the inputs; favicon (`public/favicon.svg`); ux-ui-designer visual review at 375/768/1280, light and dark; final screenshots to `design/screenshots/`.
+- Hardening: `tests/e2e/a11y.spec.ts` (axe, ADR-006, 5 states × light/dark) on Chromium, Firefox, WebKit in CI; final qa-engineer sweep (edge list in test-plan.md, console, 320 px); fix any defect as `fix:` before release.
+- Pages: `.github/workflows/pages.yml` (ADR-010), D3 live URL in addition to the local run.
 
-## Future (Not implemented)
+## Future / Won't this release (Not implemented)
+- S-4 Next learner in one step (Should). Cut by DEC-17 (time budget); design kept in technical-design.md as future.
 - S-5 Copy the outcome as one line (Could). Needs the Clipboard API, which differs by engine and needs a secure context; not worth the budget.
 - S-6 Marks needed to pass (Could). Formula ready: needed hundredths = ceil(P × T / 1000) (see technical-design.md).
 
@@ -65,4 +67,4 @@ Recommended build order: **S-1 → S-2 → S-3** (one branch and one QA loop eac
 | S-1 | J-1, J-3 · R-1, R-2 | 8 | M | result, idle | none | Yes |
 | S-2 | J-2 · R-1 | 8 | M | gap line | none | Yes |
 | S-3 | J-4 · R-2 | 8 | M | error, pass mark empty | Q-13 (bare "." / "-", not in any AC) | Yes, Q-13 default applies until answered |
-| S-4 | J-5 · R-2 | 5 | S | button, Esc hint | none | Yes |
+| S-4 | J-5 · R-2 | 5 | S | button, Esc hint | none | Cut (DEC-17), Future |

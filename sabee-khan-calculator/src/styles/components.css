@@ -33,6 +33,7 @@
   line-height: var(--leading-tight);
   font-weight: var(--weight-regular);
   color: var(--color-muted);
+  text-wrap: pretty;
 }
 
 /* ---- Fields: stacked at every width ---- */
@@ -59,7 +60,8 @@
   margin: var(--space-0);
   padding: var(--space-0) var(--space-3);
   font-size: var(--text-md);
-  font-variant-numeric: tabular-nums;
+  /* Proportional figures for typed values, so "-5" does not read as "- 5" (V-3.1); results stay tabular. */
+  font-variant-numeric: normal;
   color: var(--color-text);
   background: var(--color-surface);
   border: var(--border-w) solid var(--color-field-border);
@@ -274,6 +276,11 @@
   color: var(--color-text);
 }
 
+/* Progressive: avoids a lone last word ("mark") at 375 px; browsers without support wrap normally. */
+.gap > span {
+  text-wrap: pretty;
+}
+
 .gap-icon {
   flex: none;
   width: var(--icon-sm);
@@ -287,70 +294,6 @@
 
 .gap-icon--fail {
   fill: var(--color-fail);
-}
-
-/* ---- Actions ---- */
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-3);
-  margin-top: var(--space-6);
-}
-
-/* "Next learner" — default */
-.btn {
-  min-width: var(--control-h);
-  min-height: var(--control-h);
-  padding: var(--space-0) var(--space-5);
-  font-size: var(--text-base);
-  font-weight: var(--weight-semibold);
-  color: var(--color-accent);
-  background: transparent;
-  border: var(--border-w) solid var(--color-accent);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition:
-    background-color var(--duration-fast) var(--ease-out),
-    color var(--duration-fast) var(--ease-out);
-}
-
-/* hover */
-.btn:hover {
-  background: var(--color-accent-tint);
-}
-
-/* focus-visible */
-.btn:focus {
-  outline: none;
-}
-
-.btn:focus-visible {
-  outline: var(--focus-w) solid var(--color-focus);
-  outline-offset: var(--focus-offset);
-}
-
-/* active: inverted */
-.btn:active {
-  background: var(--color-accent);
-  color: var(--color-surface);
-}
-
-.hint {
-  font-size: var(--text-sm);
-  line-height: var(--leading-tight);
-  font-weight: var(--weight-regular);
-  color: var(--color-muted);
-}
-
-kbd {
-  padding: var(--space-0) var(--space-1);
-  font: inherit;
-  font-size: var(--text-xs);
-  color: var(--color-muted);
-  border: var(--border-w) solid var(--color-border);
-  border-bottom-width: var(--kbd-border-bottom-w);
-  border-radius: var(--radius-sm);
 }
 
 /* ---- Reduced motion ---- */

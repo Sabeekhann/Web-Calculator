@@ -1,4 +1,4 @@
-import { ESC_KEY_LABEL, MESSAGES, SCORE_UNIT, type FieldName } from '../messages';
+import { MESSAGES, SCORE_UNIT, type FieldName } from '../messages';
 import { el, svgEl } from './dom';
 import type { FieldErrors, GapKind, Verdict, ViewModel } from './view-model';
 
@@ -8,7 +8,6 @@ export interface ShellElements {
   readonly errors: Readonly<Record<FieldName, HTMLParagraphElement>>;
   readonly resultBody: HTMLDivElement;
   readonly status: HTMLDivElement;
-  readonly nextLearner: HTMLButtonElement;
 }
 
 /** Initial values on load and after reload (technical-design.md §State model). */
@@ -157,16 +156,16 @@ export function renderFieldErrors(shell: ShellElements, fieldErrors: FieldErrors
   }
 }
 
-/** Builds the static card once from messages.ts and mounts it into `root`. Never calculates. */
+/**
+ * Builds the static card once from messages.ts and mounts it into `root`. Never calculates.
+ * The card ends at the result area: S-4 ("Next learner", M-25/M-40) is Not implemented (DEC-17), so no button or hint is rendered.
+ */
 export function renderShell(root: HTMLElement): ShellElements {
   const inputs = { earned: createInput('earned'), total: createInput('total'), pass: createInput('pass') };
   const errors = { earned: createErrorSlot('earned'), total: createErrorSlot('total'), pass: createErrorSlot('pass') };
 
   const resultBody = el('div', { class: 'result-body' }, [resultMessage(MESSAGES['M-1'])]);
   const status = el('div', { class: 'sr-only', role: 'status', 'aria-live': 'polite', 'aria-atomic': 'true' });
-  const nextLearner = el('button', { class: 'btn', type: 'button', 'aria-keyshortcuts': 'Escape' }, [MESSAGES['M-25']]);
-
-  const hintLead = MESSAGES['M-40'].slice(0, -ESC_KEY_LABEL.length);
 
   const card = el('article', { class: 'card', 'aria-labelledby': 'card-title' }, [
     el('header', { class: 'card-head' }, [
@@ -185,12 +184,8 @@ export function renderShell(root: HTMLElement): ShellElements {
       resultBody,
       status,
     ]),
-    el('div', { class: 'actions' }, [
-      nextLearner,
-      el('span', { class: 'hint' }, [hintLead, el('kbd', {}, [ESC_KEY_LABEL])]),
-    ]),
   ]);
 
   root.replaceChildren(el('main', { class: 'app' }, [card]));
-  return { inputs, errors, resultBody, status, nextLearner };
+  return { inputs, errors, resultBody, status };
 }

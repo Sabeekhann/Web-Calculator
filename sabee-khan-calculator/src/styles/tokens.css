@@ -68,7 +68,6 @@
   --card-max: 520px;
   --input-max-wide: 240px;
   --border-w: 1px;
-  --kbd-border-bottom-w: 2px;
   --focus-w: 2px;
   --focus-offset: 2px;
 
@@ -93,7 +92,7 @@
   --error-slot-lines: 2;
   --error-slot-h: calc(var(--error-slot-lines) * var(--text-sm) * var(--leading-tight));
   --input-max: none;
-  --result-min-h: 196px;
+  --result-min-h: 192px;
 }
 
 /* Layout — wide (≥ 600 px): one breakpoint; 768 and 1280 show the same card. */
@@ -108,7 +107,7 @@
     --field-gap: var(--space-4);
     --error-slot-lines: 1;
     --input-max: var(--input-max-wide);
-    --result-min-h: 112px;
+    --result-min-h: 100px;
   }
 }
 

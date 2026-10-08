@@ -23,7 +23,7 @@ Both use the system font stack `system-ui, -apple-system, "Segoe UI", Roboto, "H
 | border (hairline) / field border | #DDD8CD / #8A9099 | #353A42 / #6E747E | field border 3.22 / 3.55 |
 
 - **Type:** scale 12 / 13 / 15 / 17 / 20 / 64 px; small uppercase tracked labels ("SCORE"); score 64 px weight 300 with a half-size muted "%", so the number reads like a printed mark.
-- **Layout:** one narrow card (max 420 px); "Marks earned *of* Total marks possible" on one row, pass mark below; a hairline divider, then the score with a Pass/Fail pill (tick or cross) and the gap line; "Next learner" as an outline button with an Esc hint.
+- **Layout:** one narrow card (max 420 px); "Marks earned *of* Total marks possible" on one row, pass mark below; a hairline divider, then the score with a Pass/Fail pill (tick or cross) and the gap line; "Next learner" as an outline button with an Esc hint (preview only; S-4 cut, DEC-17).
 - **Why it fits:** quiet and formal, so a borderline Fail reads as a fair record rather than a judgement; the "17.5 of 23" row mirrors how marks arrive on paper, which suits instructors recording results.
 
 ### Direction B — Spotlight (not chosen)
@@ -44,7 +44,7 @@ Both use the system font stack `system-ui, -apple-system, "Segoe UI", Roboto, "H
 | border / field border | #D6DAE7 / #8A90A8 | #2D3252 / #6C7294 | field border 3.16 / 3.65 |
 
 - **Type:** scale 13 / 14 / 15 / 18 / 22 / 26 / 56–80 px; bold, tight headings; score weight 800 sized to the card (`clamp(48px, 11cqi, 80px)`); verdict 26 px bold with a circled tick or cross.
-- **Layout:** a split card (max 640 px), inputs with unit suffixes ("marks", "%") on the left, inset result panel on the right; below 500 px card width the panel stacks under the inputs; "Next learner" is a full-width filled button.
+- **Layout:** a split card (max 640 px), inputs with unit suffixes ("marks", "%") on the left, inset result panel on the right; below 500 px card width the panel stacks under the inputs; "Next learner" is a full-width filled button (preview only).
 - **Why it fits:** the result is unmistakable at a glance on a phone and the panel keeps its place while an instructor types, but it is louder and the result sits below the inputs on mobile.
 
 ### Recommendation (accepted)
@@ -55,7 +55,7 @@ Both use the system font stack `system-ui, -apple-system, "Segoe UI", Roboto, "H
 ## Design spec (A "Ledger" + bigger verdict)
 
 Mockup: `design/mockup.html` (states a–e, light + dark, wide + 375 px, component states) · screenshots `design/screenshots/mockup-1280.png`, `mockup-375.png`.
-Changes from the A preview: verdict is a large block, not a pill; fields are stacked at every width (no "of" row, so labels never wrap unevenly and errors get their own reserved line); card max-width 520 px so the verdict fits beside the score.
+Changes from the A preview: verdict is a large block, not a pill; no "Next learner" button or Esc hint (future S-4, not built, DEC-17); fields are stacked at every width (no "of" row, so labels never wrap unevenly and errors get their own reserved line); card max-width 520 px so the verdict fits beside the score.
 
 ### Design tokens (`src/styles/tokens.css`)
 Light values on `:root`; dark values under `@media (prefers-color-scheme: dark)`. Components use tokens only.
@@ -65,9 +65,9 @@ Light values on `:root`; dark values under `@media (prefers-color-scheme: dark)`
 | `--color-bg` | #F5F3EE | #111316 | page background |
 | `--color-surface` | #FFFFFF | #1B1E23 | card, inputs; tick/cross and "!" glyphs |
 | `--color-text` | #1B1F24 | #ECEAE4 | title, values, score, gap line |
-| `--color-muted` | #5A6069 | #A4A9B1 | labels, eyebrows, M-1/M-2/M-3, "%", hint |
-| `--color-accent` / `--color-accent-tint` | #1F4E79 / #E9EFF6 | #8EB9E8 / #22303F | button label + border / button hover fill |
-| `--color-border` | #DDD8CD | #353A42 | card edge, divider, kbd (decorative) |
+| `--color-muted` | #5A6069 | #A4A9B1 | labels, eyebrows, M-1/M-2/M-3, "%" |
+| `--color-accent` / `--color-accent-tint` | #1F4E79 / #E9EFF6 | #8EB9E8 / #22303F | unused since DEC-17, kept for the future S-4 button (favicon tile repeats the light hex) |
+| `--color-border` | #DDD8CD | #353A42 | card edge, divider |
 | `--color-field-border` / `-hover` | #8A9099 / #5A6069 | #6E747E / #A4A9B1 | input border default / hover |
 | `--color-focus` | #1F4E79 | #8EB9E8 | focus ring |
 | `--color-pass` / `--color-pass-tint` | #1D6B3A / #E6F2E9 | #6FCF97 / #16301F | Pass word, disc, border, ▲ / Pass block fill |
@@ -80,9 +80,7 @@ Light values on `:root`; dark values under `@media (prefers-color-scheme: dark)`
 | Pair (fg on bg) | Used for | Light | Dark | Min |
 |-----------------|----------|-------|------|-----|
 | text on surface / on bg | values, score, gap line | 16.56 / 14.93 | 13.89 / 15.47 | 4.5 |
-| muted on surface / on bg | labels, messages, hint | 6.34 / 5.72 | 7.07 / 7.88 | 4.5 |
-| accent on surface / on accent-tint | button default / hover | 8.66 / 7.48 | 8.16 / 6.56 | 4.5 |
-| surface on accent | button active (inverted) | 8.66 | 8.16 | 4.5 |
+| muted on surface / on bg | labels, messages | 6.34 / 5.72 | 7.07 / 7.88 | 4.5 |
 | pass on surface / on pass-tint | Pass border, ▲ / Pass word | 6.53 / 5.67 | 8.79 / 7.48 | 4.5 |
 | surface on pass | tick on Pass disc | 6.53 | 8.79 | 4.5 |
 | fail on surface / on fail-tint | Fail border, ▼ / Fail word | 6.65 / 5.67 | 7.53 / 6.84 | 4.5 |
@@ -95,22 +93,24 @@ Light values on `:root`; dark values under `@media (prefers-color-scheme: dark)`
 
 | Token | Size / weight / line-height | Use |
 |-------|-----------------------------|-----|
-| `--text-xs` | 12 / 600 / 1.4, uppercase, `--tracking-eyebrow: .12em` | eyebrows "Quiz score", "Score"; kbd 12 |
-| `--text-sm` | 13 / 500 / 1.4 | labels, field errors, subheading (400), hint (400) |
-| `--text-base` | 15 / 400 / 1.5 | M-1, M-2, M-3, gap line; button 15 / 600 |
-| `--text-md` | 17 / 400 | input values |
+| `--text-xs` | 12 / 600 / 1.4, uppercase, `--tracking-eyebrow: .12em` | eyebrows "Quiz score", "Score" |
+| `--text-sm` | 13 / 500 / 1.4 | labels, field errors, subheading (400) |
+| `--text-base` | 15 / 400 / 1.5 | M-1, M-2, M-3, gap line |
+| `--text-md` | 17 / 400 | input values (proportional figures) |
 | `--text-lg` | 20 / 600 / 1.25 | card heading (h1) |
 | `--text-verdict` | 40 / 600 / 1, tracking -.01em | "Pass" / "Fail" |
 | `--text-score` | 64 / 300 / 1, tracking -.03em; "%" at .5em in muted | score |
 
-`font-variant-numeric: tabular-nums` on inputs, score (`tabular-nums lining-nums`) and gap line.
+`font-variant-numeric: tabular-nums` on the score (`tabular-nums lining-nums`) and gap line. Inputs use proportional figures (`normal`) so a typed "-5" does not read as "- 5" (V-3.1).
+`text-wrap: pretty` on the gap line text: avoids a lone last word ("mark") when it wraps at narrow widths; browsers without support wrap normally.
 
 **Spacing** (4 px base): `--space-1` 4 · `-2` 8 · `-3` 12 · `-4` 16 · `-5` 20 · `-6` 24 · `-8` 32 · `-10` 40 · `-12` 48.
 **Sizes**: `--control-h` 44 · `--icon-sm` 16 · `--icon-verdict` 40 · `--card-max` 520 · `--input-max-wide` 240 · `--border-w` 1 · `--focus-w` 2 · `--focus-offset` 2.
-**Radii**: `--radius-sm` 4 (inputs, button, kbd) · `--radius-md` 6 (card, verdict block); discs 50%.
-**Motion**: `--duration-fast` 150ms (border, background, colour on hover/focus/active) · `--duration-base` 200ms (spare) · `--ease-out` cubic-bezier(0.2, 0, 0, 1). Score, verdict, gap and messages appear instantly (no animation). `@media (prefers-reduced-motion: reduce)` → `transition: none` everywhere.
+**Radii**: `--radius-sm` 4 (inputs) · `--radius-md` 6 (card, verdict block); discs 50%.
+**Motion**: `--duration-fast` 150ms (input border and shadow on hover/error) · `--duration-base` 200ms (spare) · `--ease-out` cubic-bezier(0.2, 0, 0, 1). Score, verdict, gap and messages appear instantly (no animation). `@media (prefers-reduced-motion: reduce)` → `transition: none` everywhere.
 
 ### Theme
+- Favicon `public/favicon.svg`: 32 px rounded tile in accent #1F4E79 with a white tick (the Pass glyph); one file for both themes (the tile carries its own contrast).
 - Follows `prefers-color-scheme`; no manual toggle (a toggle adds state, storage and a control with no story). `<meta name="color-scheme" content="light dark">` and `color-scheme` per theme so native caret and autofill match.
 
 ### Layout
@@ -120,13 +120,13 @@ Light values on `:root`; dark values under `@media (prefers-color-scheme: dark)`
 | ≥ 600 px (768, 1280) | padding 48 / 40 | max 520, centred, padding 32 / 40 / 40 | stacked, inputs max 240 px; error slot 1 line | verdict beside the score, gap line under both |
 
 - One breakpoint, `@media (min-width: 600px)`; 768 and 1280 show the same card with more background. No horizontal scroll at 320 (mockup: scrollWidth 320).
-- Order inside the card: eyebrow + h1 + subheading → Marks earned → Total marks possible → Pass mark → divider → "Score" + result body → actions.
-- **Reserved space** (nothing moves when results or errors appear): every field has an error slot below it with `min-height` = lines × 13 px × 1.4 (36.4 px narrow, 18.2 px wide; every M-12..M-24 fits); result body `min-height` 196 px narrow / 112 px wide, which holds score + verdict + a 2-line gap line (narrow) or score|verdict + 1-line gap line (wide). Measured in the mockup: card height and button position identical in all five states at each width.
+- Order inside the card: eyebrow + h1 + subheading → Marks earned → Total marks possible → Pass mark → divider → "Score" + result body (the card ends here).
+- **Reserved space** (nothing moves when results or errors appear): every field has an error slot below it with `min-height` = lines × 13 px × 1.4 (36.4 px narrow, 18.2 px wide; every M-12..M-24 fits); result body `min-height: var(--result-min-h)` holds the tallest real result: score + verdict + a 2-line gap line (narrow, measured 191 px) or score|verdict + 1-line gap line (wide, 98.5 px); heights come from fixed line-heights, so they do not depend on the font. Token today 196 / 112 px; 192 / 100 px once V-S2.1 lands. Card height and bottom edge identical in idle, result, pass-mark-empty and error states at each width.
 
 ### Components and states
 | Component | States |
 |-----------|--------|
-| Text input | default: surface fill, 1 px field-border, 44 px high, value 17 px tabular · hover: field-border-hover · focus-visible: 2 px focus ring, 2 px offset (shows on mouse focus too; inputs always match `:focus-visible`) · filled: same as default · error: error border + 1 px inset error shadow (2 px look, no size change), `aria-invalid="true"` · disabled: n/a (fields are never disabled) |
+| Text input | default: surface fill, 1 px field-border, 44 px high, value 17 px proportional · hover: field-border-hover · focus-visible: 2 px focus ring, 2 px offset (shows on mouse focus too; inputs always match `:focus-visible`) · filled: same as default · error: error border + 1 px inset error shadow (2 px look, no size change), `aria-invalid="true"` · disabled: n/a (fields are never disabled) |
 | "%" suffix | muted 15 px, inside the pass mark input at right 12 px, `aria-hidden`; input right padding 32 px |
 | Inline error | error colour 13 / 500, 16 px "!" disc icon + message text; empty slot keeps its height; at most one message per field (A-15) |
 | Result body · idle | M-1 in muted 15 px; no score |
@@ -135,17 +135,14 @@ Light values on `:root`; dark values under `@media (prefers-color-scheme: dark)`
 | Result body · error | "!" icon + M-3 in muted 15 px; no score, verdict or gap |
 | Verdict block | inline-flex, padding 8 / 20 / 8 / 8, 1 px border in pass/fail, tint fill, radius 6; 40 px disc in pass/fail with a surface-coloured tick (Pass) or cross (Fail); word M-4 / M-5 40 / 600 in pass/fail. About 58 px tall next to the 64 px score. Never a pill, never colour alone |
 | Gap line | 16 px icon + text 15 px: ▲ pass for M-8, M-9, M-11 · ▼ fail for M-6, M-7 · "=" pass for M-10. Icon is decorative; the words carry the meaning |
-| "Next learner" button | default: transparent, 1 px accent border, accent label 15 / 600, min 44 × 44 · hover: accent-tint fill · focus-visible: 2 px focus ring, 2 px offset · active: accent fill, surface label · always enabled |
-| Esc hint | muted 13 px "or press" + `<kbd>Esc</kbd>` beside the button; wraps under it at 320 px |
 
 ### Interaction
-- Tab order follows the DOM: Marks earned → Total marks possible → Pass mark → Next learner. No positive `tabindex`; the hint is not focusable.
+- Tab order follows the DOM: Marks earned → Total marks possible → Pass mark (ends there). No positive `tabindex`.
 - Inputs: `type="text" inputmode="decimal" autocomplete="off" spellcheck="false"` (architect: not `type="number"`, which hides "abc", "17,5", "1e400" from validation and changes on scroll wheel).
 - Live update on every `input` event (typing, paste, cut, autofill). No Calculate button (A-7). No autofocus on load.
 - Errors appear on the `input` event that makes a value invalid and clear on the event that makes it valid (A-12..A-16); M-15 sits under marks earned but re-checks when total changes (S-3.8). Focus never moves because of an error.
 - Enter: does nothing (no form submit, no reload, values unchanged). If a `<form>` is used, its submit is prevented.
-- Escape in Marks earned = Next learner (A-17). Escape in the other fields does nothing.
-- Next learner: clears marks earned and its message, keeps total and pass mark, result shows M-1, focus returns to Marks earned (S-4.1, S-4.4).
+- Escape does nothing. "Next learner" and Escape-to-reset are future S-4 (not built, DEC-17).
 
 ### Microcopy
 Catalogue texts (verbatim, from `docs/user-stories.md`):
@@ -160,7 +157,7 @@ Catalogue texts (verbatim, from `docs/user-stories.md`):
 | Under Marks earned | M-12..M-15 | as catalogued |
 | Under Total marks possible | M-16..M-20 | as catalogued |
 | Under Pass mark | M-21..M-24 | as catalogued |
-| Button | M-25 | "Next learner" |
+| Button (future S-4, not built) | M-25 | "Next learner" |
 
 **New strings for PO approval** (not in M-1..M-29; once approved, product-analyst adds them to the catalogue so `messages.ts` stays the single source):
 
@@ -174,28 +171,28 @@ Catalogue texts (verbatim, from `docs/user-stories.md`):
 | N-8 | Pass mark label, screen readers only | " (percent)" |
 | N-9 | Pass mark suffix (visual) | "%" |
 | N-10 | Result eyebrow | "Score" |
-| N-11 | Hint beside the button | "or press Esc" |
+| N-11 | Hint beside the button (future S-4, not built) | "or press Esc" |
 
 No placeholders and no field hints: the error messages already give examples ("like 17.5").
 
 ### Accessibility
 - Every input has `<label for>`; `aria-describedby` → its error slot id (always present, empty when valid); `aria-invalid="true"` only while in error.
-- Live announcements: a visually hidden `role="status"` node (`aria-live="polite"`, `aria-atomic="true"`) inside the result section. The visible result updates instantly; the status text is set 500 ms after the last `input` event and only when it differs from the last announcement, so typing "17.5" is announced once, not four times. Content: result → score, verdict word, gap line (e.g. "76.0%, Pass, 1.4 marks above the pass mark"); pass mark empty → score + M-2; error → each field's message, then M-3; idle → M-1 (only after Next learner, not on load).
+- Live announcements: a visually hidden `role="status"` node (`aria-live="polite"`, `aria-atomic="true"`) inside the result section. The visible result updates instantly; the status text is set 500 ms after the last `input` event and only when it differs from the last announcement, so typing "17.5" is announced once, not four times. Content: result → score, verdict word, gap line (e.g. "76.0%, Pass, 1.4 marks above the pass mark"); pass mark empty → score + M-2; error → each field's message, then M-3; idle → not announced (M-1 is visible only).
 - Verdict is announced as its word; disc icons, gap arrows and "!" icons are `aria-hidden`.
 - Focus ring: 2 px `--color-focus`, offset 2 px, ≥ 7.8:1 on surface and background; never `outline: none` without a replacement.
-- Targets ≥ 44 × 44 px (inputs 44 high and full or 240 px wide; button min 44 × 44).
+- Targets ≥ 44 × 44 px (inputs 44 high and full or 240 px wide).
 - Never colour alone: errors = text + icon + thicker border; verdict = word + tick/cross; gap = words (+ arrow).
-- `lang="en"`, one h1, result section labelled by its "Score" eyebrow; the button has `aria-keyshortcuts="Escape"`.
+- `lang="en"`, one h1, result section labelled by its "Score" eyebrow; `<title>` "Quiz score and pass-mark calculator" (M-30).
 - Zoom: the layout must hold at 200% text zoom (single column, no fixed heights except the min-heights above).
 
 ### Visual review checklist (CLAUDE.md §10; walk at 375 / 768 / 1280, light and dark)
-- [ ] Alignment: labels, inputs, divider, score, button share one left edge
+- [ ] Alignment: labels, inputs, divider, score, verdict, gap line share one left edge
 - [ ] Spacing consistency: only `--space-*` values; equal gaps between fields
 - [ ] Type hierarchy: score > verdict > heading > body > labels, as in the type table
 - [ ] Contrast: every pair in the contrast table holds in the build (spot-check with devtools)
-- [ ] Focus states: visible ring on every input and the button, keyboard only
+- [ ] Focus states: visible ring on every input
 - [ ] Error states: message under the right field, icon + text + border, M-3 in the result, no score
 - [ ] Dark mode: tokens switch with `prefers-color-scheme`; no hard-coded colours
 - [ ] Mobile layout: stacked, verdict under score, no horizontal scroll at 320
 - [ ] Number formatting: "76.0%" one decimal, tabular numerals, gap numbers trimmed with comma thousands
-- [ ] No layout shift: card height and button position equal across idle, result, pass-mark-empty and error states
+- [ ] No layout shift: card height and bottom edge equal across idle, result, pass-mark-empty and error states
