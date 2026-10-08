@@ -11,7 +11,7 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 | D3 | Live URL (optional, in addition to local run) | OPEN | Decided at Stage 10 |
 | D4 | Correctness: every Implemented story matches its ACs | OPEN | |
 | D5 | Error handling: clear messages, no crash or wrong result | OPEN | |
-| D6 | UI quality: design spec, 375px+, light/dark, WCAG 2.2 AA | IN PROGRESS | ui-design.md + mockup.html; awaiting Gate 4 |
+| D6 | UI quality: design spec, 375px+, light/dark, WCAG 2.2 AA | IN PROGRESS | ui-design.md + mockup.html approved Gate 4; build + visual review pending |
 | D7 | AI writes the code | IN PROGRESS | All files so far written by Claude Code |
 | D8 | Hand changes listed in README (or "None") | OPEN | |
 | D9 | Transcripts of every session + raw logs | OPEN | PO exports (see Q-3) |
@@ -40,7 +40,8 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 | 3a App roles | 08:55 | 09:10 | 15 |
 | 3b Jobs to be done | 09:10 | 09:25 | 15 |
 | 3c User stories | 09:25 | 09:45 | 20 |
-| 4 UX/UI design | 09:45 | | |
+| 4 UX/UI design | 09:45 | 10:25 | 40 |
+| 5 Planning | 10:25 | | |
 
 ## Session log
 

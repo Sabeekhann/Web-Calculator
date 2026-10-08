@@ -16,6 +16,7 @@ Decisions (DEC-x), open questions (Q-x) and assumptions (A-x). An assumption goe
 | DEC-8 | 2026-10-08 | Gap to the pass mark is shown in marks (e.g. "0.6 marks short of the pass mark"). Illustrative details in app-roles.md (half marks, phone use) accepted. | PO | Gate 3a approval |
 | DEC-9 | 2026-10-08 | User stories S-1..S-6 approved (Must S-1..S-3, Should S-4, Could S-5..S-6); assumptions A-10..A-17 approved. | PO | Gate 3c approval |
 | DEC-10 | 2026-10-08 | Design direction: A "Ledger" with a bigger verdict (large tick/cross + word, as prominent as the score) instead of a small pill. | PO | Learner's main question is the verdict; keeps A's calm, official look |
+| DEC-11 | 2026-10-08 | Design spec and mockup approved: fields stacked at every width, card max 520px, reserved space for errors/result (no layout shift); new UI strings N-1..N-11 approved (to be catalogued as M-30..M-40). | PO | Gate 4 approval |
 
 ## Open questions
 
