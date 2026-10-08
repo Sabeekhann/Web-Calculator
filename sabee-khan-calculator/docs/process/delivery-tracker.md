@@ -19,9 +19,9 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 | D11 | Package README covers every brief item | IN PROGRESS | Headings only; choice + reasons ready in product-brief.md |
 | D12 | docs/app-roles.md | DONE | R-1 Learner, R-2 Instructor + needs table; approved Gate 3a |
 | D13 | docs/jobs-to-be-done.md | DONE | J-1..J-5, purity check PASS; approved Gate 3b |
-| D14 | docs/user-stories.md | OPEN | Placeholder |
-| D15 | Acceptance criteria (Given/When/Then, edges) | OPEN | |
-| D16 | Status per story | OPEN | |
+| D14 | docs/user-stories.md | IN PROGRESS | S-1..S-6, traceability, catalogue M-1..M-29; awaiting Gate 3c |
+| D15 | Acceptance criteria (Given/When/Then, edges) | IN PROGRESS | 34 ACs, edge coverage table, arithmetic checked twice (analyst + Orchestrator) |
+| D16 | Status per story | IN PROGRESS | All Not implemented |
 | D17 | Package layout `sabee-khan-calculator/` | IN PROGRESS | Folders created |
 | D18 | HR acknowledgement | IN PROGRESS | Draft in `.private/hr-ack-email.md` (needs Q-1) |
 | D19 | Repo public, verified signed out | IN PROGRESS | Repo already public (REST API, 2026-10-08) |
@@ -57,3 +57,4 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 | 2 | product-analyst | Product brief, DEC-6, Q-5..Q-12, A-1..A-8 | Done: 102-line brief | Accepted; Orchestrator updated stale CLAUDE.md §1 line; flagged Q-6/Q-7 display-vs-verdict conflict to PO |
 | 3a | product-analyst | App roles (D12) | Done: 2 roles, needs table, 24 lines | Accepted; checked D12 form, scope, no widget wording; margin-unit question raised to PO |
 | 3b | product-analyst | Jobs to be done (D13) | Done: 5 jobs (2 Learner, 3 Instructor), purity check 5/5 PASS | Accepted; Orchestrator aligned CLAUDE.md §8 job-tag format to "J-n (R-n Role)" |
+| 3c | product-analyst | User stories + ACs (D14–D16), A-10..A-17 | Done: 6 stories, 34 ACs, 29 messages, 147 lines | Accepted; Orchestrator re-ran 10 boundary calculations independently — all match |
