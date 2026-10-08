@@ -6,29 +6,29 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 
 | ID | Deliverable | Status | Evidence / note |
 |----|-------------|--------|-----------------|
-| D1 | Browser app (Chrome, Edge, Firefox, Safari) | IN PROGRESS | Chromium local + Chromium/Firefox/WebKit in GitHub Actions CI on Node 20 (ADR-009); main 10af8a8: 51 e2e per engine green (153 total) incl. axe + edge sweep; PO real-browser checks PASS in Chrome, Edge, Firefox, Safari, phone (DEC-18) |
-| D2 | Local run from README, no paid accounts/keys/cloud | IN PROGRESS | Clean `npm ci` copy: test, build, dev, preview all work (qa-reports/sprint-0.md) |
-| D3 | Live URL (optional, in addition to local run) | IN PROGRESS | https://sabeekhann.github.io/Web-Calculator/ deployed from main (Pages run on 10af8a8 success); PO opened and checked it (DEC-18) |
-| D4 | Correctness: every Implemented story matches its ACs | IN PROGRESS | S-1, S-2, S-3 accepted (qa-reports/S-1..S-3.md) |
-| D5 | Error handling: clear messages, no crash or wrong result | IN PROGRESS | S-3 accepted; edge sweep automated (E-EDGE.0–9) on 3 engines; Sprint 2 QA PASS; PO real-browser checks PASS (DEC-18) |
-| D6 | UI quality: design spec, 375px+, light/dark, WCAG 2.2 AA | IN PROGRESS | ui-design.md + mockup.html approved Gate 4; Shell, S-1, S-2, S-3 pass visual review; 0 axe violations; Sprint 2 polish done; axe e2e 0 violations on 3 engines |
-| D7 | AI writes the code | IN PROGRESS | All files so far written by Claude Code |
-| D8 | Hand changes listed in README (or "None") | DONE | README: "None." |
-| D9 | Transcripts of every session + raw logs | OPEN | PO exports (see Q-3) |
-| D10 | Source without node_modules/dist/coverage/reports | IN PROGRESS | `.gitignore` verified by QA (check-ignore); zero runtime deps |
-| D11 | Package README covers every brief item | IN PROGRESS | Full README written and commands verified by docs-writer; audit pending |
+| D1 | Browser app (Chrome, Edge, Firefox, Safari) | DONE | Stage 9 audit: CI run 37804095421 on 16907b6 success, annotations "E2E chromium/firefox/webkit 51 passed, 0 failed" (153 total), Node v20.20.2; clean-clone Chromium e2e 51/51; PO real-browser checks PASS in Chrome, Edge, Firefox, Safari, phone (DEC-18) |
+| D2 | Local run from README, no paid accounts/keys/cloud | DONE | Stage 9 clean clone of 16907b6 following README literally: `npm ci` (52 packages, 0 vulnerabilities), `npm run dev` (200 on :5173), `npm test` 131/131, `npm run build`, `npm run preview` (200 on 127.0.0.1:4173); no accounts or keys (release-audit.md) |
+| D3 | Live URL (optional, in addition to local run) | DONE | Pages run 37804096075 on 16907b6 success; github.io unreachable from this container, so the page itself is verified by PO (DEC-18) |
+| D4 | Correctness: every Implemented story matches its ACs | DONE | Stage 9 auditor Playwright script on the built app (Chromium): all 24 ACs S-1.1..S-3.8 (54 checks) PASS, 0 console errors; qa-reports/S-1..S-3.md; DEC-14..DEC-16 |
+| D5 | Error handling: clear messages, no crash or wrong result | DONE | Auditor re-check of S-3.1..S-3.8 PASS (every message text and field placement); edge.spec 10/10 on 3 engines (CI 16907b6); PO checks PASS (DEC-18) |
+| D6 | UI quality: design spec, 375px+, light/dark, WCAG 2.2 AA | DONE | a11y.spec (axe WCAG 2.2 AA, 5 states x light/dark) 10/10 on 3 engines in CI 16907b6; no horizontal scroll at 320 px (E-0.4) and 375 px (auditor: scrollWidth 375); visual reviews passed; Gate 8 approved (DEC-18) |
+| D7 | AI writes the code | DONE | All 56 commits since fresh start (cccb670..16907b6) carry the Claude co-author trailer; README "Code changed by hand: None." |
+| D8 | Hand changes listed in README (or "None") | DONE | README: "None." (16907b6) |
+| D9 | Transcripts of every session + raw logs | OPEN | `transcripts/` holds only `.gitkeep` at 16907b6; PO exports at Stage 10 (Q-3) |
+| D10 | Source without node_modules/dist/coverage/reports | DONE | Stage 9 `git ls-files` on fresh clone (96 files): no node_modules, dist, coverage, playwright-report, test-results, .env*, .private; secret-pattern grep: no real keys (one doc-only match in release-auditor.md); package.json has devDependencies only |
+| D11 | Package README covers every brief item | DONE | Stage 9 audit: what/who, choice + reasons, Node 20 prerequisite, install/start, tests, AI tool + model, hand changes, assumptions A-1..A-18 all present; commands work. Minor findings RA-1, RA-2 in release-audit.md |
 | D12 | docs/app-roles.md | DONE | R-1 Learner, R-2 Instructor + needs table; approved Gate 3a |
-| D13 | docs/jobs-to-be-done.md | DONE | J-1..J-5, purity check PASS; approved Gate 3b |
-| D14 | docs/user-stories.md | DONE | S-1..S-6 with job, ACs and status |
-| D15 | Acceptance criteria (Given/When/Then, edges) | DONE | 34 ACs, edge coverage table, arithmetic checked twice (analyst + Orchestrator) |
-| D16 | Status per story | DONE | S-1..S-3 Implemented (QA PASS + PO checks, DEC-18); S-4 cut, S-5/S-6 future: Not implemented |
-| D17 | Package layout `sabee-khan-calculator/` | IN PROGRESS | README, src/, docs/, transcripts/ present |
-| D18 | HR acknowledgement | IN PROGRESS | Draft in `.private/hr-ack-email.md` (needs Q-1) |
-| D19 | Repo public, verified signed out | IN PROGRESS | Repo already public (REST API, 2026-10-08) |
-| D20 | Submission email | OPEN | |
-| D21 | Accuracy of README and docs | OPEN | |
-| D22 | Open questions asked or assumed in README | IN PROGRESS | decision-log.md: Q-5..Q-12 answered, A-1..A-8 approved (DEC-7) |
-| D23 | Walkthrough notes (private) | OPEN | |
+| D13 | docs/jobs-to-be-done.md | DONE | J-1..J-5, each names its role, purity check PASS; approved Gate 3b |
+| D14 | docs/user-stories.md | DONE | S-1..S-6, each names an existing job; traceability table checked against story lines (Stage 9) |
+| D15 | Acceptance criteria (Given/When/Then, edges) | DONE | 34 ACs (S-1 8, S-2 8, S-3 8, S-4 5, S-5 2, S-6 3), edge coverage table, arithmetic checked twice (analyst + Orchestrator) |
+| D16 | Status per story | DONE | S-1..S-3 Implemented (QA PASS + PO checks, DEC-18); S-4 cut (DEC-17), S-5/S-6 future: Not implemented; app has no Next learner button (auditor: 0 buttons) |
+| D17 | Package layout `sabee-khan-calculator/` | IN PROGRESS | Stage 9: README.md, src/, docs/app-roles.md, jobs-to-be-done.md, user-stories.md, transcripts/ present; transcripts/session-01.md … pending Stage 10 |
+| D18 | HR acknowledgement | IN PROGRESS | Draft in `.private/hr-ack-email.md` (needs Q-1); PO sends |
+| D19 | Repo public, verified signed out | IN PROGRESS | REST API visibility "public"; unauthenticated fetch of github.com/Sabeekhann/Web-Calculator returns 200 (Stage 9); full signed-out content check at Stage 11 |
+| D20 | Submission email | OPEN | Stage 11 (needs Q-1) |
+| D21 | Accuracy of README and docs | DONE | Stage 9: README claims checked against the app and CI (131 unit, 51 e2e per engine, spec table counts 4/8/9/10/10/10, no runtime deps, Node 20 in CI, retries 0, "None." hand changes, quick check steps 1–7 PASS on dev and preview); no untrue claim found; minor findings in release-audit.md |
+| D22 | Open questions asked or assumed in README | DONE | Q-5..Q-13 answered (DEC-7, DEC-12); A-1..A-18 PO-approved and all listed in README; Q-1..Q-3 are PO admin items, not product questions |
+| D23 | Walkthrough notes (private) | OPEN | `.private/walkthrough-notes.md` does not exist yet (only hr-ack-email.md) |
 
 ## Time log (UTC)
 
