@@ -6,7 +6,7 @@ Stage 5, solution-architect. Binding inputs: CLAUDE.md §11, `docs/user-stories.
 - Node 20 LTS (`.nvmrc` `20`, `engines` `">=20"`); the build container runs Node 22, which satisfies it.
 - Vite 6 (supports every Node 20 minor; Vite 7 needs ≥ 20.19), `base: './'` so the same build works locally and on GitHub Pages.
 - TypeScript 5, `strict: true`, `noUncheckedIndexedAccess`, no `any`.
-- Vitest 3 (node environment), `@playwright/test` pinned to exactly `1.56.1` (browsers installed for that version), `@axe-core/playwright` (ADR-006), `@types/node` (types for config files only).
+- Vitest 4.1.11 (node environment; supports Node ^20 || ^22 || >=24 and Vite ^6; see ADR-005 amendment), `@playwright/test` pinned to exactly `1.56.1` (browsers installed for that version), `@axe-core/playwright` (ADR-006), `@types/node` (types for config files only).
 - **Zero runtime dependencies.** No network calls, fonts, CDNs, analytics or storage. System font stack only.
 
 ## Module map
@@ -108,7 +108,11 @@ Transitions: idle → result/pass-mark-empty as the last value becomes valid · 
 | ADR-002 | Decimal strategy: scaled integers in `number`, exact integer formulas above | Floats + `toFixed`/epsilon; BigInt; decimal.js/big.js | Max magnitude 1 × 10¹¹ ≪ 9 × 10¹⁵ so `number` is exact; floats break the 69.96 vs 70 boundary; BigInt or a library is unneeded weight |
 | ADR-003 | `<input type="text" inputmode="decimal">` + own string parser | `type="number"`; `pattern` attribute | `type="number"` hides "abc", "17,5", "1e400" from validation (value reads ""), differs by engine and changes on scroll; `inputmode` still shows the numeric keypad on phones |
 | ADR-004 | Plain CSS in 3 files with custom-property tokens, no CSS framework or preprocessor | Tailwind, Sass, CSS Modules, CSS-in-JS | Tokens already specified; Vite bundles plain CSS natively; zero deps; easy dark mode via one media query |
-| ADR-005 | Vitest (node env, pure modules only) + Playwright 1.56.1 on Chromium, Firefox, WebKit; e2e runs against `vite build` + `vite preview` | Jest; jsdom/happy-dom DOM tests; Cypress | Vitest shares Vite's TS config; DOM behaviour is tested in real engines instead of a simulated DOM (no jsdom dep); Cypress has no WebKit, which D1 needs for Safari |
+| ADR-005 | Vitest 4.1.11 (node env, pure modules only) + Playwright 1.56.1 on Chromium, Firefox, WebKit; e2e runs against `vite build` + `vite preview` | Jest; jsdom/happy-dom DOM tests; Cypress | Vitest shares Vite's TS config; DOM behaviour is tested in real engines instead of a simulated DOM (no jsdom dep); Cypress has no WebKit, which D1 needs for Safari (amended 2026-10-08, see below) |
 | ADR-006 | devDependency `@axe-core/playwright` (exact version locked) for an automated WCAG 2.2 AA check in e2e | Manual checks only; Lighthouse CI; pa11y | Runs inside the existing Playwright suite on all 3 engines, offline, no extra runner; dev-only, never shipped |
 | ADR-007 | Own deterministic number formatter (comma every 3 digits via string regex) | `toLocaleString`, `Intl.NumberFormat('en-US')` | Output must be identical in every browser and OS locale; integers are already exact, so formatting is a 5-line pure function |
 | ADR-008 | Zero runtime dependencies; Vite `base: './'` | Absolute base `/Web-Calculator/`; CDN-hosted libraries | Works from a local preview and any Pages sub-path without change; nothing to fetch at runtime (D2) |
+
+- **ADR-005 amended 2026-10-08 (Sprint 0):** Vitest 3 → **4.1.11**.
+  - Reason: `npm audit` on Vitest 3.2.7 reports 2 critical advisories (tinypool ≤ 2.1.0 / < 2.1.2 prototype-pollution gadget → RCE via worker/run options) and 1 moderate (`@vitest/mocker` path traversal, fixed in vitest ≥ 4.1.11). Vitest 4.1.11 supports Node ^20 || ^22 || >=24 and Vite ^6, so the Node 20 target and Vite 6 still hold. Dev-only dependency; nothing ships at runtime (ADR-008 unchanged).
+  - Alternatives: stay on 3.2.7 and accept the dev-only advisories (rejected: known critical advisories in the toolchain for no benefit); Vitest 5 (rejected: requires Node ≥ 22.12, breaking the Node 20 LTS target).
