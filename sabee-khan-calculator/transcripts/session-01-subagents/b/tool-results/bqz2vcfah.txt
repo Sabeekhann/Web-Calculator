@@ -1,0 +1,349 @@
+20:Total planned: about 2 h (Sprint 0 ≈ 30 min, Sprint 1 ≈ 65 min, Sprint 2 ≈ 25 min). Estimates include writing tests first and the QA + visual review loop.
+21-
+22-## Sprint 0 — Scaffold and shell
+23-**Goal:** a reviewer can clone, install, test and see the approved empty card (idle state, light and dark) with every npm command passing.
+24-- Package files in `sabee-khan-calculator/`: `package.json` (engines `>=20`, zero runtime dependencies), `package-lock.json`, `.nvmrc` (`20`), `tsconfig.json` (strict), `vite.config.ts` (`base: './'`, Vitest config), `playwright.config.ts` (Chromium, Firefox, WebKit).
+25-- `src/styles/tokens.css`, `base.css`, `components.css` from the approved ui-design.md tokens.
+26-- `index.html` + `src/main.ts` + `src/ui/render.ts` render the static card from `src/messages.ts` (M-1, M-25, M-30..M-40): heading, three fields (pass mark pre-filled "70"), divider, idle result, button + Esc hint. No calculation, no event handling beyond what the shell needs.
+27-- Tests: `tests/unit/messages.test.ts` (catalogue text), `tests/e2e/shell.spec.ts` (loads, title, labels, idle text, no console errors, no horizontal scroll at 320 px).
+28-- Exit: `npm ci && npm test && npm run test:e2e && npm run build` pass; ux-ui-designer confirms the shell matches the mockup.
+29-
+30:## Sprint 1 — MVP (Must)
+31-**Goal:** a learner or instructor gets an exact score, verdict and gap for any valid entry, and a clear inline message for every invalid one.
+32-
+33-Recommended build order: **S-1 → S-2 → S-3** (one branch and one QA loop each).
+34-- **S-1 first** because it builds the core that every other story stands on: the exact decimal parser (`parse.ts`, happy path plus typed error codes), the scaled-integer score and verdict (`score.ts`), the view model and live rendering. Its ACs are all valid inputs, so they test the decimal strategy directly. Until S-3 lands, any invalid input shows M-3 with no score (never NaN or blank), so S-1 is safe on its own.
+35-- **S-2 second** because it reuses S-1's integers (one extra formula and the formatter) and S-3.8 needs the gap line ("1.4 marks above the pass mark", "6 marks above the pass mark") to pass.
+36-- **S-3 last in the sprint** because its ACs mix error states with results ("76.0%" for " 017.5 ", "0.0%" for total "1000000", gap lines after recovery), so it can only pass in full once S-1 and S-2 exist. It adds the range and cross-field checks, the per-field messages, `aria-invalid`/`aria-describedby`, and the pass-mark-empty state (S-3.2).
+37-- A validation-first order (S-3 first) was rejected: S-3 could not be accepted on its own because four of its eight ACs show a score or gap.
+38-
+39-## Sprint 2 — Should, hardening, polish
+40-**Goal:** an instructor can move through a cohort in one keystroke, and the app passes the full edge sweep, an axe audit and the visual review on all three engines.
+41-- S-4 (Next learner button + Escape in marks earned).
+42-- Hardening: `tests/e2e/edge.spec.ts` and `tests/e2e/a11y.spec.ts` (axe, ADR-006), every state in light and dark; fix any defect on its story branch or as `fix:` on `main` before release.
+======
+==== qa-reports/S-1.md
+# QA report — S-1 Score and pass/fail verdict
+Build: `75ff087` (75ff08705a24e6c9c00131ff809e39f104428e6c) · CI run: https://github.com/Sabeekhann/Web-Calculator/actions/runs/37764220926 · Date: 2026-10-08 · Verifier: qa-engineer
+
+- During this check the branch head moved to `161d145` (adds 4 designer screenshots only; `git diff 75ff087 161d145` with PNGs excluded is empty). CI for `161d145` is also green with the same counts: https://github.com/Sabeekhann/Web-Calculator/actions/runs/37789088141.
+- Firefox and WebKit evidence is the CI run on the exact commit (ADR-009). This container cannot run them.
+
+## Test runs (re-run by QA)
+| Run | Where | Result |
+|-----|-------|--------|
+| `npm ci` | container, Node 22 | 0 vulnerabilities |
+| `npm test` (Vitest) | container | 2 files, **58 passed** |
+| `npm run build` | container | tsc clean; JS 6.06 kB (2.57 kB gzip), CSS 9.77 kB |
+| `npx playwright test --project=chromium` | container | **12 passed** (8 S-1 + 4 shell) |
+| CI `Unit, build and e2e (3 engines)` @ `75ff087` | GitHub Actions, Node v20.20.2 | success. Annotations: Unit 58 passed · E2E chromium 12/0 · firefox 12/0 · webkit 12/0 · total 36 passed, 0 failed, 0 flaky, 0 skipped |
+
+Test review: `tests/unit/S-1.test.ts` (T-S1.1..T-S1.8) and `tests/e2e/S-1.spec.ts` (E-S1.1..E-S1.8) assert the exact AC scores ("76.0%", "70.0%", "69.9%", "66.6%", "0.0%", "100.0%", "99.9%", "67.3%") and verdict text from M-4/M-5. E-S1.3 types key by key and asserts no "70.0%" after each key. E-S1.4 asserts no "66.7%". The e2e fixture fails any test on a console error, warning or page error. Retries = 0.
+
+## Acceptance criteria
+| AC | Test IDs | Chromium | Firefox | WebKit | Manual | Result | Evidence |
+|----|----------|----------|---------|--------|--------|--------|----------|
+| S-1.1 | T-S1.1, E-S1.1 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | QA script: pass mark pre-filled "70"; typed 17.5 / 23 → ".score" "76.0%", verdict "Pass", status "76.0%, Pass"; no Enter or button |
+| S-1.2 | T-S1.2, E-S1.2 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | 17.5 / 25 → "70.0%", "Pass" |
+| S-1.3 | T-S1.3, E-S1.3 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | total 25, earned typed key by key → 4.0%, 68.0%, 68.0%, 69.6%, 69.9%; final "69.9%", "Fail"; "70.0%" never shown |
+| S-1.4 | T-S1.4, E-S1.4 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | 2 / 3 → "66.6%", "Fail" |
+| S-1.5 | T-S1.5, E-S1.5 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | pass 0: 0 / 23 → "0.0%", "Pass"; pass 100: 23 / 23 → "100.0%", "Pass" |
+| S-1.6 | T-S1.6, E-S1.6 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | pass 100: 999999.99 / 1000000 → "99.9%", "Fail" |
+| S-1.7 | T-S1.7, E-S1.7 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | pass 70: 0.01 / 1000000 → "0.0%", "Fail" |
+| S-1.8 | T-S1.8, E-S1.8 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | 17.5 / 23 → "76.0%" Pass; earned → 15.5: "67.3%" Fail; pass mark → 65: "67.3%" Pass |
+
+Chromium = local run, the QA script and the CI run. Firefox/WebKit = CI run 37764220926 on `75ff087`, 12/12 each.
+
+## Edge sweep (input → observed → PASS/FAIL)
+Rule for S-1: a valid entry shows the correct score and verdict. An invalid entry shows no score or verdict, and no NaN, Infinity, undefined, blank, crash or console error. The validation messages belong to S-3. Run in Chromium against `vite preview` of the build. Total 23 and pass 70 unless stated.
+
+| Input | Observed | Result |
+|-------|----------|--------|
+| earned empty | idle prompt M-1, no score | PASS |
+| earned "   " | M-1, no score | PASS |
+| earned "." | M-1, no score | PASS |
+| earned "5." | "21.7%" Fail (5/23 = 21.73 → floor) | PASS |
+| earned ".5" | "2.1%" Fail | PASS |
+| earned "007" | "30.4%" Fail | PASS |
+| earned " 17.5 " (typed and pasted via input event) | "76.0%" Pass | PASS |
+| earned "abc" | M-1, no score | PASS |
+| earned "$17" | M-1, no score | PASS |
+| earned "1e400" / total "1e400" | M-1, no score | PASS |
+| earned "-0" | M-1, no score | PASS |
+| earned "1.2.3" | M-1, no score | PASS |
+| earned 400 digits / total 400 digits | M-1, no score | PASS |
+| total "0" | M-1, no score (no division by zero) | PASS |
+| total "1000000.01" | M-1, no score | PASS |
+| earned 24 > total 23 | M-1, no score | PASS |
+| pass "100.1" | M-1, no score | PASS |
+| pass empty | "76.0%" + M-2, no verdict | PASS |
+| rapid typing "17.5", 4× Backspace, "15.5" | "67.3%" Fail | PASS |
+| recovery: earned "abc" → "17.5" | "76.0%" Pass | PASS |
+| Enter pressed 5× | no change, no navigation or reload | PASS |
+| Escape | no change (Next learner / Esc is S-4) | PASS (no crash) |
+| reload after entries, pass edited to 65 | "", "", "70", M-1 (nothing restored) | PASS |
+
+No observed text contained NaN, Infinity or undefined.
+
+Observation (not an S-1 defect): until S-3 is built, invalid input shows the idle prompt M-1 ("Enter marks earned and total marks possible to see the score.") instead of M-3 and field errors. This matches the S-1 scope (`S-1 supporting` unit test). S-3 must replace it.
+
+## Accessibility (axe, Chromium, tags wcag2a/aa, wcag21a/aa, wcag22aa)
+| State | Light | Dark |
+|-------|-------|------|
+| Pass (17.5 / 23) | 0 violations | 0 violations |
+| Fail (15.5 / 23) | 0 violations | 0 violations |
+
+The status region (`role=status`, polite) announces "<score>, <verdict>" in every result state.
+
+## Console errors/warnings: none
+- Chromium QA script: none, across all AC, edge and axe steps.
+- Chromium, Firefox, WebKit e2e: the console guard fixture passed in all 36 CI tests, so there were no errors, warnings or page errors.
+
+## Manual checks for the PO (real Chrome, Edge, Firefox, Safari)
+Open the app (Pages URL or local run). Do the steps in each browser.
+1. Leave pass mark at 70. Type 17.5 in Marks earned and 23 in Total. Expect "76.0%" and "Pass" (green, tick) with no button pressed.
+2. Change Total to 25. Expect "70.0%" and "Pass".
+3. Clear Marks earned and type 1, 7, ., 4, 9 one key at a time. Expect "69.9%" and "Fail"; "70.0%" never appears.
+4. Type 2 of 3. Expect "66.6%" and "Fail" (not 66.7%).
+5. Pass mark 0, 0 of 23 → "0.0%" Pass. Pass mark 100, 23 of 23 → "100.0%" Pass.
+6. Pass mark 100, 999999.99 of 1000000 → "99.9%" Fail. Pass mark 70, 0.01 of 1000000 → "0.0%" Fail.
+7. 17.5 of 23 at 70 → Pass. Change earned to 15.5 → "67.3%" Fail. Change pass mark to 65 → Pass, still "67.3%".
+8. Paste " 17.5 " (with spaces) into Marks earned → same result as typing it.
+9. On a phone, tap each field → number keypad with a decimal point.
+10. Switch the OS to dark mode → result and verdict are still readable; Fail shows a cross, Pass shows a tick.
+
+## Verdict: PASS
+All 8 ACs pass in Chromium (local and CI) and in Firefox and WebKit (CI on `75ff087`). The edge sweep is clean. axe found 0 violations. There were no console problems. No defects. PO manual checks (above) are still open per DoD.
+==== qa-reports/S-2.md
+# QA report — S-2 Marks short of or above the pass mark
+Build: `143c61e` (143c61e7cd9a645437bfe6b0a67d0c67a50250c8) · CI run: https://github.com/Sabeekhann/Web-Calculator/actions/runs/37795758697 (cancelled, see below) · Build of record for 3 engines: `8d496d6` (8d496d627ca5c4685929f0d53cf00d5932d46927) · CI run: https://github.com/Sabeekhann/Web-Calculator/actions/runs/37796019119 (success) · Date: 2026-10-08 · Verifier: qa-engineer
+
+- **CI on the exact SHA was cancelled.** Run 37795758697 on `143c61e` ran every step to success (unit, build, e2e in all 3 engines, report upload). Its annotations show E2E chromium 21/0, firefox 21/0, webkit 21/0. At 14:52:26 the run was cancelled with "Canceling since a higher priority waiting request for ci-refs/heads/feat/S-2 exists" because `8d496d6` was pushed at 14:52:14. The run's conclusion is therefore `cancelled`, not `success`.
+- **Branch head moved during this check** to `8d496d6` ("docs(S-2): visual review screenshots"). `git diff --name-only 143c61e 8d496d6` lists only 3 PNGs under `docs/process/design/screenshots/`, so the code, tests and config are identical. CI run 37796019119 on `8d496d6` is green: Unit 91 passed, E2E chromium 21/0, firefox 21/0, webkit 21/0, total 63 passed, 0 failed, 0 flaky, 0 skipped, Node v20.20.2.
+- ADR-009 needs a green run on the exact commit. `143c61e` has none, so the Firefox/WebKit cells below are based on the green run on `8d496d6`, which has the same code. **Merge `8d496d6` (or a later green head), not `143c61e`.**
+- My local runs (unit, build, Chromium e2e, QA script) used the `143c61e` tree. That tree has the same code as `8d496d6`.
+
+## Test runs (re-run by QA)
+| Run | Where | Result |
+|-----|-------|--------|
+| `npm ci` | container, Node 22 | 0 vulnerabilities |
+| `npm test` (Vitest) | container | 3 files, **91 passed** (S-1 53, S-2 33, messages 5) |
+| `npm run build` | container | tsc clean; JS 7.42 kB (3.05 kB gzip), CSS 9.77 kB |
+| `npx playwright test --project=chromium` | container | **21 passed** (4 shell + 8 S-1 + 9 S-2) |
+| CI @ `143c61e` (run 37795758697) | GitHub Actions | **cancelled** by concurrency after every step succeeded. Annotations: Unit 91 · chromium 21/0 · firefox 21/0 · webkit 21/0 |
+| CI @ `8d496d6` (run 37796019119) | GitHub Actions, Node v20.20.2 | **success**. Unit 91 · chromium 21/0 · firefox 21/0 · webkit 21/0 · total 63 passed, 0 failed, 0 flaky, 0 skipped |
+
+Test review:
+- `tests/unit/S-2.test.ts` (T-S2.1..T-S2.8) asserts the exact AC strings for each AC and checks the hundredths value h from `gap()`, for example S-2.5 `{short, 34}`/`{above, 66}` and S-2.6 `{short, 1}`/`aboveTiny`.
+- `tests/e2e/S-2.spec.ts` (E-S2.1..E-S2.8) asserts the exact gap text quoted from each AC, the icon tone and `aria-hidden`, the score and verdict where the AC names them (S-2.6, S-2.8), and the status text for S-2.1/2.2.
+- A supporting e2e test checks that the gap line is absent in the idle and pass-mark-empty states and that the button position does not move.
+- The fixture fails a test on any console error, warning or page error.
+
+## Acceptance criteria
+| AC | Test IDs | Chromium | Firefox | WebKit | Manual | Result | Evidence (QA script, typed key by key, fresh page) |
+|----|----------|----------|---------|--------|--------|--------|----------|
+| S-2.1 | T-S2.1, E-S2.1 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | 15.5 / 23 / 70 → "67.3%", "Fail", gap "0.6 marks short of the pass mark"; status "67.3%, Fail, 0.6 marks short of the pass mark" |
+| S-2.2 | T-S2.2, E-S2.2 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | 17.5 / 23 / 70 → "76.0%", "Pass", "1.4 marks above the pass mark" |
+| S-2.3 | T-S2.3, E-S2.3 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | 17.5 / 25 / 70 → "70.0%", "Pass", "Exactly on the pass mark" |
+| S-2.4 | T-S2.4, E-S2.4 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | 13 / 20 / 70 → "65.0%" Fail "1 mark short of the pass mark"; 15 → "75.0%" Pass "1 mark above the pass mark" |
+| S-2.5 | T-S2.5, E-S2.5 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | 16 / 23.33 / 70 → "68.5%" Fail "0.34 marks short of the pass mark"; 17 → "72.8%" Pass "0.66 marks above the pass mark" |
+| S-2.6 | T-S2.6, E-S2.6 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | 16.07 / 23 / 69.9 → "69.8%", "Fail", "0.01 marks short of the pass mark"; 16.08 → "69.9%", "Pass", "Less than 0.01 marks above the pass mark" |
+| S-2.7 | T-S2.7, E-S2.7 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | 0.01 / 1000000 / 70 → "699,999.99 marks short of the pass mark"; 999999.99 / 1000000 / 100 → "0.01 marks short of the pass mark"; 1000000 / 1000000 / 0 → "1,000,000 marks above the pass mark" |
+| S-2.8 | T-S2.8, E-S2.8 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | 15.5 / 23 / 70 → "0.6 marks short …"; earned → 16.1: "70.0%", "Pass", "Exactly on the pass mark"; pass → 65: "70.0%", "Pass", "1.15 marks above the pass mark" |
+
+- Chromium = my local e2e run, my QA script and both CI runs.
+- Firefox/WebKit = CI run 37796019119 on `8d496d6` (21/21 each, green). The cancelled run 37795758697 on `143c61e` reported the same counts.
+
+**Independent recomputation.** I recomputed the gap with Python `decimal` as marks needed = P/100 × T and gap = E − needed. A shortfall rounds UP and a surplus rounds DOWN to 2 dp, with trailing zeros trimmed and comma separators. All 14 AC values match the AC text and the app.
+
+**Differential check.** I generated 300 random valid cases with Python: totals 0.01..1,000,000 (2 dp), earned 0..total, pass marks 0..100 (1 dp). I then entered each case in the app in Chromium. **0 mismatches** in score or gap line.
+
+## Edge sweep (input → observed → PASS/FAIL)
+- The rule for S-2 is that a gap line appears only in the result state, with correct text. It must never show NaN, Infinity, undefined, "{n}", "0 marks" or a leading "-".
+- In this build an invalid entry shows the idle prompt M-1. The error state and its messages belong to S-3.
+- Run in Chromium against `vite preview` of the build. Unless stated, the inputs are earned / total / pass.
+
+| Input | Observed | Result |
+|-------|----------|--------|
+| idle ("" / "" / 70) | M-1, no `.gap` | PASS |
+| earned only, total only | M-1, no `.gap` | PASS |
+| pass mark "" and "  " (17.5 / 23) | "76.0%" + M-2, no `.gap` | PASS |
+| invalid: "abc", "23.5" > total, "-1", "-0", "1e400", "1.2.3", "17.555", ".", "-", "$17" | M-1, no `.gap` | PASS |
+| invalid: pass "100.1", "70.55"; total "0", "1000000.01", 400-digit total | M-1, no `.gap` | PASS |
+| " 017.5 " / "023" / "070" | "76.0%" Pass "1.4 marks above the pass mark" | PASS |
+| pass 0: 0 / 23 | "0.0%" Pass "Exactly on the pass mark" (not "0 marks") | PASS |
+| pass 0: 0.01 / 23 | "0.01 marks above the pass mark" | PASS |
+| pass 100: 23 / 23 | "100.0%" Pass "Exactly on the pass mark" | PASS |
+| pass 100: 22 / 23 | "95.6%" Fail "1 mark short of the pass mark" | PASS |
+| singular vs plural: 6/10/70; 12.5/20/70; 13.01/20/70; 15.01/20/70 | "1 mark short"; "1.5 marks short"; "0.99 marks short"; "1.01 marks above" | PASS |
+| thousands: 1000/1000/0; 12345.67/100000/0; 0/1763.57/70 | "1,000 marks above"; "12,345.67 marks above"; "1,234.5 marks short" | PASS |
+| total 1,000,000: 0 / 1000000 / 100 | "1,000,000 marks short of the pass mark" | PASS |
+| total 1,000,000: 700000.01 / 1000000 / 70 | "0.01 marks above the pass mark" | PASS |
+| rapid edits: 20 `fill`s of earned then 15.5, Enter ×2 | "67.3%" Fail "0.6 marks short …", status matches | PASS |
+| rapid typing "17.5" with 0 ms delay | "1.4 marks above the pass mark" | PASS |
+| backspace earned to empty | M-1, no `.gap`, status cleared to "" | PASS |
+| recovery: "abc" → "17.5" | no gap → "1.4 marks above the pass mark" | PASS |
+| page reload with a result shown | fields "", "", "70"; M-1; no `.gap` | PASS |
+| layout: card height and button y in idle, pass-mark-empty, Pass, Fail, "699,999.99 …" and "1,000,000 … short" | 375 px: 827.52 / 782.52; 768 and 1280 px: 724.91 / 687.91; identical in every state | PASS |
+| 320 px, longest gap "1,000,000 marks short of the pass mark" (wraps to 2 lines) | card 845.7, button y 800.7 in idle, Pass, M-11 and longest gap; scrollWidth 320 | PASS |
+
+**Note (not an S-2 defect).** The "Next learner" button and Esc do nothing yet, so a shown gap line stays after a click. Clearing belongs to S-4, which is not implemented.
+
+## Accessibility (axe, Chromium, tags wcag2a/2aa/21a/21aa/22aa)
+| Scheme | Pass (1.4 above) | Fail (0.6 short) | Exact (M-10) | Tiny (M-11) |
+|--------|------------------|------------------|--------------|-------------|
+| light | 0 violations | 0 | 0 | 0 |
+| dark | 0 violations | 0 | 0 | 0 |
+
+- The gap icon is an `svg` with `aria-hidden="true"`; the words carry the meaning.
+- The `role="status"` text is "score, verdict, gap line", for example "76.0%, Pass, 1.4 marks above the pass mark".
+- Screenshot review in dark Fail and 320 px light: the line sits under the verdict and is readable, with no clipping.
+
+## Console errors/warnings: none
+- My QA script: none in Chromium in any page, light or dark.
+- E2E fixture (fails on any error or warning): 21/21 green in Chromium locally and in Chromium, Firefox and WebKit in CI.
+
+## Manual checks for the PO (real Chrome, Edge, Firefox, Safari)
+Open the app from the Pages URL or a local run. Do each step in every browser.
+1. Keep the pass mark at 70. Type 15.5 in Marks earned and 23 in Total. Expected: "67.3%", "Fail", and the line "0.6 marks short of the pass mark" with a small downward marker.
+2. Change Marks earned to 17.5. Expected: "76.0%", "Pass", "1.4 marks above the pass mark".
+3. Enter 17.5 of 25. Expected: "Exactly on the pass mark".
+4. Enter 13 of 20, then 15 of 20. Expected: "1 mark short of the pass mark", then "1 mark above the pass mark" (singular "mark").
+5. Set the pass mark to 69.9 with a total of 23. Enter 16.07, then 16.08. Expected: "69.8%" Fail "0.01 marks short …", then "69.9%" Pass "Less than 0.01 marks above the pass mark".
+6. Set the total to 1000000 and the pass mark to 70, and enter 0.01. Expected: "699,999.99 marks short of the pass mark", with commas.
+7. Delete the pass mark. Expected: the gap line disappears and "Enter a pass mark …" shows. Type 70 again: the line returns, and the Next learner button does not move.
+8. Copy "17.5" from another app and paste it into Marks earned (with total 23). Expected: "1.4 marks above the pass mark".
+9. Switch the device to dark mode. Expected: the gap line and its marker are readable.
+10. On a phone (Safari or Chrome), repeat step 1. Expected: the line fits the card or wraps neatly, with no sideways scrolling.
+11. Screen reader (VoiceOver or NVDA), optional: after step 2, pause. Expected: "76.0%, Pass, 1.4 marks above the pass mark" is read once.
+
+## Verdict: PASS
+- All 8 ACs pass in Chromium (local e2e, QA script, CI) and in Firefox and WebKit (CI, 21/21 each).
+- The independent Decimal recomputation and the 300-case differential match.
+- The edge sweep, console and axe checks are clean, and there is no layout shift.
+- No defects (no D-2.x).
+- Condition: CI on `143c61e` was cancelled by concurrency, so the green 3-engine evidence is run 37796019119 on `8d496d6`, which has the same code (only 3 docs PNGs added). Use `8d496d6` as the build of record.
+- Open the PO manual checks above before marking the story Implemented.
+==== qa-reports/S-3.md
+# QA report — S-3 Clear message for an invalid or impossible entry
+Build: `ea4b301` (ea4b30121aa3af296313384d64210650c3674676, branch `feat/S-3`) · CI run: https://github.com/Sabeekhann/Web-Calculator/actions/runs/37797412005 (success, same SHA) · Date: 2026-10-08 · Verifier: qa-engineer
+
+## Test runs (re-run by QA)
+| Run | Where | Result |
+|-----|-------|--------|
+| `npm ci` | container, Node 22 | 0 vulnerabilities |
+| `npm test` (Vitest) | container | 4 files, **131 passed** (S-1 53, S-2 33, S-3 40, messages 5) |
+| `npm run build` | container | tsc clean; JS 9.78 kB (3.76 kB gzip), CSS 9.77 kB |
+| `npx playwright test --project=chromium` | container | **31 passed** (4 shell + 8 S-1 + 9 S-2 + 10 S-3) |
+| CI @ `ea4b301` (run 37797412005) | GitHub Actions, Node v20.20.2 | **success**, every step green. Annotations: Unit 131 passed (4 files) · E2E chromium 31/0 · firefox 31/0 · webkit 31/0 · total 93 passed, 0 failed, 0 flaky, 0 skipped |
+
+CI annotations also include 2 platform notices: a Node 20 deprecation warning for `actions/*@v4`, and the ubuntu-latest move to Ubuntu 26 from 2026-10-19. Neither comes from the app.
+
+Test review:
+- `tests/unit/S-3.test.ts` (T-S3.1..T-S3.8, T-M.2) quotes every AC example and the exact catalogue text M-1..M-3 and M-12..M-24.
+  - It also covers more than the ACs ask: the A-15 order, lone "." (A-18), "-" and "-.", the rule that M-15 applies only when total is valid, and the rule that an error beats an empty field (M-3, not M-1).
+- `tests/e2e/S-3.spec.ts` (E-S3.1..E-S3.8 + a layout test) quotes every AC example and message verbatim. For each field it asserts:
+  - the text of the `aria-describedby` slot
+  - `aria-invalid`
+  - the `aria-hidden` icon
+  - M-3 shown, with no score, verdict or gap
+  - the status text for S-3.7
+  - for S-3.8, the "76.0%"/"94.0%", "Pass" and gap lines
+- The fixture fails a test on any console error, warning or page error.
+
+## Acceptance criteria
+QA script: Chromium, `vite preview` on port 4173, values typed key by key (`keyboard.type`). For each field the script records the message in the `aria-describedby` target, `aria-invalid`, the result-area text, and whether a score, verdict or gap is present.
+
+| AC | Test IDs | Chromium | Firefox | WebKit | Manual | Result | Evidence |
+|----|----------|----------|---------|--------|--------|--------|----------|
+| S-3.1 | T-S3.1, E-S3.1 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | earned "17.5" only → result "Enter marks earned and total marks possible to see the score.", no score, no field error, no aria-invalid. Same for total "   " only |
+| S-3.2 | T-S3.2, E-S3.2 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | 17.5 / 23, pass cleared → "76.0%" + "Enter a pass mark to see whether this is a pass or a fail.", no verdict, no gap, no field error |
+| S-3.3 | T-S3.3, E-S3.3 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | earned "abc", "17,5", "$17", "1.2.3", "1e400", "+5" → each shows "Marks earned must be a number, like 17.5." with aria-invalid=true and M-3, no score. Total "abc" → "Total marks possible must be a number, like 23.". Pass mark "seventy" → "Pass mark must be a number, like 70.". " 017.5 " → "76.0%", Pass |
+| S-3.4 | T-S3.4, E-S3.4 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | "-1" and "-0" → "Marks earned can't be negative."; total "-23" → "Total marks possible can't be negative."; pass mark "-5" → "Pass mark can't be negative."; M-3 each time, no score |
+| S-3.5 | T-S3.5, E-S3.5 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | "17.555" → "Marks earned can have at most 2 decimal places."; total "23.001" → "Total marks possible can have at most 2 decimal places."; pass mark "70.05" → "Pass mark can have at most 1 decimal place."; no score |
+| S-3.6 | T-S3.6, E-S3.6 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | earned 10, pass mark 70. Total "0" → "Total marks possible must be more than 0."; "1000000.01" → "Total marks possible can't be more than 1,000,000."; "8" → "Marks earned can't be more than the total marks possible." under marks earned (total shows no error); pass mark "100.1" with total 23 → "Pass mark can't be more than 100."; total "1000000" → "0.0%", Fail |
+| S-3.7 | T-S3.7, E-S3.7 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | "abc" + "0" → both messages at once, each under its own field with aria-invalid; result shows M-3. Status after the debounce: "Marks earned must be a number, like 17.5. Total marks possible must be more than 0. The score will appear once every entry is valid." |
+| S-3.8 | T-S3.8, E-S3.8 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | 23.5 / 23 / 70 → M-15 under marks earned. Earned → 17.5: message gone, "76.0%", "Pass", "1.4 marks above the pass mark". On a fresh page, total → 25: "94.0%", "Pass", "6 marks above the pass mark" |
+
+Firefox/WebKit: PASS because CI run 37797412005 on exactly `ea4b301` is green, with 31/0 for each engine. That run includes E-S3.1..E-S3.8 (ADR-009). The QA script ran in Chromium only, because Firefox and WebKit cannot be downloaded in this container (DEC-13).
+
+## Edge sweep (input → observed → PASS/FAIL)
+Base for every row: fresh page, then 17.5 / 23 / 70 (gives "76.0%", Pass). One field is retyped key by key. 179 rows checked; every row passes. Every row also checks:
+- no NaN, Infinity or undefined anywhere in the card
+- the result area is never blank
+- no score, verdict or gap while any error shows
+- `aria-invalid` is true only on a field that is in error
+
+| Case | Input (field) | Observed | Result |
+|------|---------------|----------|--------|
+| Empty | "" (earned / total) | M-1, no error, no score | PASS |
+| Empty | "" (pass mark) | "76.0%" + M-2, no verdict or gap | PASS |
+| Whitespace | "    " (each field) | Same as empty (M-1 / M-2), no error | PASS |
+| Letters | "abc", "Infinity", "NaN" (each field) | That field's not-a-number message (M-12 / M-16 / M-21) + M-3 | PASS |
+| Symbols | "$17", "€17", "17%", "+5", "1,000", "0x10", "17 .5", "- 5", "--5", "１７" (full-width) (each field) | Not-a-number message + M-3 | PASS |
+| "1e400" | each field | Not-a-number message + M-3 | PASS |
+| Multiple dots | "1..2", ".." (each field); "1.2.3" (earned) | Not-a-number message + M-3 | PASS |
+| "-0", "-", "-." | each field | Can't-be-negative message (M-13 / M-17 / M-22) + M-3. A lone "-" follows A-18. "-." is treated like "-" | PASS |
+| Negatives | "-5", " -5 " (each field) | Can't-be-negative message | PASS |
+| Error order (A-15) | "-17.555" (each field) | Can't-be-negative message (not the decimal-places one) | PASS |
+| Lone "." | earned / total → M-1; pass mark → "76.0%" + M-2 | No error (A-18) | PASS |
+| "5." / ".5" | earned "5." → 21.7% Fail, "11.1 marks short…" · total "25." → 70.0% Pass, "Exactly on the pass mark" · pass "80." → 76.0% Fail · earned ".5" → 2.1% Fail (rounded down, A-3), "15.6 marks short…" · total ".5" → M-15 under earned · pass ".5" → Pass, "17.38 marks above…" | Values correct | PASS |
+| Leading zeros | earned "0017.5", total "0023", pass "070", earned with 400 leading zeros + "17.5" | All "76.0%", Pass, "1.4 marks above the pass mark" | PASS |
+| 0 | earned "0" → 0.0% Fail · total "0" / "0.00" → M-19 · pass "0" → Pass, "17.5 marks above…" | As specified | PASS |
+| Maximum allowed | total "1000000" → 0.0% Fail, "699,982.5 marks short…" · pass "100" → 76.0% Fail · earned "23" (= total) → 100.0% Pass | Accepted | PASS |
+| Just over | total "1000000.01" → M-20 · pass "100.1" → M-24 · earned "23.01" → M-15 · total "0.01" → M-15 under earned | Messages correct, no score | PASS |
+| Too many decimals | "17.555" → M-14 · "23.001" → M-18 · "70.05" → M-23 · "17.500" → M-14 · "23.000" → M-18 · "70.00" → M-23 (decimal places count as typed, A-13) | Messages correct | PASS |
+| Decimals allowed | earned "17.50" → 76.0%; pass "70.0" → 76.0% Pass | Accepted | PASS |
+| Very long input | 400 × "9": earned → M-15, total → M-20, pass → M-24. "0." + 400 digits: earned → M-14, total → M-18, pass → M-23 | No NaN or Infinity, no freeze | PASS |
+| Pasted (real clipboard, Ctrl+V) | earned " 17.5 ", "17.5\t", "17.5\n" (newline stripped by the browser) → 76.0%. "$17" → M-12. Total "£23" → M-16; " 23 " → 76.0%. Pass mark "70 %" → M-21; " 70 " → 76.0% | Correct | PASS |
+| Typing mid-number | Key-by-key snapshots of earned "17.5" and ".5", total "23.25", pass "62.5" | No error at any keystroke | PASS |
+| Rapid typing | "17.5" / "23" with 0 ms delay | "76.0%", Pass, "1.4 marks above the pass mark" | PASS |
+| Repeated Enter | Enter ×5 in each field, in the 3-error state and in the valid state | Values, URL and messages unchanged; no reload | PASS |
+| Two errors | "abc" + "0" (S-3.7); earned "abc" + total empty → M-3, not M-1; earned "50" + total "abc" → only M-16 (M-15 not checked, A-15) | Correct | PASS |
+| Three errors | "abc" / "0" / "100.1" → M-12, M-19, M-24 + M-3. "-17.555" / "23.001" / "-70.05" → M-13, M-18, M-22 (A-15 order) | All shown together | PASS |
+| Recovery from three errors | Fixing one field at a time removes only that field's message; after the last fix: 76.0%, Pass, gap | Correct | PASS |
+| Recovery from each error | Each of the 10 single-field errors (abc, -1, 17.555, -23, 23.001, 1000000.01, seventy, -5, 70.05, 100.1) retyped to a valid value → 76.0%, Pass, "1.4 marks above the pass mark". "17.555" + Backspace → 76.3%, "1.45 marks above…" | Correct | PASS |
+| Earned > total as total changes | earned 30: total 23 → M-15 · 30 → 100.0% · 29.99 → M-15 · empty → M-1 (no M-15) · 0 → M-19 only · 300 → 10.0% Fail | Appears and disappears correctly | PASS |
+| Page reload | Reload in the 3-error state | "", "", "70", M-1, no errors | PASS |
+
+## Layout shift (card height / "Next learner" button y, px)
+Measured in 7 states: idle, result, pass mark empty, single error, M-15, three errors, and three errors with the longest messages (23.5 / 1000000.01 / 70.05).
+
+| Width | Card height | Button y | Horizontal scroll | Result |
+|-------|-------------|----------|-------------------|--------|
+| 320 | 845.7 in every state | 800.7 in every state | none (scrollWidth 320) | PASS |
+| 375 | 827.5 in every state | 782.5 in every state | none | PASS |
+| 1280 | 724.9 in every state | 687.9 in every state | none | PASS |
+
+## Accessibility (axe, Chromium, tags wcag2a/2aa/21a/21aa/22aa)
+| State | Light | Dark |
+|-------|-------|------|
+| Single error (abc / 23 / 70) | 0 violations | 0 violations |
+| Three errors (abc / 0 / 100.1) | 0 violations | 0 violations |
+| M-15 (23.5 / 23 / 70) | 0 violations | 0 violations |
+
+`aria-describedby` on every field points to its own error slot; each slot's text matches the message on screen. Screen-reader speech is a PO check.
+
+## Console errors/warnings: none
+QA script (Chromium): 0 console errors, 0 warnings, 0 page errors across all 179 checks, axe runs and layout runs. CI: the e2e fixture fails on any console problem, and all 93 runs passed (3 engines).
+
+## Manual checks for the PO (real Chrome, Edge, Firefox, Safari)
+Open the app (Pages URL or a local run) in each browser.
+1. Type "17.5" in Marks earned only → "Enter marks earned and total marks possible to see the score."; no red message.
+2. Type "23" in Total. Change Marks earned to "abc" → red "Marks earned must be a number, like 17.5." under Marks earned; result area shows "The score will appear once every entry is valid."; no score.
+3. Change Marks earned to "-0" → "Marks earned can't be negative."; then to "17.555" → "Marks earned can have at most 2 decimal places.".
+4. Set Marks earned to "10" and Total to "0" → "Total marks possible must be more than 0."; then Total "8" → "Marks earned can't be more than the total marks possible." under Marks earned.
+5. Marks earned "abc", Total "0" → both messages at once.
+6. Marks earned "23.5", Total "23" → over-total message. Change Marks earned to "17.5" → message goes; "76.0%", "Pass", "1.4 marks above the pass mark".
+7. Total "23", Pass mark "100.1" → "Pass mark can't be more than 100."; Pass mark "70.05" → "Pass mark can have at most 1 decimal place.".
+8. Real paste: copy " 17.5 " (with spaces) from a document and paste it into Marks earned (Total 23, Pass mark 70) → "76.0%". Paste "$17" → not-a-number message.
+9. With a message showing, check that the card and the "Next learner" button do not jump. Check that the red text is readable in dark mode (switch the OS to dark).
+10. Phone (iOS Safari / Android Chrome): tapping a field opens the decimal keypad; error messages fit at phone width without sideways scroll.
+11. Screen reader (VoiceOver / NVDA): with "abc" in Marks earned, the field is announced as invalid and the message is read. After a short pause, the status reads the message(s) followed by "The score will appear once every entry is valid.".
+
+## Verdict: PASS
+All 8 ACs pass in Chromium (local run + QA script) and in Firefox and WebKit (CI on exactly `ea4b301`). The edge sweep found no defects (179/179), axe found 0 violations in error states in light and dark, there is no layout shift at 320/375/1280, and the console is clean. Defects: none (no D-3.x).
+
+Notes (not defects):
+- "-." shows the can't-be-negative message, like a lone "-" (A-18). No AC covers it; unit test T-S3.4 asserts it.
+- My first draft of the sweep expected earned ".5" of 23 to show "2.2%". The app shows "2.1%", which is correct under A-3 (round down). The error was in my expectation, not in the app.

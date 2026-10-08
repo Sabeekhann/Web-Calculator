@@ -1,0 +1,254 @@
+# Decision Log
+
+Decisions (DEC-x), open questions (Q-x) and assumptions (A-x). An assumption goes into the README only after PO approval. Architecture decisions are ADRs in `technical-design.md`.
+
+## Decisions
+
+| ID | Date | Decision | Decided by | Reason |
+|----|------|----------|-----------|--------|
+| DEC-1 | 2026-10-08 | Work runs in a Claude Code **cloud session** (launched from the desktop app), not a local desktop session. All work is pushed to `Sabeekhann/Web-Calculator`. | PO | PO instruction at Preflight |
+| DEC-2 | 2026-10-08 | Commits authored as `Sabee Khan <sabeekhan99@gmail.com>`, with a Claude co-author trailer. | PO | PO answer at Preflight |
+| DEC-3 | 2026-10-08 | Previous attempt cleared from `main` in commit `cccb670`; it stays in history at `fe7cc3f`. Old `feat/S-1..3` branches (all merged into `fe7cc3f`) to be deleted. | PO | Fresh start (Stage 1.2) |
+| DEC-4 | 2026-10-08 | README tool line: "Claude Code (cloud session, launched from the desktop app), Claude Opus 5.5, with 7 subagents defined in `.claude/agents/`". | PO | PO answer at Preflight |
+| DEC-5 | 2026-10-08 | Calculator choice: Stage 2 proposes 3 options with a recommendation; PO chooses one that is doable in the time budget. | PO | Part C left blank |
+| DEC-6 | 2026-10-08 | Calculator choice: Option A, Quiz score and pass-mark calculator. | PO | Best fit for KnowledgeCity's users, two roles with different needs, edge cases that come from the domain, small enough for 2–4 h (see `product-brief.md`). |
+| DEC-7 | 2026-10-08 | Q-5..Q-12 answered with the recommended answers; Q-7 changed to round-down display. Assumptions A-1..A-8 approved. | PO | Gate 2 approval |
+| DEC-8 | 2026-10-08 | Gap to the pass mark is shown in marks (e.g. "0.6 marks short of the pass mark"). Illustrative details in app-roles.md (half marks, phone use) accepted. | PO | Gate 3a approval |
+| DEC-9 | 2026-10-08 | User stories S-1..S-6 approved (Must S-1..S-3, Should S-4, Could S-5..S-6); assumptions A-10..A-17 approved. | PO | Gate 3c approval |
+| DEC-10 | 2026-10-08 | Design direction: A "Ledger" with a bigger verdict (large tick/cross + word, as prominent as the score) instead of a small pill. | PO | Learner's main question is the verdict; keeps A's calm, official look |
+| DEC-11 | 2026-10-08 | Design spec and mockup approved: fields stacked at every width, card max 520px, reserved space for errors/result (no layout shift); new UI strings N-1..N-11 approved (to be catalogued as M-30..M-40). | PO | Gate 4 approval |
+| DEC-12 | 2026-10-08 | Plan approved: backlog (Sprint 0 → S-1, S-2, S-3 → S-4 + hardening), technical design ADR-001..008 (incl. Vite 6, axe devDependency), test plan. Q-13 answered: a field holding only "." is treated as empty; a lone "-" shows the can't-be-negative message. Code freeze lifted. | PO | Gate 5 approval |
+| DEC-13 | 2026-10-08 | Gate 6 approved; ADR-005 amendment (Vitest 4.1.11) accepted. Firefox/WebKit hosts will not be unblocked here, so the 3-engine e2e runs in GitHub Actions CI (ADR-009); local QA stays on Chromium. | PO | Gate 6 approval |
+| DEC-14 | 2026-10-08 | S-1 accepted on QA PASS (3 engines via CI run 37764220926) and visual review; PO real-browser manual checks deferred to the live URL / local run before release (option 1). | PO | S-1 acceptance |
+| DEC-15 | 2026-10-08 | S-2 accepted on QA PASS (3 engines via CI run 37796019119 on 8d496d6, code identical to 143c61e) and visual review; manual checks deferred as for S-1. | PO | S-2 acceptance |
+| DEC-16 | 2026-10-08 | S-3 accepted on QA PASS (3 engines via CI run 37797412005 on ea4b301; 179-check edge sweep) and visual review; manual checks deferred as for S-1. | PO | S-3 acceptance |
+| DEC-17 | 2026-10-08 | Gate 7 approved. Sprint 2 scope (b): S-4 cut (stays Not implemented; its "Next learner" button and Esc hint removed from the UI until built) — polish + hardening only, then release. GitHub Pages live URL enabled now (D3) so the PO can do real-browser checks. | PO | Time budget exceeded; MVP meets the brief; rule "cut Should stories, never quality" |
+| DEC-18 | 2026-10-08 | Gate 8 approved. PO ran the 14-step real-browser checklist (qa-reports/sprint-2.md) on the live URL in Chrome, Edge, Firefox, Safari and a phone: all pass (after a hard refresh — an earlier report of a non-working Next learner button/Esc came from the cached pre-Sprint-2 deploy 90a3a96). S-1..S-3 may now be marked Implemented. | PO | Gate 8 approval |
+
+## Open questions
+
+| ID | Raised | Question | Owner | Status |
+|----|--------|----------|-------|--------|
+| Q-1 | Stage 1 | Role applied for, HR contact name/email, deadline and expected submission date (for D18 and D20). | PO | Open |
+| Q-2 | Stage 1 | The session's git proxy returns HTTP 403 for tag pushes and branch deletions. Archive tag `archive/pre-fresh-start` (→ `fe7cc3f`), deleting `feat/S-1..3`, and the `v1.0.0` tag in Stage 9 must be done by the PO in the GitHub web UI, or the plan must change. | PO | Resolved 2026-10-08: PO created tag archive/pre-fresh-start (→ fe7cc3f) and deleted old feat/S-1..3 in the web UI; v1.0.0 tag still needs the PO at Stage 9 |
+| Q-3 | Stage 1 | Transcripts (D9): this container's raw logs in `~/.claude/projects/` disappear when the session ends. The PO must run `/export` before then; the Orchestrator may copy the raw log files unchanged into `transcripts/` only with PO approval. | PO | Open |
+| Q-4 | Stage 1 | `localhost` dev-server URLs can't be reached from the PO's browser. PO checks run via a GitHub Pages URL or a local run on the PO's machine; agents use headless Chromium screenshots. | PO | Resolved: GitHub Pages live URL (DEC-17, ADR-010); PO checks done there (DEC-18) |
+| Q-5 | Stage 2 | Pass rule: is it a pass when the score is greater than or equal to the pass mark (exactly 70% with a 70% pass mark passes)? **Recommended:** yes, score ≥ pass mark. | PO | Answered at Gate 2: recommended answer accepted |
+| Q-6 | Stage 2 | Does the verdict use the exact, unrounded score? **Recommended:** yes; 17.49 of 25 = 69.96% with a 70% pass mark is a Fail even if the score is shown as "70.0%". | PO | Answered at Gate 2: recommended answer accepted |
+| Q-7 | Stage 2 | Displayed precision and rounding? **Recommended:** always 1 decimal place, round half-up (2/3 → "66.7%", 70 → "70.0%"). Alternative: round down, so a fail is never shown as the pass mark itself. | PO | Answered at Gate 2: recommended answer accepted (amended: round down, see A-3) |
+| Q-8 | Stage 2 | Are half or decimal marks allowed for marks earned and total possible, and how many decimals? **Recommended:** yes, up to 2 decimal places (17.5, 17.25), dot as the only decimal separator; more decimals give an error message. | PO | Answered at Gate 2: recommended answer accepted |
+| Q-9 | Stage 2 | Maximum total marks possible? **Recommended:** 1,000,000; total must be greater than 0; above the maximum gives an error message. | PO | Answered at Gate 2: recommended answer accepted |
+| Q-10 | Stage 2 | Is the pass mark optional with a default, and what range? **Recommended:** pre-filled with 70 and editable; allowed 0 to 100 inclusive, up to 1 decimal place; if cleared, the score still shows and the verdict asks for a pass mark. | PO | Answered at Gate 2: recommended answer accepted |
+| Q-11 | Stage 2 | Live update or a Calculate button? **Recommended:** live update as the user types; the result clears while any input is invalid and returns as soon as all inputs are valid. | PO | Answered at Gate 2: recommended answer accepted |
+| Q-12 | Stage 2 | Marks earned greater than total possible (bonus marks)? **Recommended:** not allowed; show an error message and no score. | PO | Answered at Gate 2: recommended answer accepted |
+| Q-13 | Stage 5 | No AC covers a field holding only "." or "-" (passed through while typing ".5" or "-5"). A-13 needs digits, but its reason is "typing never flashes an error mid-number". Show that field's not-a-number message, or treat it like an empty field (no error, M-1 / M-2)? No AC changes either way. **Recommended:** not-a-number, the literal A-13 rule (a "-5" is an error anyway; the 500 ms announcement debounce keeps a brief "." from being read out). Design default until answered: not-a-number. | PO | Answered at Gate 5: lone "." = empty (A-18); lone "-" = negative message |
+
+## Assumptions (PO-approved assumptions are copied to the README)
+
+| ID | Assumption | Proposed in | PO approved |
+|----|-----------|-------------|-------------|
+| A-1 | A learner passes when score ≥ pass mark. | Stage 2 (Q-5) | Yes, Gate 2 |
+| A-2 | The verdict uses the exact, unrounded score, never the displayed value. | Stage 2 (Q-6) | Yes, Gate 2 |
+| A-3 | The score is shown to 1 decimal place, rounded down (69.96% → "69.9%", 2/3 → "66.6%"), so a failing score is never displayed as the pass mark. | Stage 2 (Q-7) | Yes, Gate 2 (amended from half-up) |
+| A-4 | Marks earned and total possible accept up to 2 decimal places, with a dot as the decimal separator. | Stage 2 (Q-8) | Yes, Gate 2 |
+| A-5 | Total marks possible is greater than 0 and at most 1,000,000. | Stage 2 (Q-9) | Yes, Gate 2 |
+| A-6 | The pass mark defaults to 70, is editable, and accepts 0 to 100 inclusive with up to 1 decimal place. | Stage 2 (Q-10) | Yes, Gate 2 |
+| A-7 | Results update live; no Calculate button. | Stage 2 (Q-11) | Yes, Gate 2 |
+| A-8 | Marks earned cannot exceed total possible (no bonus marks). | Stage 2 (Q-12) | Yes, Gate 2 |
+| A-9 | The gap to the pass mark is shown in marks, not percentage points. | Stage 3a | Yes, Gate 3a |
+| A-10 | Marks needed = pass mark ÷ 100 × total; gap = marks earned − marks needed. A shortfall is rounded UP and a surplus rounded DOWN to 2 decimal places (16.331 needed: 16 → "0.34 marks short", 17 → "0.66 marks above"); a shortfall under 0.01 shows as "0.01"; a surplus under 0.01 shows "Less than 0.01 marks above the pass mark"; equal shows "Exactly on the pass mark". | Stage 3c (S-2) | Yes, Gate 3c |
+| A-11 | Gap numbers drop trailing zeros ("0.60" → "0.6", "2.00" → "2") and use comma thousands separators ("699,999.99"); "mark" is singular only when the shown value is exactly 1. | Stage 3c (S-2) | Yes, Gate 3c |
+| A-12 | An empty field (or spaces only) never shows an error: if marks earned or total is empty the result area shows "Enter marks earned and total marks possible to see the score."; if the pass mark is empty the score still shows, the verdict area shows "Enter a pass mark to see whether this is a pass or a fail." and no gap is shown. | Stage 3c (S-3) | Yes, Gate 3c |
+| A-13 | Accepted number format: digits with at most one dot (".5" and "5." accepted, so typing never flashes an error mid-number), leading zeros ("007" = 7), leading/trailing spaces ignored. Decimal places count as typed ("17.500" has 3). Anything else ("abc", "17,5", "$17", "1.2.3", "1e400", "+5") gets that field's not-a-number message. | Stage 3c (S-3) | Yes, Gate 3c |
+| A-14 | A minus sign before an otherwise valid number, including "-0", gets that field's can't-be-negative message (all three fields). | Stage 3c (S-3) | Yes, Gate 3c |
+| A-15 | Checks per field run in order: not a number → negative → too many decimals → range (total > 0 and ≤ 1,000,000; pass mark ≤ 100); then marks earned ≤ total, checked only when both are otherwise valid. Each field shows at most one message, under that field; several invalid fields each show their own. | Stage 3c (S-3) | Yes, Gate 3c |
+| A-16 | While any field shows an error, the result area shows "The score will appear once every entry is valid." instead of a score, verdict or gap (never blank). | Stage 3c (S-3) | Yes, Gate 3c |
+| A-17 | "Next learner" (and Escape in marks earned) clears only marks earned and its message, keeps total and pass mark as they are, and puts the cursor back in marks earned. | Stage 3c (S-4) | Yes, Gate 3c |
+| A-18 | A field holding only "." (after trimming spaces) is treated as empty, so no error flashes while typing ".5"; a lone "-" gets the can't-be-negative message. | Stage 5 (Q-13) | Yes, Gate 5 |
+# Delivery Tracker
+
+Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved only).
+
+## D1–D23 checklist
+
+| ID | Deliverable | Status | Evidence / note |
+|----|-------------|--------|-----------------|
+| D1 | Browser app (Chrome, Edge, Firefox, Safari) | DONE | Stage 9 audit: CI run 37804095421 on 16907b6 success, annotations "E2E chromium/firefox/webkit 51 passed, 0 failed" (153 total), Node v20.20.2; clean-clone Chromium e2e 51/51; PO real-browser checks PASS in Chrome, Edge, Firefox, Safari, phone (DEC-18) |
+| D2 | Local run from README, no paid accounts/keys/cloud | DONE | Stage 9 clean clone of 16907b6 following README literally: `npm ci` (52 packages, 0 vulnerabilities), `npm run dev` (200 on :5173), `npm test` 131/131, `npm run build`, `npm run preview` (200 on 127.0.0.1:4173); no accounts or keys (release-audit.md) |
+| D3 | Live URL (optional, in addition to local run) | DONE | Pages run 37804096075 on 16907b6 success; github.io unreachable from this container, so the page itself is verified by PO (DEC-18) |
+| D4 | Correctness: every Implemented story matches its ACs | DONE | Stage 9 auditor Playwright script on the built app (Chromium): all 24 ACs S-1.1..S-3.8 (54 checks) PASS, 0 console errors; qa-reports/S-1..S-3.md; DEC-14..DEC-16 |
+| D5 | Error handling: clear messages, no crash or wrong result | DONE | Auditor re-check of S-3.1..S-3.8 PASS (every message text and field placement); edge.spec 10/10 on 3 engines (CI 16907b6); PO checks PASS (DEC-18) |
+| D6 | UI quality: design spec, 375px+, light/dark, WCAG 2.2 AA | DONE | a11y.spec (axe WCAG 2.2 AA, 5 states x light/dark) 10/10 on 3 engines in CI 16907b6; no horizontal scroll at 320 px (E-0.4) and 375 px (auditor: scrollWidth 375); visual reviews passed; Gate 8 approved (DEC-18) |
+| D7 | AI writes the code | DONE | All 56 commits since fresh start (cccb670..16907b6) carry the Claude co-author trailer; README "Code changed by hand: None." |
+| D8 | Hand changes listed in README (or "None") | DONE | README: "None." (16907b6) |
+| D9 | Transcripts of every session + raw logs | OPEN | `transcripts/` holds only `.gitkeep` at 16907b6; PO exports at Stage 10 (Q-3) |
+| D10 | Source without node_modules/dist/coverage/reports | DONE | Stage 9 `git ls-files` on fresh clone (96 files): no node_modules, dist, coverage, playwright-report, test-results, .env*, .private; secret-pattern grep: no real keys (one doc-only match in release-auditor.md); package.json has devDependencies only |
+| D11 | Package README covers every brief item | DONE | Stage 9 audit: what/who, choice + reasons, Node 20 prerequisite, install/start, tests, AI tool + model, hand changes, assumptions A-1..A-18 all present; commands work. Minor findings RA-1, RA-2 in release-audit.md |
+| D12 | docs/app-roles.md | DONE | R-1 Learner, R-2 Instructor + needs table; approved Gate 3a |
+| D13 | docs/jobs-to-be-done.md | DONE | J-1..J-5, each names its role, purity check PASS; approved Gate 3b |
+| D14 | docs/user-stories.md | DONE | S-1..S-6, each names an existing job; traceability table checked against story lines (Stage 9) |
+| D15 | Acceptance criteria (Given/When/Then, edges) | DONE | 34 ACs (S-1 8, S-2 8, S-3 8, S-4 5, S-5 2, S-6 3), edge coverage table, arithmetic checked twice (analyst + Orchestrator) |
+| D16 | Status per story | DONE | S-1..S-3 Implemented (QA PASS + PO checks, DEC-18); S-4 cut (DEC-17), S-5/S-6 future: Not implemented; app has no Next learner button (auditor: 0 buttons) |
+| D17 | Package layout `sabee-khan-calculator/` | IN PROGRESS | Stage 9: README.md, src/, docs/app-roles.md, jobs-to-be-done.md, user-stories.md, transcripts/ present; transcripts/session-01.md … pending Stage 10 |
+| D18 | HR acknowledgement | IN PROGRESS | Draft in `.private/hr-ack-email.md` (needs Q-1); PO sends |
+| D19 | Repo public, verified signed out | IN PROGRESS | REST API visibility "public"; unauthenticated fetch of github.com/Sabeekhann/Web-Calculator returns 200 (Stage 9); full signed-out content check at Stage 11 |
+| D20 | Submission email | OPEN | Stage 11 (needs Q-1) |
+| D21 | Accuracy of README and docs | DONE | Stage 9: README claims checked against the app and CI (131 unit, 51 e2e per engine, spec table counts 4/8/9/10/10/10, no runtime deps, Node 20 in CI, retries 0, "None." hand changes, quick check steps 1–7 PASS on dev and preview); no untrue claim found; minor findings in release-audit.md |
+| D22 | Open questions asked or assumed in README | DONE | Q-5..Q-13 answered (DEC-7, DEC-12); A-1..A-18 PO-approved and all listed in README; Q-1..Q-3 are PO admin items, not product questions |
+| D23 | Walkthrough notes (private) | OPEN | `.private/walkthrough-notes.md` does not exist yet (only hr-ack-email.md) |
+
+## Time log (UTC)
+
+Derived from commit timestamps (start = previous gate approval, end = this gate's approval commit); includes PO review time. Corrected at Stage 7 start: earlier rows from Stage 3a onwards had been estimated by the Orchestrator instead of read from the clock.
+
+| Stage | Start | End | Minutes |
+|-------|-------|-----|---------|
+| Preflight | 08:08 | 08:12 | 4 |
+| 1 Fresh start & initiation | 08:12 | 08:17 | 5 |
+| 2 Discovery | 08:17 | 09:21 | 64 |
+| 3a App roles | 09:21 | 09:26 | 5 |
+| 3b Jobs to be done | 09:26 | 09:30 | 4 |
+| 3c User stories | 09:30 | 09:36 | 6 |
+| 4 UX/UI design | 09:36 | 09:52 | 16 |
+| 5 Planning | 09:52 | 10:00 | 8 |
+| 6 Sprint 0 | 10:00 | 10:23 | 23 |
+| 7 Sprint 1 | 10:23 | 15:17 | 294 (incl. a pause until the account rate limit reset) |
+| 8 Sprint 2 | 15:17 | 15:47 | incl. PO real-browser checks |
+| 9 Release | 15:47 | | |
+
+## Session log
+
+| Session | Tool / model | Date | Stages | Transcript file |
+|---------|--------------|------|--------|-----------------|
+| session-01 | Claude Code (cloud session, launched from the desktop app), Claude Opus 5.5 | 2026-10-08 | Preflight → | `transcripts/session-01.md` (PO exports) |
+
+## Agent activity log
+
+| Stage | Agent | Task | Result | Orchestrator review |
+|-------|-------|------|--------|---------------------|
+| 1 | Orchestrator | Preflight, fresh start, structure, CLAUDE.md (282 lines), 7 agent files | Done | Brought CLAUDE.md up from 256 to 282 lines and release-auditor.md up from 47 to 52, adding content each needed |
+| 1 | docs-writer | Draft HR acknowledgement `.private/hr-ack-email.md` | Done: 85-word body, 4 placeholders (Q-1) | Accepted, no invented facts; file confirmed gitignored |
+| 2 | product-analyst | Propose 3 calculator options + recommendation | Done: A Quiz score recommended | Accepted; PO chose A (DEC-6) |
+| 2 | product-analyst | Product brief, DEC-6, Q-5..Q-12, A-1..A-8 | Done: 102-line brief | Accepted; Orchestrator updated stale CLAUDE.md §1 line; flagged Q-6/Q-7 display-vs-verdict conflict to PO |
+| 3a | product-analyst | App roles (D12) | Done: 2 roles, needs table, 24 lines | Accepted; checked D12 form, scope, no widget wording; margin-unit question raised to PO |
+| 3b | product-analyst | Jobs to be done (D13) | Done: 5 jobs (2 Learner, 3 Instructor), purity check 5/5 PASS | Accepted; Orchestrator aligned CLAUDE.md §8 job-tag format to "J-n (R-n Role)" |
+| 3c | product-analyst | User stories + ACs (D14–D16), A-10..A-17 | Done: 6 stories, 34 ACs, 29 messages, 147 lines | Accepted; Orchestrator re-ran 10 boundary calculations independently — all match |
+| 4 | ux-ui-designer | 2 design directions + side-by-side preview (directions.html, 375/1280 screenshots) | Done: A Ledger (recommended), B Spotlight; all contrast pairs pass | Accepted; Orchestrator noted A's small verdict pill and B's mobile result-below-button issue for the PO |
+| 4 | ux-ui-designer | Full spec (201 lines) + mockup.html (states a–e, light/dark, 375/1280) | Done: 19 contrast pairs pass, 78 message texts match, no layout shift measured | Accepted; Orchestrator reviewed Pass, Fail, error and pass-mark-empty states in fresh screenshots; recorded DEC-10 |
+| 5 | product-analyst | Catalogue UI strings N-1..N-11 as M-30..M-40 | Done: 11 rows, all match ui-design.md | Accepted; note: Orchestrator's brief asked for a Bash check outside the role's tool list — agent flagged it; brief wording to be fixed in future delegations |
+| 5 | solution-architect | backlog.md, technical-design.md (ADR-001..008), test-plan.md, Q-13 | Done: 29/29 ACs mapped, 30/30 AC numbers verified with integer formulas | Accepted; Orchestrator recommends a different answer to Q-13 (lone "." treated as empty) for PO |
+| 6 | developer | Sprint 0 scaffold, design system, shell, tests first | Done: 5 unit + 4 e2e (Chromium) | Accepted after fix loop 1 |
+| 6 | Orchestrator | npm audit review | 2 critical + 1 moderate in Vitest 3 dev deps; registry check → Vitest 4.1.11 | Sent back as D-0.1 |
+| 6 | developer | D-0.1 Vitest 4.1.11 upgrade | Done: 0 vulnerabilities | Accepted; Orchestrator verified plain `npm install` on npm 10 in a fresh copy |
+| 6 | solution-architect | ADR-005 amendment | Done (72c6927) | Accepted; facts match registry |
+| 6 | ux-ui-designer | Sprint 0 visual review | 0 issues; 0-pixel diff vs mockup (a) | Accepted |
+| 6 | qa-engineer | Sprint 0 verification → qa-reports/sprint-0.md | PASS (Chromium); Firefox/WebKit NOT RUN (environment) | Accepted |
+| 6 | docs-writer | Sprint 0 entry in sprint-log.md | Done | Accepted |
+| 6 | developer | CI workflow (ADR-009) + per-engine annotations | Done: first CI run 12/12 e2e on 3 engines, Node 20 | Accepted; Orchestrator found logs/artifacts blocked (blob host) → annotations |
+| 7 | developer | S-1 on feat/S-1, tests first | Done: 58 unit, 12 e2e | Accepted; Orchestrator merged main into branch for CI annotations |
+| 7 | ux-ui-designer | S-1 visual review | PASS, 0 issues | Accepted |
+| 7 | qa-engineer | S-1 verification (first attempt cut off by account rate limit; retried) | PASS all 8 ACs, 3 engines, edge sweep 23/23 | Accepted |
+| 7 | PO | S-1 acceptance | Accepted; manual checks deferred (DEC-14) | Merged --no-ff |
+| 7 | developer | S-2 on feat/S-2, tests first | Done: 91 unit, 21 e2e | Accepted |
+| 7 | ux-ui-designer | S-2 visual review | PASS, 0 issues (cosmetic orphan noted for Sprint 2) | Accepted |
+| 7 | qa-engineer | S-2 verification | PASS 8/8, 300 random inputs 0 mismatches | Accepted; QA caught that the Orchestrator's screenshot push cancelled CI on the code commit (concurrency) — process changed: screenshots commit with the QA report |
+| 7 | PO | S-2 acceptance | Accepted (DEC-15) | Merged --no-ff |
+| 7 | developer | S-3 on feat/S-3, tests first | Done: 131 unit, 31 e2e | Accepted |
+| 7 | ux-ui-designer | S-3 visual review (screenshots kept out of repo until QA done) | PASS; V-3.1 cosmetic "-5" spacing → Sprint 2 polish | Accepted |
+| 7 | qa-engineer | S-3 verification | PASS 8/8, 179 checks, 0 defects | Accepted |
+| 7 | PO | S-3 acceptance | Accepted (DEC-16) | Merged --no-ff |
+| 7 | docs-writer | Sprint 1 review + retro in sprint-log.md | Done | Accepted |
+| 8 | developer | Pages workflow; S-4 UI removed; polish; a11y spec; edge spec; V-S2.1–3 | Done | Accepted |
+| 8 | ux-ui-designer | Polish review; spec + mockup aligned; final screenshots | PASS, 3 Low findings applied | Accepted |
+| 8 | solution-architect | Test plan / technical design (ADR-010) / backlog aligned with DEC-17 | Done | Accepted; 2 of its claims (CSS missing, Q-13 open) checked and rejected by Orchestrator; its missing-edge-tests finding acted on |
+| 8 | qa-engineer | Sprint 2 final hardening | PASS, 51/engine, H-1..H-15, 0 defects | Accepted |
+| 8 | docs-writer | Sprint 2 review + retro | Done | Accepted |
+| 9 | docs-writer | Story statuses S-1..S-3 Implemented; package + root README | Done; all README commands run in a fresh copy | Accepted; Orchestrator fixed one stale word in user-stories.md intro ("pending" → "approved, DEC-9") |
+| 9 | release-auditor | Clean-clone audit, hygiene, traceability, docs vs app (24 ACs + README quick check), D1–D23 table | PASS; 5 minor findings (RA-1..RA-5) | Accepted; RA-1/RA-2 → docs-writer, RA-3/RA-4 → product-analyst, RA-5 info only |
+| 9 | docs-writer / product-analyst | Fix RA-1..RA-4 | Done | Accepted; Orchestrator aligned CLAUDE.md §17 with --with-deps |
+# Sprint Log
+
+## Sprint 0 — Foundation, design system and app shell
+**Goal** (backlog.md): a reviewer can clone, install, test and see the approved empty card (idle state, light and dark) with every npm command passing.
+
+**Delivered vs goal**
+| Item | Status | Evidence |
+|------|--------|----------|
+| Scaffold: Vite 6.4.4, TypeScript 5.9.3 strict, Vitest 4.1.11, @playwright/test 1.56.1, @axe-core/playwright 4.13.0 (dev only), zero runtime deps | Done | `qa-reports/sprint-0.md` checks 1, 4, 5 (`npm ls --omit=dev` → empty) |
+| `messages.ts` M-1..M-40 | Done | `qa-reports/sprint-0.md` check 3: 40 entries, 0 mismatches |
+| `tokens.css`, `base.css`, `components.css`; static shell | Done | `qa-reports/sprint-0.md` shell checks; ux-ui-designer: 0 issues, all tokens match spec |
+| Shell matches mockup | Done | ux-ui-designer: state (a) 0 differing pixels at 375/768/1280, light + dark; `design/screenshots/shell-*.png` |
+| Tests first: `tests/unit/messages.test.ts`, `tests/e2e/shell.spec.ts` | Done | Developer return: failing first (unit: module not found; e2e: 4 failed vs a stub), then 5 unit + 4 e2e pass |
+| `npm ci && npm test && npm run test:e2e && npm run build` | Done on Chromium | `qa-reports/sprint-0.md` checks 1, 2, 4, 6 |
+| Accessibility, console, servers, hygiene | Done | 0 axe violations (light/dark); 0 console messages; dev + preview serve; hygiene clean |
+| E2E on Firefox and WebKit | Not run (blocked) | `qa-reports/sprint-0.md` checks 7, 8 |
+
+**Not done / carried over**
+- Firefox/WebKit e2e: blocked — network policy refuses the browser downloads (`cdn.playwright.dev`, `playwright.download.prss.microsoft.com`). Not worked around; PO asked to allow the hosts.
+- T-M.2 (every error code → one message): deferred to S-3, where error codes first exist (QA O-2).
+- Esc / "Next learner" behaviour: hint visible but not wired; comes with S-4 (QA O-1).
+
+**Review notes**
+- QA verdict: PASS on Chromium, no defects; Firefox/WebKit NOT RUN (environment).
+- Fix loop 1 (D-0.1): `npm audit` found 2 critical + 1 moderate advisories in Vitest 3.2.7 dev deps (tinypool, @vitest/mocker). Registry check: Vitest 4.1.11 supports Node ^20 and Vite ^6; Vitest 5 needs Node ≥22.12. Upgraded to 4.1.11 → 0 vulnerabilities; ADR-005 amended (`72c6927`).
+- Side finding: npm 10.9.4 hits an internal `edgesOut` error when adding or changing a dependency; the lockfile was generated once with npm 11. Plain `npm install` and `npm ci` from the lockfile both work on npm 10 (fresh copy).
+
+**Retro**
+- Went well: tests shown failing before code; `npm audit` caught the advisories before any story work; pixel-exact match to the mockup at the first review.
+- Didn't go well: two of three engines could not run; npm 10 cannot change dependencies here; one QA shell check gave a false FAIL (`innerText` includes sr-only text).
+- Change: get the browser hosts allowed before Sprint 1 closes; run `npm audit` as part of every dependency change; check visible text with computed styles or the ARIA snapshot, not `innerText`.
+
+## Sprint 1 — MVP (S-1, S-2, S-3)
+**Goal** (backlog.md): a learner or instructor gets an exact score, verdict and gap for any valid entry, and a clear inline message for every invalid one.
+
+**Delivered vs goal**
+| Story | Status | QA verdict | CI run (3 engines) | Merge commit |
+|-------|--------|------------|--------------------|--------------|
+| S-1 Score and pass/fail verdict | Accepted (DEC-14), merged `--no-ff` | PASS 8/8 ACs; edge sweep 23/23; 0 axe violations | 37764220926 on `75ff087`: unit 58; e2e 12/0 per engine (36) | `126b382` |
+| S-2 Marks short of or above the pass mark | Accepted (DEC-15), merged `--no-ff` | PASS 8/8; 300-case differential 0 mismatches; 0 axe violations | 37796019119 on `8d496d6` (same code as `143c61e`): unit 91; e2e 21/0 per engine (63) | `9b56aac` |
+| S-3 Clear message for an invalid or impossible entry | Accepted (DEC-16), merged `--no-ff` | PASS 8/8; edge sweep 179/179; 0 axe violations; no layout shift at 320/375/1280 | 37797412005 on `ea4b301`: unit 131; e2e 31/0 per engine (93) | `4b63578` |
+
+**Not done / carried over**
+- PO real-browser manual checks (Chrome, Edge, Firefox, Safari) for S-1..S-3: deferred to the live URL / local run before release (DEC-14..16). Stories stay Not implemented in user-stories.md until then.
+- Sprint 2 polish (cosmetic, from visual reviews): S-2 gap line leaves an orphan word at 375 px (suggestion: `text-wrap: pretty`); V-3.1 "-5" hyphen spacing caused by tabular numerals.
+- "Next learner" button and Esc still do nothing; they come with S-4 (Sprint 2).
+
+**Review notes**
+- Firefox/WebKit cannot be downloaded in this container, so GitHub Actions CI on the exact commit is the 3-engine evidence (DEC-13, ADR-009). The container also cannot read Actions logs or artifacts (blob host blocked), so CI publishes per-engine counts as check-run annotations (`455c31c`).
+- S-1: the first qa-engineer run was cut off by the account rate limit and was re-run in full.
+- S-2: the Orchestrator's screenshot push (`8d496d6`) cancelled the CI run on the code commit `143c61e` (workflow concurrency, cancel-in-progress). QA caught it and used the next green run on identical code (diff = 3 PNGs only).
+- No defects in any story (no D-1.x, D-2.x, D-3.x). Console clean in all runs.
+
+**Retro**
+- Went well: tests shown failing before code on every story; CI annotations gave per-engine counts without log access; QA's independent checks (Decimal recomputation, 300-case differential, 179-check sweep) found no defects; QA caught the cancelled CI run instead of passing on it.
+- Didn't go well: a screenshot push cancelled CI on a code commit; one QA run lost to the rate limit; PO manual checks still outstanding.
+- Change: screenshots are committed together with the QA report, never between the code commit and QA; QA always confirms a green run on the exact SHA it signs off; schedule the PO manual checks before release.
+
+## Sprint 2 — Polish, hardening and live URL (S-4 cut)
+**Goal** (backlog.md, DEC-17): the MVP passes an axe audit, the final QA sweep and the visual review on all three engines, and is live on GitHub Pages. At Gate 7 the PO chose option (b): time budget exceeded and the MVP meets the brief, so S-4 is cut.
+
+**Delivered vs goal** (branch `chore/sprint-2-polish`; QA build `7098224`, CI run 37801681193)
+| Item | Status | Evidence |
+|------|--------|----------|
+| S-4 UI removed ("Next learner" button, Esc hint); favicon | Done | `21c7b2d`, `e4873ec`; QA H-3, H-10 |
+| axe WCAG 2.2 AA e2e for every state, light + dark | Done | `e4873ec`, `05010a4`; a11y 10/10 per engine; QA H-8 0 violations |
+| Edge sweep automated (`tests/e2e/edge.spec.ts`, E-EDGE.0–9) | Done | `dff4b10`; 10/10 on each engine in CI |
+| Visual polish V-S2.1–3: reserved result height 192/100 px, subheading `text-wrap: pretty`, unused token removed | Done | `7098224`; no-shift tests pass on 3 engines; headroom 1.0 px (narrow) / 1.5 px (wide) |
+| Docs aligned with DEC-17 (test plan, technical design ADR-010, backlog, UI spec, mockup, final screenshots) | Done | `77243d8`, `25a0cf7` |
+| Regression S-1..S-3 | Done | QA PASS: 24/24 ACs on Chromium, Firefox, WebKit; unit 131/131; e2e 51/0 per engine; 0 retries; audit clean; H-1..H-15 PASS; no console errors |
+| GitHub Pages (D3) | Done; not checked from here | `90a3a96`; first deploy run 37799872280 succeeded on `90a3a96`; https://sabeekhann.github.io/Web-Calculator/ |
+
+**Not done / carried over**
+- S-4 Next learner in one step: cut (DEC-17), stays Not implemented; design kept in technical-design.md as future.
+- PO real-browser checklist (`qa-reports/sprint-2.md`, steps 1–14 in Chrome, Edge, Firefox, Safari + phone): still required by the DoD before S-1..S-3 can be marked Implemented. The live URL serves `main`, so this build is checkable there only after merge.
+
+**Review notes**
+- Pages: the proxy blocks the Pages API, so the PO set the source to GitHub Actions in the web UI. github.io is blocked from this container, so the live URL was not opened here; the PO checks it.
+- The solution-architect's doc review found the planned edge tests had never been written; the developer added `edge.spec.ts` so the sweep runs on all 3 engines. Two other architect claims (polish CSS missing; Q-13 open) were checked by the Orchestrator and rejected: both were wrong (Q-13 was answered at Gate 5).
+- QA O-1: test-plan.md still said no `edge.spec.ts` exists (being fixed by the architect). O-2: the 1–1.5 px headroom is verified on Linux engines only; `system-ui` fonts differ on Windows/Apple, so checklist step 4 watches for a jump.
+- No defects (no D-S2.x).
+
+**Retro**
+- Went well: scope cut early with a clear rule (cut Should stories, never quality); edge sweep and axe now run on 3 engines in CI; a cross-agent doc review caught the missing edge tests.
+- Didn't go well: the edge tests planned at Stage 5 were silently skipped until Sprint 2; an agent review made unverified claims; the layout headroom is very thin; the live URL can't be checked from the container.
+- Change: QA confirms every planned test file exists before signing a sprint; reviewers cite file + line for each claim; the PO runs the real-browser checklist on the live URL before release.

@@ -1,0 +1,356 @@
+     1	# Test Plan
+     2	
+     3	Stage 5, solution-architect. Every AC of S-1..S-4 maps to at least one test (CLAUDE.md §12). Tests are written first and shown failing.
+     4	Test titles start with their ID (`test('E-S1.3 …')`) so QA reports can quote them. Expected text is imported from `src/messages.ts`, never retyped, except where the AC quotes a number.
+     5	
+     6	## AC → test mapping (29 of 29 ACs mapped)
+     7	
+     8	Unit tests (T) call `toViewModel`, `validateInputs` or the logic functions with the AC's exact strings. E2E tests (E) type into the running build on Chromium, Firefox and WebKit.
+     9	
+    10	| AC | Description | T-ID (unit) | E-ID (e2e) | MANUAL reason |
+    11	|----|-------------|-------------|------------|---------------|
+    12	| S-1.1 | 17.5 of 23 @ 70 → "76.0%", Pass, live (no key/button) | T-S1.1 | E-S1.1 | — |
+    13	| S-1.2 | 17.5 of 25 (exactly 70%) → "70.0%", Pass | T-S1.2 | E-S1.2 | — |
+    14	| S-1.3 | 17.49 of 25 → "69.9%", Fail, never "70.0%" (E types key by key, checks after each) | T-S1.3 | E-S1.3 | — |
+    15	| S-1.4 | 2 of 3 → "66.6%" (down), Fail | T-S1.4 | E-S1.4 | — |
+    16	| S-1.5 | pass 0: 0 of 23 → "0.0%" Pass; pass 100: 23 of 23 → "100.0%" Pass | T-S1.5 | E-S1.5 | — |
+    17	| S-1.6 | pass 100: 999999.99 of 1000000 → "99.9%", Fail | T-S1.6 | E-S1.6 | — |
+    18	| S-1.7 | 0.01 of 1000000 → "0.0%", Fail | T-S1.7 | E-S1.7 | — |
+    19	| S-1.8 | after result: earned 15.5 → "67.3%" Fail; pass 65 → Pass, "67.3%" | T-S1.8 | E-S1.8 | — |
+    20	| S-2.1 | 15.5 of 23 → Fail, "0.6 marks short …" | T-S2.1 | E-S2.1 | — |
+    21	| S-2.2 | 17.5 of 23 → Pass, "1.4 marks above …" | T-S2.2 | E-S2.2 | — |
+    22	| S-2.3 | 17.5 of 25 → Pass, M-10 | T-S2.3 | E-S2.3 | — |
+    23	| S-2.4 | total 20: 13 → M-7 "1 mark short"; 15 → M-9 "1 mark above" | T-S2.4 | E-S2.4 | — |
+    24	| S-2.5 | total 23.33: 16 → "0.34 … short" (up); 17 → "0.66 … above" (down) | T-S2.5 | E-S2.5 | — |
+    25	| S-2.6 | pass 69.9, total 23: 16.07 → "69.8%" Fail "0.01 … short"; 16.08 → "69.9%" Pass M-11 | T-S2.6 | E-S2.6 | — |
+    26	| S-2.7 | total 1000000: "699,999.99 … short"; "0.01 … short"; "1,000,000 … above" | T-S2.7 | E-S2.7 | — |
+    27	| S-2.8 | after result: earned 16.1 → "70.0%" Pass M-10; pass 65 → "1.15 … above" | T-S2.8 | E-S2.8 | — |
+    28	| S-3.1 | only earned, or spaces in total → M-1, no score, no field error | T-S3.1 | E-S3.1 | — |
+    29	| S-3.2 | pass mark cleared → "76.0%" + M-2, no verdict/gap/error | T-S3.2 | E-S3.2 | — |
+    30	| S-3.3 | "abc", "17,5", "$17", "1.2.3", "1e400", "+5" → M-12 + M-3; total "abc" → M-16; pass "seventy" → M-21; " 017.5 " → "76.0%" | T-S3.3 | E-S3.3 | — |
+    31	| S-3.4 | "-1", "-0" → M-13; total "-23" → M-17; pass "-5" → M-22; no score | T-S3.4 | E-S3.4 | — |
+    32	| S-3.5 | "17.555" → M-14; total "23.001" → M-18; pass "70.05" → M-23; no score | T-S3.5 | E-S3.5 | — |
+    33	| S-3.6 | total "0" → M-19; "1000000.01" → M-20; "8" → M-15 under earned; pass "100.1" → M-24; "1000000" → "0.0%" | T-S3.6 | E-S3.6 | — |
+    34	| S-3.7 | earned "abc" + total "0" → M-12 and M-19 together, M-3 | T-S3.7 | E-S3.7 | — |
+    35	| S-3.8 | M-15 for 23.5 of 23; earned → 17.5 clears it ("76.0%", Pass, "1.4 … above"); or total → 25 ("94.0%", Pass, "6 marks above …") | T-S3.8 | E-S3.8 | — |
+    36	| S-4.1 | Next learner → earned empty, total "23", pass "70" kept, focus in earned, M-1 | T-S4.1 (view model part) | E-S4.1 | — |
+    37	| S-4.2 | after Next learner, type 15.5 → "67.3%", Fail, "0.6 … short" | — (pure UI flow; maths covered by T-S2.1) | E-S4.2 | — |
+    38	| S-4.3 | Escape in earned = S-4.1 | — (keyboard event) | E-S4.3 | — |
+    39	| S-4.4 | Next learner while M-15 shown → message gone, earned empty, total "23", M-1 | T-S4.4 (view model part) | E-S4.4 | — |
+    40	| S-4.5 | pass 65, total 40: Next learner, type 26 → pass still "65", "65.0%", Pass, M-10 | — (pure UI flow) | E-S4.5 | — |
+    41	
+    42	Count: S-1 8 + S-2 8 + S-3 8 + S-4 5 = **29 ACs, 29 mapped** (29 with an E-ID, 26 with a T-ID, 0 manual-only). No AC is untestable as written.
+    43	Future, not mapped: S-5 (S-5.1, S-5.2) and S-6 (S-6.1..S-6.3).
+    44	
+    45	## Supporting tests (not tied to one AC)
+    46	| ID | File | What it proves |
+    47	|----|------|----------------|
+    48	| T-L.1..L.6 | `tests/unit/logic.test.ts` | `floorDiv`/`ceilDiv` exact at 10¹¹; largest products ≤ `Number.MAX_SAFE_INTEGER`; `formatMarks` (0.6, 6, 0.01, 1,000,000, 699,999.99); `formatScore` (0.0, 66.6, 100.0) |
+    49	| T-M.1..M.2 | `tests/unit/messages.test.ts` | every M-1..M-40 text verbatim; every error code maps to exactly one message |
+    50	| T-EDGE.1 | `tests/unit/edge.test.ts` | the edge-sweep inputs below in every field: view-model text never contains NaN, Infinity, undefined or is blank |
+    51	| E-0.1..0.4 | `tests/e2e/shell.spec.ts` | Sprint 0 smoke: title = M-30, labels M-34..M-36, pass mark "70", idle M-1, no horizontal scroll at 320 px |
+    52	| E-EDGE.1..6 | `tests/e2e/edge.spec.ts` | rows marked E-EDGE in the sweep below |
+    53	| E-A11Y.1..4 | `tests/e2e/a11y.spec.ts` | axe: 0 violations in idle, result, error and pass-mark-empty, light and dark; Tab order; `aria-invalid`/`aria-describedby`; status text after debounce |
+    54	| (all E) | `tests/e2e/fixtures.ts` | shared fixture fails any test on a console error, console warning or page error (DoD) |
+    55	
+    56	## Edge sweep (CLAUDE.md §12)
+    57	| Case | Example inputs | Where tested |
+    58	|------|----------------|--------------|
+    59	| Empty | "" in earned / total / pass | T-S3.1, T-S3.2, E-S3.1, E-S3.2 |
+    60	| Whitespace | "   " in total; " 017.5 " | T-S3.1, T-S3.3, E-S3.1, E-S3.3 |
+    61	| Letters | "abc", "seventy" | T-S3.3, E-S3.3 |
+    62	| Symbols | "$17", "17,5", "+5", "€5", "17 .5" | T-S3.3, E-S3.3, T-EDGE.1 |
+    63	| "1e400" | earned "1e400" | T-S3.3, E-S3.3 |
+    64	| "-0" | earned "-0" | T-S3.4, E-S3.4 |
+    65	| Multiple dots | "1.2.3", ".." | T-S3.3, E-S3.3 |
+    66	| Leading zeros | " 017.5 ", "007", pass "070" | T-S3.3, E-S3.3, T-EDGE.1 |
+    67	| Negatives | "-1", "-23", "-5", "-17.555" (→ M-13, A-15 order) | T-S3.4, E-S3.4 |
+    68	| 0 | earned "0", total "0", pass "0" | T-S1.5, T-S3.6, E-S1.5, E-S3.6 |
+    69	| Maximum allowed | total "1000000", pass "100"; just over: "1000000.01", "100.1" | T-S1.6, T-S2.7, T-S3.6, E-S1.6, E-S2.7, E-S3.6 |
+    70	| Very long input | 400-digit total (→ M-20), 400-digit earned with total 23 (→ M-15), 400 fraction digits (→ dp message) | T-EDGE.1, E-EDGE.1 |
+    71	| Pasted values | paste " 17.5 ", "$17", "17.5\t" via `keyboard.insertText` | E-EDGE.2; real paste by PO (manual) |
+    72	| Repeated Enter | Enter ×5 in each field: no reload, values and result unchanged | E-EDGE.3 |
+    73	| Rapid clicking | Next learner clicked 10× and double-clicked: stays idle, focus in earned, no errors | E-EDGE.4 |
+    74	| Recovery after error | fix the field; Next learner after M-15 | S-3.8, S-4.4 (T and E) |
+    75	| Page reload | fill all, reload: back to "", "", "70", M-1 (no restored values, incl. Firefox) | E-EDGE.5 |
+    76	| Bare "." / "-" (Q-13) | "." and "-" in each field | T-EDGE.1, E-EDGE.6 (expected value follows the Q-13 answer) |
+    77	
+    78	## Browser matrix
+    79	| Engine (Playwright 1.56.1) | Stands for | Runs | Where (ADR-009) |
+    80	|----------------------------|-----------|------|-----------------|
+    81	| Chromium | Chrome, Edge | every E test (shell, S-1..S-4, edge, a11y with axe) | build container (local QA) + GitHub Actions CI |
+    82	| Firefox | Firefox | same | GitHub Actions CI only |
+    83	| WebKit | Safari | same | GitHub Actions CI only |
+    84	
+    85	- `playwright.config.ts`: 3 projects; `webServer` = `npm run build && npm run preview -- --host 127.0.0.1 --port 4173 --strictPort`, so e2e checks the real bundle with `base: './'`.
+    86	- The build container cannot download Playwright's Firefox/WebKit builds (proxy 403, DEC-13), so `.github/workflows/ci.yml` runs all 3 projects on ubuntu-latest with Node 20 from `.nvmrc` on every push/PR.
+    87	- **QA evidence rule:** a Firefox or WebKit cell in a QA report is PASS only when the CI run on the **exact commit under test** (story branch head) is green for that project; record the run URL and commit hash in Evidence. Chromium needs the local run and the same CI run. The CI run is also the evidence for Node 20 (container runs Node 22). A missing, failed or older-commit run = not verified.
+    88	- qa-engineer reads CI results through the GitHub REST API: the run for the head SHA (`GET /repos/Sabeekhann/Web-Calculator/actions/runs?head_sha=<sha>`), its job logs, and the Playwright HTML report artifact; QA never edits the workflow.
+    89	- **PO manual checks** (DoD, D1): this cloud session cannot expose `localhost` to the PO (Q-4). The PO checks in real Chrome, Edge, Firefox and Safari through the GitHub Pages URL (if approved) or a local run on their machine using the README; these are in addition to CI, never replaced by it. Script per story: the AC examples, a real paste, Tab/Escape, phone keypad (`inputmode`), dark mode.
+    90	
+    91	## Visual review and accessibility audit
+    92	- ux-ui-designer runs headless Chromium screenshots at 375, 768 and 1280 px, light and dark (`colorScheme`), for idle, result (Pass and Fail), pass-mark-empty and error, plus a 320 px overflow check (`scrollWidth` = 320); walks the visual review checklist in ui-design.md; card height and button position must not change between states.
+    93	- axe (`@axe-core/playwright`, ADR-006) runs in `a11y.spec.ts` on all 3 engines with tags `wcag2a, wcag2aa, wcag21a, wcag21aa, wcag22aa`; pass = 0 violations. Screen-reader output (VoiceOver/NVDA) is a PO manual check.
+    94	
+    95	## Test file layout
+    96	```
+    97	tests/unit/  logic.test.ts  messages.test.ts  edge.test.ts  S-1.test.ts  S-2.test.ts  S-3.test.ts  S-4.test.ts
+    98	tests/e2e/   fixtures.ts  shell.spec.ts  S-1.spec.ts  S-2.spec.ts  S-3.spec.ts  S-4.spec.ts  edge.spec.ts  a11y.spec.ts
+    99	```
+     1	# Technical Design
+     2	
+     3	Stage 5, solution-architect. Binding inputs: CLAUDE.md §11, `docs/user-stories.md` (S-1..S-4, M-1..M-40), A-1..A-17, approved `ui-design.md`.
+     4	
+     5	## Stack
+     6	- Node 20 LTS (`.nvmrc` `20`, `engines` `">=20"`); the build container runs Node 22, which satisfies it.
+     7	- Vite 6 (supports every Node 20 minor; Vite 7 needs ≥ 20.19), `base: './'` so the same build works locally and on GitHub Pages.
+     8	- TypeScript 5, `strict: true`, `noUncheckedIndexedAccess`, no `any`.
+     9	- Vitest 4.1.11 (node environment; supports Node ^20 || ^22 || >=24 and Vite ^6; see ADR-005 amendment), `@playwright/test` pinned to exactly `1.56.1` (browsers installed for that version), `@axe-core/playwright` (ADR-006), `@types/node` (types for config files only).
+    10	- **Zero runtime dependencies.** No network calls, fonts, CDNs, analytics or storage. System font stack only.
+    11	
+    12	## Module map
+    13	| File | Layer | Responsibility |
+    14	|------|-------|----------------|
+    15	| `src/logic/arith.ts` | logic | `floorDiv`, `ceilDiv` for non-negative safe integers: `floorDiv(a,b) = (a - a % b) / b`, `ceilDiv = floorDiv + (a % b ? 1 : 0)` |
+    16	| `src/logic/score.ts` | logic | `scoreTenths(E,T)`, `isPass(E,T,P)` on scaled integers |
+    17	| `src/logic/gap.ts` | logic | `gap(E,T,P)` → `{kind:'exact'} \| {kind:'short',h} \| {kind:'above',h} \| {kind:'aboveTiny'}` (h = hundredths of a mark) |
+    18	| `src/logic/format.ts` | logic | `formatScore(tenths)` → "76.0"; `formatMarks(h)` → "699,999.99" / "0.6" / "6" (ADR-007) |
+    19	| `src/validation/parse.ts` | validation | `parseDecimal(raw, maxDp)` → `{ok:true,value:number\|null} \| {ok:false,code}`; `null` = empty; value is a scaled integer |
+    20	| `src/validation/validate.ts` | validation | `validateInputs({earned,total,pass})` → per-field results with range and cross-field (M-15) checks, A-15 order |
+    21	| `src/messages.ts` | — | M-1..M-40 verbatim, `errorText(field, code)`, `gapText(gap)` (fills `{n}`, singular when h = 100) |
+    22	| `src/ui/view-model.ts` | ui (pure) | `toViewModel(raw)` → `{state, fieldErrors, score, verdict, gapText, announcement}`; no DOM, unit-tested |
+    23	| `src/ui/render.ts` | ui | builds the card once from `messages.ts`; `apply(vm)` sets text, `aria-invalid`, classes; never calculates |
+    24	| `src/ui/app.ts` | ui | events (`input`, `keydown` Escape, button `click`, form `submit` prevented), focus, 500 ms announcement debounce |
+    25	| `src/main.ts` | entry | imports the 3 CSS files, `mountApp(document.getElementById('app'))` |
+    26	| `src/styles/tokens.css` · `base.css` · `components.css` | styles | tokens from ui-design.md (light `:root`, dark media query) · reset, page, type · card, field, error, result, verdict, gap, button |
+    27	| `index.html` | entry | `lang="en"`, viewport, `color-scheme` meta, `<title>` = M-30 (e2e asserts it equals `messages.ts`), `<div id="app">` |
+    28	
+    29	Dependency direction: `ui → validation → logic`, `ui → messages`. Logic and validation never import from `ui` or touch `document`.
+    30	
+    31	## Decimal strategy (ADR-002)
+    32	Every input becomes a **scaled integer** by string parsing (never `parseFloat`/`Number()` on the raw text):
+    33	- `E` = marks earned × 100, `T` = total × 100 (≤ 2 dp, A-4) · `P` = pass mark × 10 (≤ 1 dp, A-6).
+    34	- Parse: digits before the dot form the integer part, the fraction is right-padded to `maxDp` digits, `value = int × 10^maxDp + frac`.
+    35	- **Saturation:** if the integer part (leading zeros stripped) has more than 9 digits, value = `OVER_LIMIT` (10^12). It is above every limit, so it can only produce a range or M-15 error and never reaches arithmetic.
+    36	
+    37	| Quantity | Exact formula (integers only) | Rounding |
+    38	|----------|-------------------------------|----------|
+    39	| Score in tenths of a percent | `s = floorDiv(E × 1000, T)`; shown as `⌊s/10⌋ + "." + s%10 + "%"` | down, 1 dp (A-3) |
+    40	| Verdict | Pass ⇔ `E × 1000 ≥ P × T` (exact score, A-1, A-2) | none |
+    41	| Gap numerator (marks × 10⁵) | `D = E × 1000 − P × T` | — |
+    42	| Shortfall (D < 0), hundredths | `h = ceilDiv(−D, 1000)` → never 0, so under 0.01 shows "0.01" | up, 2 dp (A-10) |
+    43	| Surplus (D > 0), hundredths | `h = floorDiv(D, 1000)`; h = 0 → M-11 | down, 2 dp (A-10) |
+    44	| Equal (D = 0) | M-10 | — |
+    45	| Future S-6: marks needed | `ceilDiv(P × T, 1000)` hundredths | up |
+    46	
+    47	**Magnitude:** max E = max T = 1,000,000.00 → 100,000,000; max P = 1000. Largest product: `E × 1000` ≤ 1.0 × 10¹¹ and `P × T` ≤ 1000 × 10⁸ = 1.0 × 10¹¹; |D| ≤ 1.0 × 10¹¹. `Number.MAX_SAFE_INTEGER` = 9,007,199,254,740,991 ≈ 9.0 × 10¹⁵, so the headroom is about 90,000×. All values are exact in `number`; BigInt is not needed. `%` and the exact-multiple division in `floorDiv` are exact for safe integers.
+    48	
+    49	**Spot-check** (python3 with these formulas; Node gives the same integers):
+    50	| AC | Input | E·1000 vs P·T | D | Shown |
+    51	|----|-------|---------------|---|-------|
+    52	| S-1.6 | 999999.99 of 1000000 @ 100 | 99,999,999,000 < 100,000,000,000 | −1,000 | "99.9%", Fail, "0.01 marks short" |
+    53	| S-2.5 | 16 / 17 of 23.33 @ 70 | 1,600,000 / 1,700,000 vs 1,633,100 | −33,100 / +66,900 | "0.34 marks short" / "0.66 marks above" |
+    54	| S-2.6 | 16.07 / 16.08 of 23 @ 69.9 | 1,607,000 / 1,608,000 vs 1,607,700 | −700 / +300 | "69.8%" Fail "0.01 marks short" / "69.9%" Pass M-11 |
+    55	| S-2.7 | 0.01 of 1000000 @ 70 | 1,000 vs 70,000,000,000 | −69,999,999,000 | "699,999.99 marks short" |
+    56	| S-1.4 | 2 of 3 @ 70 | floorDiv(200,000, 300) = 666 | — | "66.6%" (not "66.7%") |
+    57	
+    58	All 30 numeric examples in S-1..S-4 were run through the script and match their ACs.
+    59	
+    60	## Limits and number display
+    61	| Input | Scale | Min | Max | Max dp | Empty |
+    62	|-------|-------|-----|-----|--------|-------|
+    63	| Marks earned | ×100 | 0 | ≤ total (M-15) | 2 | M-1 in result, no error |
+    64	| Total marks possible | ×100 | > 0 (M-19) | 1,000,000 (M-20) | 2 | M-1 in result, no error |
+    65	| Pass mark | ×10 | 0 | 100 (M-24) | 1 | score shown + M-2, no verdict or gap |
+    66	
+    67	- Score: always 1 dp, "%" suffix, range "0.0%".."100.0%" (no separators needed). Gap: `formatMarks(h)` = integer part with a comma every 3 digits (string regex, not `toLocaleString`/`Intl`, ADR-007), then "." + 2-digit fraction with trailing zeros trimmed ("0.60" → "0.6", "2.00" → "2"). Singular M-7/M-9 only when h = 100.
+    68	- Output is built only from these integers and catalogue strings, so NaN, Infinity, undefined or blank cannot appear.
+    69	
+    70	## Validation (A-13..A-15)
+    71	Accepted text after `trim()`: `^-?(\d+\.?\d*|\.\d+)$`; empty after trim → `value: null`. Per field, first failing check wins:
+    72	
+    73	| # | Check | Earned | Total | Pass mark |
+    74	|---|-------|--------|-------|-----------|
+    75	| 1 | Not a number (letters, ",", "$", "+", "e", 2+ dots, inner spaces, "-" without a valid number) | `NOT_NUMBER` → M-12 | M-16 | M-21 |
+    76	| 2 | Leading "-" before a valid number, incl. "-0" (A-14) | `NEGATIVE` → M-13 | M-17 | M-22 |
+    77	| 3 | Fraction digits as typed > max dp ("17.500" has 3) | `TOO_MANY_DP` → M-14 | M-18 | M-23 |
+    78	| 4 | Range | — | `ZERO` → M-19 · `TOO_LARGE` → M-20 | `TOO_LARGE` → M-24 |
+    79	| 5 | Earned > total, only when both pass 1–4 | `OVER_TOTAL` → M-15 (under earned) | — | — |
+    80	
+    81	- Codes are a TypeScript union per field; `messages.ts` maps `(field, code)` → M-ID text. Nothing throws to the UI.
+    82	- Bare "." or "-" (Q-13, open): default = not a number (strict A-13 wording); one-line change if the PO prefers "treat as empty".
+    83	
+    84	## State model
+    85	`toViewModel` is recomputed from the three raw strings on every event (no stored calculation state). Precedence top-down:
+    86	
+    87	| State | Condition | Result area | Fields |
+    88	|-------|-----------|-------------|--------|
+    89	| error | any field has an error | "!" + M-3; no score, verdict, gap (A-16) | each invalid field shows its own message, `aria-invalid="true"` |
+    90	| idle | earned or total empty, no errors | M-1 | no messages |
+    91	| pass-mark-empty | earned + total valid, pass empty | score + M-2 in the verdict slot; no gap (A-12) | no messages |
+    92	| result | all three valid | score + verdict block (M-4/M-5) + gap line (M-6..M-11) | no messages |
+    93	
+    94	Transitions: idle → result/pass-mark-empty as the last value becomes valid · result → error on any invalid edit · error → recovery: the message clears on the edit that makes the field valid (M-15 re-checks when total changes) and the result returns at once (S-3.8) · any state → idle on Next learner / Escape. Reload → initial state (earned "", total "", pass "70"); inputs carry `autocomplete="off"` so Firefox does not restore values.
+    95	
+    96	## Interaction and accessibility
+    97	- Inputs: `type="text" inputmode="decimal" autocomplete="off" spellcheck="false"` (ADR-003), `<label for>`, `aria-describedby` → error slot (always present), `aria-invalid` only while in error.
+    98	- Live update on every `input` event (typing, paste, cut, autofill); no Calculate button (A-7). Visual update is immediate.
+    99	- **Announcements:** accept the designer's 500 ms debounce, for the visually hidden `role="status"` node only; it announces only when the text differs from the last one. Content per ui-design.md §Accessibility. e2e waits with auto-retrying assertions, so tests stay deterministic.
+   100	- Enter: the `<form>` `submit` is prevented and the button is `type="button"`, so Enter never reloads or changes values.
+   101	- Next learner (A-17): click or Escape in marks earned only → earned = "", recompute (clears M-15 and any earned message), focus earned, announce M-1. Idempotent, so rapid clicks are safe. Escape in other fields does nothing. Button has `aria-keyshortcuts="Escape"`.
+   102	- WCAG 2.2 AA: tokens from ui-design.md (contrast computed there), 44 × 44 targets, visible focus ring, icon + text for errors and verdict, `prefers-reduced-motion`, no horizontal scroll at 320 px; axe in e2e (ADR-006).
+   103	
+   104	## Architecture decisions (ADRs, proposed for PO approval at Gate 5)
+   105	| ADR | Decision | Alternatives considered | Reason |
+   106	|-----|----------|-------------------------|--------|
+   107	| ADR-001 | No UI framework: vanilla TypeScript + DOM, build the card once and update text | React/Preact, Svelte, Lit | One screen, 3 inputs, 4 states: a framework adds bundle, deps and concepts with no benefit; CLAUDE.md §11 |
+   108	| ADR-002 | Decimal strategy: scaled integers in `number`, exact integer formulas above | Floats + `toFixed`/epsilon; BigInt; decimal.js/big.js | Max magnitude 1 × 10¹¹ ≪ 9 × 10¹⁵ so `number` is exact; floats break the 69.96 vs 70 boundary; BigInt or a library is unneeded weight |
+   109	| ADR-003 | `<input type="text" inputmode="decimal">` + own string parser | `type="number"`; `pattern` attribute | `type="number"` hides "abc", "17,5", "1e400" from validation (value reads ""), differs by engine and changes on scroll; `inputmode` still shows the numeric keypad on phones |
+   110	| ADR-004 | Plain CSS in 3 files with custom-property tokens, no CSS framework or preprocessor | Tailwind, Sass, CSS Modules, CSS-in-JS | Tokens already specified; Vite bundles plain CSS natively; zero deps; easy dark mode via one media query |
+   111	| ADR-005 | Vitest 4.1.11 (node env, pure modules only) + Playwright 1.56.1 on Chromium, Firefox, WebKit; e2e runs against `vite build` + `vite preview` | Jest; jsdom/happy-dom DOM tests; Cypress | Vitest shares Vite's TS config; DOM behaviour is tested in real engines instead of a simulated DOM (no jsdom dep); Cypress has no WebKit, which D1 needs for Safari (amended 2026-10-08, see below) |
+   112	| ADR-006 | devDependency `@axe-core/playwright` (exact version locked) for an automated WCAG 2.2 AA check in e2e | Manual checks only; Lighthouse CI; pa11y | Runs inside the existing Playwright suite on all 3 engines, offline, no extra runner; dev-only, never shipped |
+   113	| ADR-007 | Own deterministic number formatter (comma every 3 digits via string regex) | `toLocaleString`, `Intl.NumberFormat('en-US')` | Output must be identical in every browser and OS locale; integers are already exact, so formatting is a 5-line pure function |
+   114	| ADR-008 | Zero runtime dependencies; Vite `base: './'` | Absolute base `/Web-Calculator/`; CDN-hosted libraries | Works from a local preview and any Pages sub-path without change; nothing to fetch at runtime (D2) |
+   115	| ADR-009 | Firefox + WebKit e2e (and Node 20) run in GitHub Actions `.github/workflows/ci.yml` on every push/PR: ubuntu-latest, Node from `.nvmrc`, `npm ci` → `npm audit` → `npm test` → `npm run build` → `npx playwright install --with-deps chromium firefox webkit` → `npx playwright test`, HTML report uploaded as an artifact. Local QA in the build container stays Chromium (DEC-13, PO-approved) | apt Firefox/WebKitGTK; another e2e tool (WebDriver); manual-only browser testing; paid cloud browser grid | Container proxy returns 403 for Playwright's browser hosts and the PO will not unblock them; Playwright can only drive its own patched builds, so stock apt browsers fail; WebDriver is new tooling, its drivers also need downloads and Linux has no Safari engine; manual-only is not repeatable (PO checks stay in addition); paid grids break the no-paid-services rule. Actions is free for public repos, needs no secrets, and runs the same pinned Playwright 1.56.1 |
+   116	
+   117	- **ADR-005 amended 2026-10-08 (Sprint 0):** Vitest 3 → **4.1.11**.
+   118	  - Reason: `npm audit` on Vitest 3.2.7 reports 2 critical advisories (tinypool ≤ 2.1.0 / < 2.1.2 prototype-pollution gadget → RCE via worker/run options) and 1 moderate (`@vitest/mocker` path traversal, fixed in vitest ≥ 4.1.11). Vitest 4.1.11 supports Node ^20 || ^22 || >=24 and Vite ^6, so the Node 20 target and Vite 6 still hold. Dev-only dependency; nothing ships at runtime (ADR-008 unchanged).
+   119	  - Alternatives: stay on 3.2.7 and accept the dev-only advisories (rejected: known critical advisories in the toolchain for no benefit); Vitest 5 (rejected: requires Node ≥ 22.12, breaking the Node 20 LTS target).
+     1	# Backlog
+     2	
+     3	Stage 5, solution-architect. Priorities from `docs/user-stories.md` (DEC-9). Design in `technical-design.md`, tests in `test-plan.md`.
+     4	Time left for building: about 2 h. If time runs short, cut S-4 or polish first, never tests or quality (CLAUDE.md A.7).
+     5	
+     6	## Priority order
+     7	
+     8	| # | Item | Story / job / role | MoSCoW | Size | Est. | Sprint | Branch |
+     9	|---|------|--------------------|--------|------|------|--------|--------|
+    10	| 1 | Scaffold, design system, app shell (no calculation) | enables all (D2, D6, D10) | — | M | 30 min | 0 | `main` (chore) |
+    11	| 2 | Score and pass/fail verdict | S-1 · J-1, J-3 · R-1, R-2 | Must | M | 25 min | 1 | `feat/S-1` |
+    12	| 3 | Marks short of or above the pass mark | S-2 · J-2 · R-1 | Must | M | 15 min | 1 | `feat/S-2` |
+    13	| 4 | Clear message for an invalid or impossible entry | S-3 · J-4 · R-2 | Must | M | 25 min | 1 | `feat/S-3` |
+    14	| 5 | Next learner in one step | S-4 · J-5 · R-2 | Should | S | 10 min | 2 | `feat/S-4` |
+    15	| 6 | Hardening: edge sweep, axe audit, console check, 320 px check | D1, D5, D6 | — | S | 10 min | 2 | `main` (test/fix) |
+    16	| 7 | Polish: visual review fixes, final screenshots 375/768/1280 light + dark | D6 | — | S | 5 min | 2 | `main` (style) |
+    17	| 8 | Copy the outcome as one line | S-5 · J-5 · R-2 | Could | S | — | Future | — |
+    18	| 9 | Marks needed to pass | S-6 · J-2 · R-1 | Could | S | — | Future | — |
+    19	
+    20	Total planned: about 2 h (Sprint 0 ≈ 30 min, Sprint 1 ≈ 65 min, Sprint 2 ≈ 25 min). Estimates include writing tests first and the QA + visual review loop.
+    21	
+    22	## Sprint 0 — Scaffold and shell
+    23	**Goal:** a reviewer can clone, install, test and see the approved empty card (idle state, light and dark) with every npm command passing.
+    24	- Package files in `sabee-khan-calculator/`: `package.json` (engines `>=20`, zero runtime dependencies), `package-lock.json`, `.nvmrc` (`20`), `tsconfig.json` (strict), `vite.config.ts` (`base: './'`, Vitest config), `playwright.config.ts` (Chromium, Firefox, WebKit).
+    25	- `src/styles/tokens.css`, `base.css`, `components.css` from the approved ui-design.md tokens.
+    26	- `index.html` + `src/main.ts` + `src/ui/render.ts` render the static card from `src/messages.ts` (M-1, M-25, M-30..M-40): heading, three fields (pass mark pre-filled "70"), divider, idle result, button + Esc hint. No calculation, no event handling beyond what the shell needs.
+    27	- Tests: `tests/unit/messages.test.ts` (catalogue text), `tests/e2e/shell.spec.ts` (loads, title, labels, idle text, no console errors, no horizontal scroll at 320 px).
+    28	- Exit: `npm ci && npm test && npm run test:e2e && npm run build` pass; ux-ui-designer confirms the shell matches the mockup.
+    29	
+    30	## Sprint 1 — MVP (Must)
+    31	**Goal:** a learner or instructor gets an exact score, verdict and gap for any valid entry, and a clear inline message for every invalid one.
+    32	
+    33	Recommended build order: **S-1 → S-2 → S-3** (one branch and one QA loop each).
+    34	- **S-1 first** because it builds the core that every other story stands on: the exact decimal parser (`parse.ts`, happy path plus typed error codes), the scaled-integer score and verdict (`score.ts`), the view model and live rendering. Its ACs are all valid inputs, so they test the decimal strategy directly. Until S-3 lands, any invalid input shows M-3 with no score (never NaN or blank), so S-1 is safe on its own.
+    35	- **S-2 second** because it reuses S-1's integers (one extra formula and the formatter) and S-3.8 needs the gap line ("1.4 marks above the pass mark", "6 marks above the pass mark") to pass.
+    36	- **S-3 last in the sprint** because its ACs mix error states with results ("76.0%" for " 017.5 ", "0.0%" for total "1000000", gap lines after recovery), so it can only pass in full once S-1 and S-2 exist. It adds the range and cross-field checks, the per-field messages, `aria-invalid`/`aria-describedby`, and the pass-mark-empty state (S-3.2).
+    37	- A validation-first order (S-3 first) was rejected: S-3 could not be accepted on its own because four of its eight ACs show a score or gap.
+    38	
+    39	## Sprint 2 — Should, hardening, polish
+    40	**Goal:** an instructor can move through a cohort in one keystroke, and the app passes the full edge sweep, an axe audit and the visual review on all three engines.
+    41	- S-4 (Next learner button + Escape in marks earned).
+    42	- Hardening: `tests/e2e/edge.spec.ts` and `tests/e2e/a11y.spec.ts` (axe, ADR-006), every state in light and dark; fix any defect on its story branch or as `fix:` on `main` before release.
+    43	- Polish: ux-ui-designer visual review at 375/768/1280, light and dark; final screenshots to `design/screenshots/`.
+    44	
+    45	## Future (Not implemented)
+    46	- S-5 Copy the outcome as one line (Could). Needs the Clipboard API, which differs by engine and needs a secure context; not worth the budget.
+    47	- S-6 Marks needed to pass (Could). Formula ready: needed hundredths = ceil(P × T / 1000) (see technical-design.md).
+    48	
+    49	## Definition of Ready (CLAUDE.md §9)
+    50	**DoR**: traces to a job and role · ACs testable with exact values and text · sized · UI states defined in ui-design.md · no open questions.
+    51	
+    52	## Definition of Done (CLAUDE.md §9)
+    53	**DoD**:
+    54	- [ ] Unit + e2e tests written first (shown failing), now passing on Chromium, Firefox, WebKit
+    55	- [ ] Every AC verified by qa-engineer in the running app
+    56	- [ ] Errors show clear messages from `messages.ts`
+    57	- [ ] UI matches the design spec and passes the visual review checklist
+    58	- [ ] Keyboard-operable; no console errors or warnings
+    59	- [ ] Docs updated (QA report, sprint log, tracker)
+    60	- [ ] Committed and pushed
+    61	
+    62	## Readiness check (Stage 5)
+    63	| Story | Job + role | ACs exact | Sized | UI states in ui-design.md | Open questions | Ready |
+    64	|-------|-----------|-----------|-------|---------------------------|----------------|-------|
+    65	| S-1 | J-1, J-3 · R-1, R-2 | 8 | M | result, idle | none | Yes |
+    66	| S-2 | J-2 · R-1 | 8 | M | gap line | none | Yes |
+    67	| S-3 | J-4 · R-2 | 8 | M | error, pass mark empty | Q-13 (bare "." / "-", not in any AC) | Yes, Q-13 default applies until answered |
+    68	| S-4 | J-5 · R-2 | 5 | S | button, Esc hint | none | Yes |
+25:| DEC-17 | 2026-10-08 | Gate 7 approved. Sprint 2 scope (b): S-4 cut (stays Not implemented; its "Next learner" button and Esc hint removed from the UI until built) — polish + hardening only, then release. GitHub Pages live URL enabled now (D3) so the PO can do real-browser checks. | PO | Time budget exceeded; MVP meets the brief; rule "cut Should stories, never quality" |
+26-
+27-## Open questions
+28-
+29-| ID | Raised | Question | Owner | Status |
+30-|----|--------|----------|-------|--------|
+31-| Q-1 | Stage 1 | Role applied for, HR contact name/email, deadline and expected submission date (for D18 and D20). | PO | Open |
+# Deploy the built app to GitHub Pages (D3, DEC-17). The live URL is offered IN ADDITION to the local run.
+# No secrets, no paid services. Vite `base: './'` (ADR-008) keeps asset paths relative for the Pages sub-path.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: sabee-khan-calculator
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up Node from .nvmrc
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: sabee-khan-calculator/.nvmrc
+          cache: npm
+          cache-dependency-path: sabee-khan-calculator/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: sabee-khan-calculator/dist
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

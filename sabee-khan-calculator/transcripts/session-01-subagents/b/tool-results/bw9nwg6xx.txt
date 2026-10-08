@@ -1,0 +1,344 @@
+# Quiz score and pass-mark calculator — Sabee Khan
+
+## What the app is and who it is for
+
+A one-screen web calculator that turns raw quiz marks (for example 17.5 out of 23) into a percentage score, a clear Pass or Fail verdict against a pass mark, and how many marks the result is short of or above that pass mark. It is for two people on a compliance course: the **Learner**, who has had a quiz returned as raw marks and needs to know whether they passed and by how much before a resit deadline, and the **Instructor**, who marks short-answer assessments by hand and must record the same defensible percentage and verdict for every learner (see [app roles](docs/app-roles.md)). Mistyped or impossible entries, such as more marks earned than possible or a total of 0, get a plain message naming what to fix and no score.
+
+![The calculator showing 17.5 of 23 marks: 76.0%, Pass, 1.4 marks above the pass mark](docs/process/design/screenshots/final-1280-light.png)
+
+## Why this calculator
+
+Chosen by the product owner from three options (decision DEC-6; full comparison in the [product brief](docs/process/product-brief.md)):
+
+- **Fits the company:** learners and instructors are KnowledgeCity's everyday users.
+- **Roles that differ:** the Learner wants a verdict and the gap to the pass mark; the Instructor wants a consistent, defensible percentage.
+- **Edge cases come from the domain:** 0 possible marks (division by zero), marks earned above marks possible, rounding at the pass boundary (69.96% must never look like a 70% pass).
+- **Small and safe for 2–4 hours:** 3 inputs, 3 Must stories, no currency or locale formatting.
+- **Fresh:** it does not repeat an earlier bill-splitter attempt in this repository's history.
+
+## Prerequisites
+
+- **Node.js 20 LTS.** `.nvmrc` says `20` (run `nvm use` if you use nvm); `package.json` requires `"node": ">=20"`. CI runs on Node 20.
+- **npm**, which comes with Node.js.
+- **Git**, to clone the repository.
+- No accounts, API keys, backend or cloud services. The app has no runtime dependencies.
+
+## Install and start
+
+```bash
+git clone https://github.com/Sabeekhann/Web-Calculator.git
+cd Web-Calculator/sabee-khan-calculator
+npm ci            # npm install also works
+npm run dev
+```
+
+Open the URL Vite prints, normally <http://localhost:5173/>.
+
+Production build:
+
+```bash
+npm run build     # type-check, then build into dist/
+npm run preview   # serve dist/ at http://127.0.0.1:4173/
+```
+
+## Running the tests
+
+**Unit tests (Vitest)**: 131 tests in `tests/unit/`, one file per story (S-1, S-2, S-3) plus the message catalogue.
+
+```bash
+npm test
+```
+
+**End-to-end tests (Playwright)**: 51 tests per engine, on Chromium, Firefox and WebKit, run against the production build (Playwright builds it and starts `vite preview` itself).
+
+```bash
+npx playwright install --with-deps    # one time: downloads the Playwright browsers
+npm run test:e2e
+```
+
+`--with-deps` also installs the system libraries Firefox and WebKit need on Linux, so it may ask for an admin (sudo) password; this is the same step CI runs. On Windows and macOS, plain `npx playwright install` is enough.
+
+| Spec file (`tests/e2e/`) | Tests | Covers |
+|-----------|-------|--------|
+| `shell.spec.ts` | 4 | Page title and heading, labelled inputs, idle state, no sideways scroll at 320 px |
+| `S-1.spec.ts` | 8 | S-1 acceptance criteria: score and Pass/Fail verdict |
+| `S-2.spec.ts` | 9 | S-2 acceptance criteria: marks short of or above the pass mark, plus no layout shift |
+| `S-3.spec.ts` | 10 | S-3 acceptance criteria: error messages, plus no layout shift |
+| `a11y.spec.ts` | 10 | axe scan for WCAG 2.2 AA in 5 states (idle, Pass, Fail, error, pass mark empty), light and dark |
+| `edge.spec.ts` | 10 | Edge sweep: spaces, lone "." or "-", 400-digit input, pasted text, Enter key, reload, key-by-key typing, never NaN/Infinity/undefined/blank |
+
+**CI:** [`.github/workflows/ci.yml`](https://github.com/Sabeekhann/Web-Calculator/blob/main/.github/workflows/ci.yml) runs on every push and pull request, on Node 20: `npm ci`, `npm audit`, unit tests, build, then the e2e suite on all three engines. Playwright never retries a failed test (`retries: 0`). No coverage tool is configured.
+
+## Reviewer quick check
+
+Run `npm run dev`, open the page, and try (the pass mark starts at 70):
+
+1. Type **17.5** in Marks earned and **23** in Total marks possible. Expect **76.0%**, **Pass**, "1.4 marks above the pass mark", with no button to press. (S-1, S-2)
+2. Change Marks earned to **15.5**. Expect **67.3%**, **Fail**, "0.6 marks short of the pass mark". (S-1, S-2)
+3. Enter **17.49** of **25**. Expect **69.9%** and **Fail**, never "70.0%". Then **17.5** of **25**: **70.0%**, **Pass**, "Exactly on the pass mark". (S-1, S-2 boundary)
+4. Enter **23.5** of **23**. Expect "Marks earned can't be more than the total marks possible." and no score. Change it to **17.5**: the message goes and 76.0% Pass returns. (S-1/S-2 error case)
+5. Type **abc** in Marks earned and **0** in Total. Expect "Marks earned must be a number, like 17.5." and "Total marks possible must be more than 0." together, and "The score will appear once every entry is valid." (S-3)
+6. Put back 17.5 of 23 and type **-5** in the pass mark. Expect "Pass mark can't be negative." and no score. (S-3)
+7. Clear the pass mark. Expect 76.0% to stay, with "Enter a pass mark to see whether this is a pass or a fail." and no red message. (S-3)
+
+## AI tool and model used
+
+Claude Code (cloud session, launched from the desktop app), Claude Opus 5.5, with 7 subagents defined in `.claude/agents/` at the repo root (DEC-4).
+
+How the product owner directed the work (rules in [CLAUDE.md](https://github.com/Sabeekhann/Web-Calculator/blob/main/CLAUDE.md), every decision in the [decision log](docs/process/decision-log.md)):
+
+- **Gated stages:** nothing moved to the next stage until the PO approved it at a gate.
+- **Documentation first:** roles → jobs → stories with acceptance criteria → design → plan → code.
+- **Tests first, builder is not the checker:** the developer wrote failing tests from the acceptance criteria before the code; the qa-engineer, ux-ui-designer and release-auditor checked the work independently.
+- **PO accepted every story** on a QA PASS, then checked the live app in real browsers before release (DEC-14 to DEC-18).
+
+## Code changed by hand
+
+None.
+
+## Assumptions
+
+Approved by the product owner (IDs match the [decision log](docs/process/decision-log.md)):
+
+- **A-1** A learner passes when the score is at or above the pass mark.
+- **A-2** The verdict uses the exact, unrounded score, never the displayed value.
+- **A-3** The score is shown to 1 decimal place, rounded down (69.96% → "69.9%", 2/3 → "66.6%"), so a failing score never looks like the pass mark.
+- **A-4** Marks earned and total marks possible accept up to 2 decimal places, with a dot as the decimal separator.
+- **A-5** Total marks possible is more than 0 and at most 1,000,000.
+- **A-6** The pass mark starts at 70, can be changed, and accepts 0 to 100 with up to 1 decimal place.
+- **A-7** Results update as you type; there is no Calculate button.
+- **A-8** Marks earned can't be more than total marks possible (no bonus marks).
+- **A-9** The gap to the pass mark is shown in marks, not percentage points.
+- **A-10** Marks needed = pass mark ÷ 100 × total. A shortfall is rounded up and a surplus rounded down to 2 decimal places; a surplus under 0.01 shows "Less than 0.01 marks above the pass mark"; equal shows "Exactly on the pass mark".
+- **A-11** Gap numbers drop trailing zeros ("0.60" → "0.6") and use comma thousands separators ("699,999.99"); "mark" is singular only for exactly 1.
+- **A-12** An empty field (or only spaces) never shows an error: the result area asks for the missing entries; with no pass mark the score still shows and the verdict area asks for a pass mark.
+- **A-13** Accepted numbers: digits with at most one dot (".5" and "5." are fine), leading zeros, surrounding spaces ignored. Anything else ("abc", "17,5", "$17", "1.2.3", "1e400", "+5") gets that field's not-a-number message.
+- **A-14** A minus sign before a number, including "-0", gets that field's can't-be-negative message.
+- **A-15** Each field is checked in order (not a number → negative → too many decimals → range), then marks earned against total; each field shows at most one message, under itself.
+- **A-16** While any field has an error, the result area says "The score will appear once every entry is valid." instead of a score.
+- **A-17** "Next learner" (and Escape) would clear only marks earned and keep total and pass mark. This applies to S-4, which is not built.
+- **A-18** A field holding only "." counts as empty, so no error flashes while typing ".5"; a lone "-" gets the can't-be-negative message.
+
+## Known limitations / Not implemented
+
+Story status is kept in [user-stories.md](docs/user-stories.md). S-1, S-2 and S-3 are Implemented.
+
+- **S-4 Next learner in one step: Not implemented.** Cut when the time budget ran out (DEC-17), following the rule "cut Should stories first, never quality". Its button and Esc hint were taken out of the UI.
+- **S-5 Copy the outcome as one line: Not implemented** (future story).
+- **S-6 Marks needed to pass: Not implemented** (future story).
+- Nothing is saved: no history, no export, and a reload clears the fields.
+- One learner at a time; no batch or CSV import.
+- Dot is the only decimal separator; no locale number formats (no "17,5", no thousands separators in input).
+- Total marks possible is capped at 1,000,000.
+- Uses the system font stack, so text looks slightly different on Windows, macOS and other systems.
+
+## Browser support
+
+Current Chrome, Edge, Firefox and Safari, on desktop and phone, from 320 px wide, in light and dark mode.
+
+How this was checked:
+
+- **Automated:** Playwright e2e on Chromium, Firefox and WebKit in GitHub Actions on every push (51 tests per engine). Firefox and WebKit run only in CI because the build container could not download those browsers (ADR-009 in the [technical design](docs/process/technical-design.md)); local runs in that container used Chromium.
+- **Manual:** the product owner ran a 14-step checklist ([sprint-2 QA report](docs/process/qa-reports/sprint-2.md)) in real Chrome, Edge, Firefox and Safari and on a phone; all steps passed (DEC-18).
+
+## Live URL
+
+<https://sabeekhann.github.io/Web-Calculator/>
+
+This is in addition to the local run, not instead of it. It is deployed from `main` by [`.github/workflows/pages.yml`](https://github.com/Sabeekhann/Web-Calculator/blob/main/.github/workflows/pages.yml).
+
+## Docs index
+
+Product documents:
+- [App roles](docs/app-roles.md)
+- [Jobs to be done](docs/jobs-to-be-done.md)
+- [User stories with acceptance criteria and status](docs/user-stories.md)
+
+Process documents (`docs/process/`):
+- [Product brief](docs/process/product-brief.md)
+- [UI design](docs/process/ui-design.md)
+- [Technical design and ADRs](docs/process/technical-design.md)
+- [Test plan](docs/process/test-plan.md)
+- [Backlog](docs/process/backlog.md)
+- [Sprint log](docs/process/sprint-log.md)
+- [Decision log](docs/process/decision-log.md)
+- [Delivery tracker](docs/process/delivery-tracker.md)
+- [QA reports](docs/process/qa-reports/)
+
+## Transcripts
+
+[`transcripts/`](transcripts/) is for the session transcripts (`session-01.md`, …) exported by the product owner, plus the raw session logs. They are added at the final hand-in stage, after the build sessions end.
+# App Roles
+
+The app has no accounts or sign-in. Both roles use the same single screen, and each "They must never" is something the app prevents through how it calculates and checks what is entered, not through access control.
+
+## R-1 Learner
+
+A Learner is an employee on a mandatory compliance course who has just had a quiz marked by hand and returned as raw marks (for example 17.5 out of 23), and who must decide before the resit deadline whether to book a resit. They can enter the marks they earned, the total marks possible and their course's pass mark (70% unless they change it), and see their score as a percentage, a clear pass or fail verdict, how many marks they are short of or above the pass mark, and a plain message telling them what to fix when something they entered cannot be right. They must never be shown a pass for a score below the pass mark, a failing score that looks like the pass mark itself (69.96% is shown as "69.9%", never "70.0%"), or any score for marks that cannot exist, such as more marks earned than were possible or a total of 0.
+
+## R-2 Instructor
+
+An Instructor is a course instructor or L&D trainer who marks short-answer assessments by hand for a cohort of learners, often awarding half marks, and who must record a percentage and a pass or fail for each learner that holds up if a learner challenges it. They can enter one learner's marks earned at a time against the same total possible and the pass mark set for the course, see the score as a percentage to one decimal place, the verdict and the margin to the pass mark, and see a clear message naming the problem whenever an entry is mistyped or impossible. They must never get a different verdict for the same marks, a verdict judged on the rounded score instead of the exact one, or a score from a slip such as an empty or 0 total, more marks earned than possible, more than 2 decimal places, a negative mark or a pass mark outside 0–100.
+
+## How their needs differ
+
+| Need | Learner | Instructor |
+|------|---------|------------|
+| Main question | "Did I pass, and by how much?" | "What percentage and verdict do I record for this learner?" |
+| What they enter most often | Their own marks, once; the pass mark only if their course is not 70% | Marks earned for each learner in turn; total and pass mark stay the same for the whole cohort |
+| What matters most in the result | The verdict and the marks short of or above the pass mark | The exact percentage and a verdict that is the same every time for the same marks |
+| Frequency and speed | Once or twice per quiz, often on a phone | Many times in a row in one marking session; changing one number must give the next answer at once |
+| Tolerance for ambiguity at the boundary | Low: wants a straight answer, not "70.0%" next to Fail | None: a borderline call must survive a learner's challenge |
+
+One design serves both: the verdict and margin answer the Learner's question at a glance, while one fixed rule (pass if the exact score is at or above the pass mark; score shown to 1 decimal place, rounded down) gives the Instructor the same defensible answer for every learner.
+Because the total and pass mark stay in place while only marks earned changes, the Instructor can work through a cohort quickly without the app saving anything.
+# Jobs To Be Done
+
+Each job is written as if no calculator existed: it would make the same sense with a marked paper, a pen and a deadline.
+
+## R-1 Learner
+
+**J-1 (R-1 Learner).** When my hand-marked quiz comes back as raw marks out of a total and the resit deadline is close, I want to know for certain whether I reached the pass mark, even if I missed it by a fraction, so I can decide in time whether to book a resit.
+
+**J-2 (R-1 Learner).** When I find out I fell short of the pass mark, I want to know how many marks I missed it by, so I can judge how much more study I need before I sit the quiz again.
+
+## R-2 Instructor
+
+**J-3 (R-2 Instructor).** When I turn each learner's hand-awarded marks, half marks included, into a score and a pass or fail, I want to judge every learner by the same rule on their exact marks, so I can defend each outcome if a learner challenges it.
+
+**J-4 (R-2 Instructor).** When I tally a learner's marks and make a slip, such as awarding more marks than the quiz allows or leaving the total blank, I want to catch the slip before the outcome goes on record, so I can release scores I never have to correct or retract.
+
+**J-5 (R-2 Instructor).** When I have a whole cohort's papers to work through in one sitting, all marked against the same total and pass mark, I want to get each learner's score and verdict without redoing the parts that never change, so I can finish the cohort in one session and return outcomes promptly.
+
+## Purity check
+
+| Job | Words found from the list | PASS/FAIL |
+|-----|---------------------------|--------|
+| J-1 | none | PASS |
+| J-2 | none | PASS |
+| J-3 | none | PASS |
+| J-4 | none | PASS |
+| J-5 | none | PASS |
+
+List searched (whole words and inside longer words): app, calculator, screen, button, field, click, tap, enter, type, input, display, result, show, page, form, tool, feature, percentage box.
+Rule: "result" or "percentage" as a domain word (a quiz result, a percentage score) is allowed only if the sentence still makes sense with pen and paper; no job uses either word, so no exception is claimed.
+process/qa-reports/S-1.md:1:# QA report — S-1 Score and pass/fail verdict
+process/qa-reports/S-1.md:7:## Test runs (re-run by QA)
+process/qa-reports/S-1.md:11:| `npm test` (Vitest) | container | 2 files, **58 passed** |
+process/qa-reports/S-1.md:14:| CI `Unit, build and e2e (3 engines)` @ `75ff087` | GitHub Actions, Node v20.20.2 | success. Annotations: Unit 58 passed · E2E chromium 12/0 · firefox 12/0 · webkit 12/0 · total 36 passed, 0 failed, 0 flaky, 0 skipped |
+process/qa-reports/S-1.md:16:Test review: `tests/unit/S-1.test.ts` (T-S1.1..T-S1.8) and `tests/e2e/S-1.spec.ts` (E-S1.1..E-S1.8) assert the exact AC scores ("76.0%", "70.0%", "69.9%", "66.6%", "0.0%", "100.0%", "99.9%", "67.3%") and verdict text from M-4/M-5. E-S1.3 types key by key and asserts no "70.0%" after each key. E-S1.4 asserts no "66.7%". The e2e fixture fails any test on a console error, warning or page error. Retries = 0.
+process/qa-reports/S-1.md:18:## Acceptance criteria
+process/qa-reports/S-1.md:23:| S-1.3 | T-S1.3, E-S1.3 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | total 25, earned typed key by key → 4.0%, 68.0%, 68.0%, 69.6%, 69.9%; final "69.9%", "Fail"; "70.0%" never shown |
+process/qa-reports/S-1.md:24:| S-1.4 | T-S1.4, E-S1.4 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | 2 / 3 → "66.6%", "Fail" |
+process/qa-reports/S-1.md:26:| S-1.6 | T-S1.6, E-S1.6 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | pass 100: 999999.99 / 1000000 → "99.9%", "Fail" |
+process/qa-reports/S-1.md:27:| S-1.7 | T-S1.7, E-S1.7 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | pass 70: 0.01 / 1000000 → "0.0%", "Fail" |
+process/qa-reports/S-1.md:28:| S-1.8 | T-S1.8, E-S1.8 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | 17.5 / 23 → "76.0%" Pass; earned → 15.5: "67.3%" Fail; pass mark → 65: "67.3%" Pass |
+process/qa-reports/S-1.md:32:## Edge sweep (input → observed → PASS/FAIL)
+process/qa-reports/S-1.md:40:| earned "5." | "21.7%" Fail (5/23 = 21.73 → floor) | PASS |
+process/qa-reports/S-1.md:41:| earned ".5" | "2.1%" Fail | PASS |
+process/qa-reports/S-1.md:42:| earned "007" | "30.4%" Fail | PASS |
+process/qa-reports/S-1.md:55:| rapid typing "17.5", 4× Backspace, "15.5" | "67.3%" Fail | PASS |
+process/qa-reports/S-1.md:58:| Escape | no change (Next learner / Esc is S-4) | PASS (no crash) |
+process/qa-reports/S-1.md:65:## Accessibility (axe, Chromium, tags wcag2a/aa, wcag21a/aa, wcag22aa)
+process/qa-reports/S-1.md:69:| Fail (15.5 / 23) | 0 violations | 0 violations |
+process/qa-reports/S-1.md:73:## Console errors/warnings: none
+process/qa-reports/S-1.md:77:## Manual checks for the PO (real Chrome, Edge, Firefox, Safari)
+process/qa-reports/S-1.md:81:3. Clear Marks earned and type 1, 7, ., 4, 9 one key at a time. Expect "69.9%" and "Fail"; "70.0%" never appears.
+process/qa-reports/S-1.md:82:4. Type 2 of 3. Expect "66.6%" and "Fail" (not 66.7%).
+process/qa-reports/S-1.md:84:6. Pass mark 100, 999999.99 of 1000000 → "99.9%" Fail. Pass mark 70, 0.01 of 1000000 → "0.0%" Fail.
+process/qa-reports/S-1.md:85:7. 17.5 of 23 at 70 → Pass. Change earned to 15.5 → "67.3%" Fail. Change pass mark to 65 → Pass, still "67.3%".
+process/qa-reports/S-1.md:88:10. Switch the OS to dark mode → result and verdict are still readable; Fail shows a cross, Pass shows a tick.
+process/qa-reports/S-1.md:90:## Verdict: PASS
+process/qa-reports/S-2.md:1:# QA report — S-2 Marks short of or above the pass mark
+process/qa-reports/S-2.md:2:Build: `143c61e` (143c61e7cd9a645437bfe6b0a67d0c67a50250c8) · CI run: https://github.com/Sabeekhann/Web-Calculator/actions/runs/37795758697 (cancelled, see below) · Build of record for 3 engines: `8d496d6` (8d496d627ca5c4685929f0d53cf00d5932d46927) · CI run: https://github.com/Sabeekhann/Web-Calculator/actions/runs/37796019119 (success) · Date: 2026-10-08 · Verifier: qa-engineer
+process/qa-reports/S-2.md:4:- **CI on the exact SHA was cancelled.** Run 37795758697 on `143c61e` ran every step to success (unit, build, e2e in all 3 engines, report upload). Its annotations show E2E chromium 21/0, firefox 21/0, webkit 21/0. At 14:52:26 the run was cancelled with "Canceling since a higher priority waiting request for ci-refs/heads/feat/S-2 exists" because `8d496d6` was pushed at 14:52:14. The run's conclusion is therefore `cancelled`, not `success`.
+process/qa-reports/S-2.md:5:- **Branch head moved during this check** to `8d496d6` ("docs(S-2): visual review screenshots"). `git diff --name-only 143c61e 8d496d6` lists only 3 PNGs under `docs/process/design/screenshots/`, so the code, tests and config are identical. CI run 37796019119 on `8d496d6` is green: Unit 91 passed, E2E chromium 21/0, firefox 21/0, webkit 21/0, total 63 passed, 0 failed, 0 flaky, 0 skipped, Node v20.20.2.
+process/qa-reports/S-2.md:9:## Test runs (re-run by QA)
+process/qa-reports/S-2.md:13:| `npm test` (Vitest) | container | 3 files, **91 passed** (S-1 53, S-2 33, messages 5) |
+process/qa-reports/S-2.md:16:| CI @ `143c61e` (run 37795758697) | GitHub Actions | **cancelled** by concurrency after every step succeeded. Annotations: Unit 91 · chromium 21/0 · firefox 21/0 · webkit 21/0 |
+process/qa-reports/S-2.md:17:| CI @ `8d496d6` (run 37796019119) | GitHub Actions, Node v20.20.2 | **success**. Unit 91 · chromium 21/0 · firefox 21/0 · webkit 21/0 · total 63 passed, 0 failed, 0 flaky, 0 skipped |
+process/qa-reports/S-2.md:23:- The fixture fails a test on any console error, warning or page error.
+process/qa-reports/S-2.md:25:## Acceptance criteria
+process/qa-reports/S-2.md:28:| S-2.1 | T-S2.1, E-S2.1 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | 15.5 / 23 / 70 → "67.3%", "Fail", gap "0.6 marks short of the pass mark"; status "67.3%, Fail, 0.6 marks short of the pass mark" |
+process/qa-reports/S-2.md:31:| S-2.4 | T-S2.4, E-S2.4 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | 13 / 20 / 70 → "65.0%" Fail "1 mark short of the pass mark"; 15 → "75.0%" Pass "1 mark above the pass mark" |
+process/qa-reports/S-2.md:32:| S-2.5 | T-S2.5, E-S2.5 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | 16 / 23.33 / 70 → "68.5%" Fail "0.34 marks short of the pass mark"; 17 → "72.8%" Pass "0.66 marks above the pass mark" |
+process/qa-reports/S-2.md:33:| S-2.6 | T-S2.6, E-S2.6 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | 16.07 / 23 / 69.9 → "69.8%", "Fail", "0.01 marks short of the pass mark"; 16.08 → "69.9%", "Pass", "Less than 0.01 marks above the pass mark" |
+process/qa-reports/S-2.md:38:- Firefox/WebKit = CI run 37796019119 on `8d496d6` (21/21 each, green). The cancelled run 37795758697 on `143c61e` reported the same counts.
+process/qa-reports/S-2.md:44:## Edge sweep (input → observed → PASS/FAIL)
+process/qa-reports/S-2.md:60:| pass 100: 22 / 23 | "95.6%" Fail "1 mark short of the pass mark" | PASS |
+process/qa-reports/S-2.md:65:| rapid edits: 20 `fill`s of earned then 15.5, Enter ×2 | "67.3%" Fail "0.6 marks short …", status matches | PASS |
+process/qa-reports/S-2.md:70:| layout: card height and button y in idle, pass-mark-empty, Pass, Fail, "699,999.99 …" and "1,000,000 … short" | 375 px: 827.52 / 782.52; 768 and 1280 px: 724.91 / 687.91; identical in every state | PASS |
+process/qa-reports/S-2.md:73:**Note (not an S-2 defect).** The "Next learner" button and Esc do nothing yet, so a shown gap line stays after a click. Clearing belongs to S-4, which is not implemented.
+process/qa-reports/S-2.md:75:## Accessibility (axe, Chromium, tags wcag2a/2aa/21a/21aa/22aa)
+process/qa-reports/S-2.md:76:| Scheme | Pass (1.4 above) | Fail (0.6 short) | Exact (M-10) | Tiny (M-11) |
+process/qa-reports/S-2.md:83:- Screenshot review in dark Fail and 320 px light: the line sits under the verdict and is readable, with no clipping.
+process/qa-reports/S-2.md:85:## Console errors/warnings: none
+process/qa-reports/S-2.md:87:- E2E fixture (fails on any error or warning): 21/21 green in Chromium locally and in Chromium, Firefox and WebKit in CI.
+process/qa-reports/S-2.md:89:## Manual checks for the PO (real Chrome, Edge, Firefox, Safari)
+process/qa-reports/S-2.md:91:1. Keep the pass mark at 70. Type 15.5 in Marks earned and 23 in Total. Expected: "67.3%", "Fail", and the line "0.6 marks short of the pass mark" with a small downward marker.
+process/qa-reports/S-2.md:95:5. Set the pass mark to 69.9 with a total of 23. Enter 16.07, then 16.08. Expected: "69.8%" Fail "0.01 marks short …", then "69.9%" Pass "Less than 0.01 marks above the pass mark".
+process/qa-reports/S-2.md:97:7. Delete the pass mark. Expected: the gap line disappears and "Enter a pass mark …" shows. Type 70 again: the line returns, and the Next learner button does not move.
+process/qa-reports/S-2.md:103:## Verdict: PASS
+process/qa-reports/S-2.md:108:- Condition: CI on `143c61e` was cancelled by concurrency, so the green 3-engine evidence is run 37796019119 on `8d496d6`, which has the same code (only 3 docs PNGs added). Use `8d496d6` as the build of record.
+process/qa-reports/S-3.md:1:# QA report — S-3 Clear message for an invalid or impossible entry
+process/qa-reports/S-3.md:4:## Test runs (re-run by QA)
+process/qa-reports/S-3.md:8:| `npm test` (Vitest) | container | 4 files, **131 passed** (S-1 53, S-2 33, S-3 40, messages 5) |
+process/qa-reports/S-3.md:11:| CI @ `ea4b301` (run 37797412005) | GitHub Actions, Node v20.20.2 | **success**, every step green. Annotations: Unit 131 passed (4 files) · E2E chromium 31/0 · firefox 31/0 · webkit 31/0 · total 93 passed, 0 failed, 0 flaky, 0 skipped |
+process/qa-reports/S-3.md:25:- The fixture fails a test on any console error, warning or page error.
+process/qa-reports/S-3.md:27:## Acceptance criteria
+process/qa-reports/S-3.md:33:| S-3.2 | T-S3.2, E-S3.2 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | 17.5 / 23, pass cleared → "76.0%" + "Enter a pass mark to see whether this is a pass or a fail.", no verdict, no gap, no field error |
+process/qa-reports/S-3.md:37:| S-3.6 | T-S3.6, E-S3.6 | PASS | PASS (CI) | PASS (CI) | PO check below | PASS | earned 10, pass mark 70. Total "0" → "Total marks possible must be more than 0."; "1000000.01" → "Total marks possible can't be more than 1,000,000."; "8" → "Marks earned can't be more than the total marks possible." under marks earned (total shows no error); pass mark "100.1" with total 23 → "Pass mark can't be more than 100."; total "1000000" → "0.0%", Fail |
+process/qa-reports/S-3.md:43:## Edge sweep (input → observed → PASS/FAIL)
+process/qa-reports/S-3.md:63:| "5." / ".5" | earned "5." → 21.7% Fail, "11.1 marks short…" · total "25." → 70.0% Pass, "Exactly on the pass mark" · pass "80." → 76.0% Fail · earned ".5" → 2.1% Fail (rounded down, A-3), "15.6 marks short…" · total ".5" → M-15 under earned · pass ".5" → Pass, "17.38 marks above…" | Values correct | PASS |
+process/qa-reports/S-3.md:65:| 0 | earned "0" → 0.0% Fail · total "0" / "0.00" → M-19 · pass "0" → Pass, "17.5 marks above…" | As specified | PASS |
+process/qa-reports/S-3.md:66:| Maximum allowed | total "1000000" → 0.0% Fail, "699,982.5 marks short…" · pass "100" → 76.0% Fail · earned "23" (= total) → 100.0% Pass | Accepted | PASS |
+process/qa-reports/S-3.md:79:| Earned > total as total changes | earned 30: total 23 → M-15 · 30 → 100.0% · 29.99 → M-15 · empty → M-1 (no M-15) · 0 → M-19 only · 300 → 10.0% Fail | Appears and disappears correctly | PASS |
+process/qa-reports/S-3.md:82:## Layout shift (card height / "Next learner" button y, px)
+process/qa-reports/S-3.md:91:## Accessibility (axe, Chromium, tags wcag2a/2aa/21a/21aa/22aa)
+process/qa-reports/S-3.md:100:## Console errors/warnings: none
+process/qa-reports/S-3.md:101:QA script (Chromium): 0 console errors, 0 warnings, 0 page errors across all 179 checks, axe runs and layout runs. CI: the e2e fixture fails on any console problem, and all 93 runs passed (3 engines).
+process/qa-reports/S-3.md:103:## Manual checks for the PO (real Chrome, Edge, Firefox, Safari)
+process/qa-reports/S-3.md:113:9. With a message showing, check that the card and the "Next learner" button do not jump. Check that the red text is readable in dark mode (switch the OS to dark).
+process/qa-reports/S-3.md:117:## Verdict: PASS
+process/qa-reports/sprint-0.md:1:# QA report — Sprint 0 Scaffold and shell
+process/qa-reports/sprint-0.md:7:## Checks
+process/qa-reports/sprint-0.md:11:| 2 | Unit tests | `npm test` (clean copy) | PASS | Vitest 4.1.11: "Test Files 1 passed (1) · Tests 5 passed (5)" (T-M.1a..T-M.1e) |
+process/qa-reports/sprint-0.md:16:| 7 | E2E, Firefox | `npx playwright test --project=firefox` | NOT RUN — blocked (environment) | All 4 failed at launch: "browserType.launch: Executable doesn't exist at /opt/pw-browsers/firefox-1495/firefox/firefox". The proxy log shows `cdn.playwright.dev:443` and `playwright.download.prss.microsoft.com:443` refused with "gateway answered 403 to CONNECT (policy denial…)". Not worked around (CLAUDE.md §16). |
+process/qa-reports/sprint-0.md:20:| 11 | Shell checks | Own Playwright script (scratchpad `qa-s0/scripts/shell-check.mjs`, Chromium, against the 4173 preview). Expected text retyped from user-stories.md, not imported. | PASS (52/53; the 1 FAIL was a mistake in my script, see note) | See the next table |
+process/qa-reports/sprint-0.md:23:### Shell checks (Chromium, preview build, 1280 px unless stated)
+process/qa-reports/sprint-0.md:38:| Button M-25 | "Next learner", type=button, `aria-keyshortcuts="Escape"` | PASS |
+process/qa-reports/sprint-0.md:40:| Tab order from page start | earned → total → pass-mark → Next learner (5th Tab leaves the page) | PASS |
+process/qa-reports/sprint-0.md:43:| Targets ≥ 44×44 | earned 240×44, total 240×44, pass 240×44, Next learner 131.5×44 | PASS |
+process/qa-reports/sprint-0.md:47:| Shell robustness (no calculation yet) | typed "abc" / "1e400", Enter, Esc, 2 clicks + double-click on Next learner: result still M-1, no NaN, no errors | PASS |
+process/qa-reports/sprint-0.md:52:Note on the 1 FAIL in the script run: my check "visible pass-mark label text = 'Pass mark'" read `innerText` and got "Pass mark\n(percent)". Chromium's `innerText` still includes text that is clipped to 1 px (sr-only), so it does not show what is painted. I re-checked with computed styles, text rects, the ARIA snapshot and screenshots: "(percent)" is not painted, and the accessible name is "Pass mark (percent)" as the spec says. This was a mistake in my script, not a code defect.
+process/qa-reports/sprint-0.md:54:## Accessibility (axe, @axe-core/playwright 4.13.0, Chromium, idle state)
+process/qa-reports/sprint-0.md:62:## Console errors/warnings: none
+process/qa-reports/sprint-0.md:63:- Chromium, light and dark contexts: 0 console messages of any type, 0 page errors, 0 failed requests (my script).
+process/qa-reports/sprint-0.md:64:- The committed e2e fixture (`consoleGuard`) also failed none of the 4 Chromium tests.
+process/qa-reports/sprint-0.md:67:## Browser matrix
+process/qa-reports/sprint-0.md:74:## Hygiene
+process/qa-reports/sprint-0.md:80:## Sprint 0 DoD (backlog.md exit and CLAUDE.md §9)
+process/qa-reports/sprint-0.md:87:| Tests written first and shown failing | Not checkable by QA: the work is uncommitted, so there is no history. Rely on the developer's Handoff Return. |
+process/qa-reports/sprint-0.md:92:- O-1: Esc and "Next learner" do nothing yet. That is expected for Sprint 0 ("no event handling beyond what the shell needs"); the behaviour comes with S-4. The hint "or press Esc" is visible before it works. It must be wired in S-4.
+process/qa-reports/sprint-0.md:95:## Manual checks for the PO (real Chrome, Edge, Firefox, Safari)
+process/qa-reports/sprint-0.md:99:3. Under "SCORE" it reads "Enter marks earned and total marks possible to see the score." There is a "Next learner" button with "or press Esc" beside it.
+process/qa-reports/sprint-0.md:100:4. Click in the page, then press Tab four times. Focus moves Marks earned → Total marks possible → Pass mark → Next learner, and each one shows a clear blue outline.
+process/qa-reports/sprint-0.md:106:## Verdict: PASS
+process/qa-reports/sprint-2.md:1:# QA report — Sprint 2 final hardening (DEC-17: S-4 cut; polish + hardening)
+process/qa-reports/sprint-2.md:6:## Test runs (re-run by me)
+process/qa-reports/sprint-2.md:15:| CI, audit + unit + build | same run | PASS | step "Audit dependencies" success; "Unit :: 131 passed, 0 failed, 0 skipped (4 test file(s))" |
+process/qa-reports/sprint-2.md:16:| CI, e2e Chromium | same run | PASS | "E2E chromium :: 51 passed, 0 failed, 0 flaky, 0 skipped" |
+process/qa-reports/sprint-2.md:17:| CI, e2e Firefox | same run | PASS | "E2E firefox :: 51 passed, 0 failed, 0 flaky, 0 skipped" |
+process/qa-reports/sprint-2.md:18:| CI, e2e WebKit | same run | PASS | "E2E webkit :: 51 passed, 0 failed, 0 flaky, 0 skipped" |
+process/qa-reports/sprint-2.md:19:| No retries masking failures | `playwright.config.ts` | PASS | `retries: 0`; 0 flaky reported |
+process/qa-reports/sprint-2.md:25:## Regression — test changes vs `main` (`git diff origin/main -- tests`)
+process/qa-reports/sprint-2.md:30:| `shell.spec.ts` | E-0.2: Tab to Next learner → "exactly 3 focusables in card, last = `#pass-mark`"; E-0.3: button/hint asserted ABSENT; 44 px target check now on all 3 inputs (was button + earned) | No — intended DEC-17 change; target-size coverage widened |
+process/qa-reports/sprint-2.md:37:## Regression — S-1..S-3 ACs
+process/qa-reports/sprint-2.md:46:## Hardening checks (own Playwright script, Chromium, `vite preview` on 127.0.0.1:4173 serving this build; server stopped afterwards)
+process/qa-reports/sprint-2.md:51:| H-3 | No Next learner / Esc hint | PASS | 0 buttons, 0 `<kbd>`, no "Next learner"/"or press Esc" text; pressing Esc leaves "17.5" untouched |
+process/qa-reports/sprint-2.md:56:| H-8 | Contrast / axe | PASS | 0 violations (wcag2a/2aa/21aa/22aa + color-contrast) in error and Fail states, light and dark, at 320 and 1280 px; 13 contrast nodes passed each |
+process/qa-reports/sprint-2.md:62:| H-14 | Card bottom stable | PASS | 8 states (idle, Pass, Fail, 1-mark, pass-empty, 2 error mixes, M-11, 0.0%) → bottom 779.52 px @375, 692.91 px @1280, identical in every state |
+process/qa-reports/sprint-2.md:63:| H-15 | Console | PASS | no console errors/warnings, page errors or failed requests across all script pages; e2e fixture also fails on any console message (all 153 CI tests passed) |
+process/qa-reports/sprint-2.md:67:## Console errors/warnings: none
+process/qa-reports/sprint-2.md:69:## Observations (not defects)
+process/qa-reports/sprint-2.md:74:## Manual checks for the PO — final real-browser checklist
