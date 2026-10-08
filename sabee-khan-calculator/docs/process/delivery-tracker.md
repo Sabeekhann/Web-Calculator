@@ -6,12 +6,12 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 
 | ID | Deliverable | Status | Evidence / note |
 |----|-------------|--------|-----------------|
-| D1 | Browser app (Chrome, Edge, Firefox, Safari) | IN PROGRESS | Chromium local + Chromium/Firefox/WebKit in GitHub Actions CI on Node 20 (ADR-009); S-1..S-3: 31 e2e per engine green (93 total); PO real-browser checks pending |
+| D1 | Browser app (Chrome, Edge, Firefox, Safari) | IN PROGRESS | Chromium local + Chromium/Firefox/WebKit in GitHub Actions CI on Node 20 (ADR-009); main 10af8a8: 51 e2e per engine green (153 total) incl. axe + edge sweep; PO real-browser checks pending |
 | D2 | Local run from README, no paid accounts/keys/cloud | IN PROGRESS | Clean `npm ci` copy: test, build, dev, preview all work (qa-reports/sprint-0.md) |
-| D3 | Live URL (optional, in addition to local run) | OPEN | Decided at Stage 10 |
+| D3 | Live URL (optional, in addition to local run) | IN PROGRESS | https://sabeekhann.github.io/Web-Calculator/ deployed from main (Pages run on 10af8a8 success); PO to open it — github.io unreachable from container |
 | D4 | Correctness: every Implemented story matches its ACs | IN PROGRESS | S-1, S-2, S-3 accepted (qa-reports/S-1..S-3.md) |
-| D5 | Error handling: clear messages, no crash or wrong result | IN PROGRESS | S-3 accepted: 13 error messages, 179-check edge sweep, 0 defects; Sprint 2 hardening sweep pending |
-| D6 | UI quality: design spec, 375px+, light/dark, WCAG 2.2 AA | IN PROGRESS | ui-design.md + mockup.html approved Gate 4; Shell, S-1, S-2, S-3 pass visual review; 0 axe violations; polish items queued for Sprint 2 |
+| D5 | Error handling: clear messages, no crash or wrong result | IN PROGRESS | S-3 accepted; edge sweep automated (E-EDGE.0–9) on 3 engines; Sprint 2 QA PASS; PO real-browser check pending |
+| D6 | UI quality: design spec, 375px+, light/dark, WCAG 2.2 AA | IN PROGRESS | ui-design.md + mockup.html approved Gate 4; Shell, S-1, S-2, S-3 pass visual review; 0 axe violations; Sprint 2 polish done; axe e2e 0 violations on 3 engines |
 | D7 | AI writes the code | IN PROGRESS | All files so far written by Claude Code |
 | D8 | Hand changes listed in README (or "None") | OPEN | |
 | D9 | Transcripts of every session + raw logs | OPEN | PO exports (see Q-3) |
@@ -46,6 +46,7 @@ Derived from commit timestamps (start = previous gate approval, end = this gate'
 | 5 Planning | 09:52 | 10:00 | 8 |
 | 6 Sprint 0 | 10:00 | 10:23 | 23 |
 | 7 Sprint 1 | 10:23 | 15:17 | 294 (incl. a pause until the account rate limit reset) |
+| 8 Sprint 2 | 15:17 | 15:43 | |
 
 ## Session log
 
@@ -89,3 +90,8 @@ Derived from commit timestamps (start = previous gate approval, end = this gate'
 | 7 | qa-engineer | S-3 verification | PASS 8/8, 179 checks, 0 defects | Accepted |
 | 7 | PO | S-3 acceptance | Accepted (DEC-16) | Merged --no-ff |
 | 7 | docs-writer | Sprint 1 review + retro in sprint-log.md | Done | Accepted |
+| 8 | developer | Pages workflow; S-4 UI removed; polish; a11y spec; edge spec; V-S2.1–3 | Done | Accepted |
+| 8 | ux-ui-designer | Polish review; spec + mockup aligned; final screenshots | PASS, 3 Low findings applied | Accepted |
+| 8 | solution-architect | Test plan / technical design (ADR-010) / backlog aligned with DEC-17 | Done | Accepted; 2 of its claims (CSS missing, Q-13 open) checked and rejected by Orchestrator; its missing-edge-tests finding acted on |
+| 8 | qa-engineer | Sprint 2 final hardening | PASS, 51/engine, H-1..H-15, 0 defects | Accepted |
+| 8 | docs-writer | Sprint 2 review + retro | Done | Accepted |
