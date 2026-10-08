@@ -5,3 +5,8 @@
 export function floorDiv(a: number, b: number): number {
   return (a - (a % b)) / b;
 }
+
+/** ⌈a / b⌉ for non-negative safe integers: rounds up only when there is a remainder (ADR-002). */
+export function ceilDiv(a: number, b: number): number {
+  return floorDiv(a, b) + (a % b === 0 ? 0 : 1);
+}

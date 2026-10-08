@@ -1,6 +1,7 @@
 import { formatScore } from '../logic/format';
+import { gap, type Gap } from '../logic/gap';
 import { isPass, scoreTenths } from '../logic/score';
-import { announcementText, MESSAGES, scoreText } from '../messages';
+import { announcementText, gapText, MESSAGES, scoreText } from '../messages';
 import { validateInputs, type RawFields } from '../validation/validate';
 
 // Pure: raw field text → what the result area shows (technical-design.md §State model). No DOM.
@@ -8,6 +9,8 @@ import { validateInputs, type RawFields } from '../validation/validate';
 export type RawInputs = RawFields;
 
 export type Verdict = 'pass' | 'fail';
+
+export type GapKind = Gap['kind'];
 
 /** `announcement` is the status text for screen readers; '' means nothing to announce. */
 export type ViewModel =
@@ -23,6 +26,8 @@ export type ViewModel =
       readonly score: string;
       readonly verdict: Verdict;
       readonly verdictText: string;
+      readonly gapKind: GapKind;
+      readonly gapText: string;
       readonly announcement: string;
     };
 
@@ -48,5 +53,15 @@ export function toViewModel(raw: RawInputs): ViewModel {
 
   const verdict: Verdict = isPass(earned, total, passMark) ? 'pass' : 'fail';
   const verdictText = verdict === 'pass' ? MESSAGES['M-4'] : MESSAGES['M-5'];
-  return { state: 'result', score, verdict, verdictText, announcement: announcementText([scoreText(score), verdictText]) };
+  const marksGap = gap(earned, total, passMark);
+  const gapLine = gapText(marksGap);
+  return {
+    state: 'result',
+    score,
+    verdict,
+    verdictText,
+    gapKind: marksGap.kind,
+    gapText: gapLine,
+    announcement: announcementText([scoreText(score), verdictText, gapLine]),
+  };
 }
