@@ -13,6 +13,7 @@ Decisions (DEC-x), open questions (Q-x) and assumptions (A-x). An assumption goe
 | DEC-5 | 2026-10-08 | Calculator choice: Stage 2 proposes 3 options with a recommendation; PO chooses one that is doable in the time budget. | PO | Part C left blank |
 | DEC-6 | 2026-10-08 | Calculator choice: Option A, Quiz score and pass-mark calculator. | PO | Best fit for KnowledgeCity's users, two roles with different needs, edge cases that come from the domain, small enough for 2–4 h (see `product-brief.md`). |
 | DEC-7 | 2026-10-08 | Q-5..Q-12 answered with the recommended answers; Q-7 changed to round-down display. Assumptions A-1..A-8 approved. | PO | Gate 2 approval |
+| DEC-8 | 2026-10-08 | Gap to the pass mark is shown in marks (e.g. "0.6 marks short of the pass mark"). Illustrative details in app-roles.md (half marks, phone use) accepted. | PO | Gate 3a approval |
 
 ## Open questions
 
@@ -43,3 +44,4 @@ Decisions (DEC-x), open questions (Q-x) and assumptions (A-x). An assumption goe
 | A-6 | The pass mark defaults to 70, is editable, and accepts 0 to 100 inclusive with up to 1 decimal place. | Stage 2 (Q-10) | Yes, Gate 2 |
 | A-7 | Results update live; no Calculate button. | Stage 2 (Q-11) | Yes, Gate 2 |
 | A-8 | Marks earned cannot exceed total possible (no bonus marks). | Stage 2 (Q-12) | Yes, Gate 2 |
+| A-9 | The gap to the pass mark is shown in marks, not percentage points. | Stage 3a | Yes, Gate 3a |

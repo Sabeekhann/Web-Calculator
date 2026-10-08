@@ -183,7 +183,7 @@ Web-Calculator/
 
 ## 8. Document standards
 - **Role (D12)**: "A [role] is [who + situation]. They can [see/do in the app]. They must never [what the app prevents]." Add "How their needs differ" when there is more than one role.
-- **Job (D13)**: "**J-n (Role R-n).** When [situation], I want to [motivation], so I can [expected outcome]."
+- **Job (D13)**: "**J-n (R-n Role).** When [situation], I want to [motivation], so I can [expected outcome]."
 - **Story (D14)**: "**S-n (serves J-n, Status).** As a [role], I want [capability], so that [benefit]." followed by ACs.
 - **IDs**: roles R-1, jobs J-1, stories S-1, ACs S-1.1, unit tests T-S1.1, e2e tests E-S1.1, ADR-001, open questions Q-1, assumptions A-1, decisions DEC-1.
 - **AC rules**: Given/When/Then; exact numbers and exact message text in quotes; 4–8 per story; every story covers normal case, invalid input (empty, letters, symbols, multiple decimal points), boundaries (0, negative, maximum allowed), very large and very small numbers, carrying on after a result, carrying on after an error.
