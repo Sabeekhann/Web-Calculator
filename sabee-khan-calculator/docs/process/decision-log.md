@@ -22,6 +22,7 @@ Decisions (DEC-x), open questions (Q-x) and assumptions (A-x). An assumption goe
 | DEC-14 | 2026-10-08 | S-1 accepted on QA PASS (3 engines via CI run 37764220926) and visual review; PO real-browser manual checks deferred to the live URL / local run before release (option 1). | PO | S-1 acceptance |
 | DEC-15 | 2026-10-08 | S-2 accepted on QA PASS (3 engines via CI run 37796019119 on 8d496d6, code identical to 143c61e) and visual review; manual checks deferred as for S-1. | PO | S-2 acceptance |
 | DEC-16 | 2026-10-08 | S-3 accepted on QA PASS (3 engines via CI run 37797412005 on ea4b301; 179-check edge sweep) and visual review; manual checks deferred as for S-1. | PO | S-3 acceptance |
+| DEC-17 | 2026-10-08 | Gate 7 approved. Sprint 2 scope (b): S-4 cut (stays Not implemented; its "Next learner" button and Esc hint removed from the UI until built) — polish + hardening only, then release. GitHub Pages live URL enabled now (D3) so the PO can do real-browser checks. | PO | Time budget exceeded; MVP meets the brief; rule "cut Should stories, never quality" |
 
 ## Open questions
 
