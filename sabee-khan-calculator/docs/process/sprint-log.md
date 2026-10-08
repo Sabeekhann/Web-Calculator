@@ -55,3 +55,32 @@
 - Went well: tests shown failing before code on every story; CI annotations gave per-engine counts without log access; QA's independent checks (Decimal recomputation, 300-case differential, 179-check sweep) found no defects; QA caught the cancelled CI run instead of passing on it.
 - Didn't go well: a screenshot push cancelled CI on a code commit; one QA run lost to the rate limit; PO manual checks still outstanding.
 - Change: screenshots are committed together with the QA report, never between the code commit and QA; QA always confirms a green run on the exact SHA it signs off; schedule the PO manual checks before release.
+
+## Sprint 2 — Polish, hardening and live URL (S-4 cut)
+**Goal** (backlog.md, DEC-17): the MVP passes an axe audit, the final QA sweep and the visual review on all three engines, and is live on GitHub Pages. At Gate 7 the PO chose option (b): time budget exceeded and the MVP meets the brief, so S-4 is cut.
+
+**Delivered vs goal** (branch `chore/sprint-2-polish`; QA build `7098224`, CI run 37801681193)
+| Item | Status | Evidence |
+|------|--------|----------|
+| S-4 UI removed ("Next learner" button, Esc hint); favicon | Done | `21c7b2d`, `e4873ec`; QA H-3, H-10 |
+| axe WCAG 2.2 AA e2e for every state, light + dark | Done | `e4873ec`, `05010a4`; a11y 10/10 per engine; QA H-8 0 violations |
+| Edge sweep automated (`tests/e2e/edge.spec.ts`, E-EDGE.0–9) | Done | `dff4b10`; 10/10 on each engine in CI |
+| Visual polish V-S2.1–3: reserved result height 192/100 px, subheading `text-wrap: pretty`, unused token removed | Done | `7098224`; no-shift tests pass on 3 engines; headroom 1.0 px (narrow) / 1.5 px (wide) |
+| Docs aligned with DEC-17 (test plan, technical design ADR-010, backlog, UI spec, mockup, final screenshots) | Done | `77243d8`, `25a0cf7` |
+| Regression S-1..S-3 | Done | QA PASS: 24/24 ACs on Chromium, Firefox, WebKit; unit 131/131; e2e 51/0 per engine; 0 retries; audit clean; H-1..H-15 PASS; no console errors |
+| GitHub Pages (D3) | Done; not checked from here | `90a3a96`; first deploy run 37799872280 succeeded on `90a3a96`; https://sabeekhann.github.io/Web-Calculator/ |
+
+**Not done / carried over**
+- S-4 Next learner in one step: cut (DEC-17), stays Not implemented; design kept in technical-design.md as future.
+- PO real-browser checklist (`qa-reports/sprint-2.md`, steps 1–14 in Chrome, Edge, Firefox, Safari + phone): still required by the DoD before S-1..S-3 can be marked Implemented. The live URL serves `main`, so this build is checkable there only after merge.
+
+**Review notes**
+- Pages: the proxy blocks the Pages API, so the PO set the source to GitHub Actions in the web UI. github.io is blocked from this container, so the live URL was not opened here; the PO checks it.
+- The solution-architect's doc review found the planned edge tests had never been written; the developer added `edge.spec.ts` so the sweep runs on all 3 engines. Two other architect claims (polish CSS missing; Q-13 open) were checked by the Orchestrator and rejected: both were wrong (Q-13 was answered at Gate 5).
+- QA O-1: test-plan.md still said no `edge.spec.ts` exists (being fixed by the architect). O-2: the 1–1.5 px headroom is verified on Linux engines only; `system-ui` fonts differ on Windows/Apple, so checklist step 4 watches for a jump.
+- No defects (no D-S2.x).
+
+**Retro**
+- Went well: scope cut early with a clear rule (cut Should stories, never quality); edge sweep and axe now run on 3 engines in CI; a cross-agent doc review caught the missing edge tests.
+- Didn't go well: the edge tests planned at Stage 5 were silently skipped until Sprint 2; an agent review made unverified claims; the layout headroom is very thin; the live URL can't be checked from the container.
+- Change: QA confirms every planned test file exists before signing a sprint; reviewers cite file + line for each claim; the PO runs the real-browser checklist on the live URL before release.
