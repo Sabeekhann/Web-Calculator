@@ -11,7 +11,7 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 | D3 | Live URL (optional, in addition to local run) | OPEN | Decided at Stage 10 |
 | D4 | Correctness: every Implemented story matches its ACs | IN PROGRESS | S-1, S-2, S-3 accepted (qa-reports/S-1..S-3.md) |
 | D5 | Error handling: clear messages, no crash or wrong result | IN PROGRESS | S-3 accepted: 13 error messages, 179-check edge sweep, 0 defects; Sprint 2 hardening sweep pending |
-| D6 | UI quality: design spec, 375px+, light/dark, WCAG 2.2 AA | IN PROGRESS | ui-design.md + mockup.html approved Gate 4; build + visual review pending |
+| D6 | UI quality: design spec, 375px+, light/dark, WCAG 2.2 AA | IN PROGRESS | ui-design.md + mockup.html approved Gate 4; Shell, S-1, S-2, S-3 pass visual review; 0 axe violations; polish items queued for Sprint 2 |
 | D7 | AI writes the code | IN PROGRESS | All files so far written by Claude Code |
 | D8 | Hand changes listed in README (or "None") | OPEN | |
 | D9 | Transcripts of every session + raw logs | OPEN | PO exports (see Q-3) |
@@ -45,7 +45,7 @@ Derived from commit timestamps (start = previous gate approval, end = this gate'
 | 4 UX/UI design | 09:36 | 09:52 | 16 |
 | 5 Planning | 09:52 | 10:00 | 8 |
 | 6 Sprint 0 | 10:00 | 10:23 | 23 |
-| 7 Sprint 1 | 10:23 | | |
+| 7 Sprint 1 | 10:23 | 15:17 | 294 (incl. ~45 min paused by the account rate limit) |
 
 ## Session log
 
@@ -88,3 +88,4 @@ Derived from commit timestamps (start = previous gate approval, end = this gate'
 | 7 | ux-ui-designer | S-3 visual review (screenshots kept out of repo until QA done) | PASS; V-3.1 cosmetic "-5" spacing → Sprint 2 polish | Accepted |
 | 7 | qa-engineer | S-3 verification | PASS 8/8, 179 checks, 0 defects | Accepted |
 | 7 | PO | S-3 acceptance | Accepted (DEC-16) | Merged --no-ff |
+| 7 | docs-writer | Sprint 1 review + retro in sprint-log.md | Done | Accepted |
