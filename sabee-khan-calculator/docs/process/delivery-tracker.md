@@ -6,11 +6,11 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 
 | ID | Deliverable | Status | Evidence / note |
 |----|-------------|--------|-----------------|
-| D1 | Browser app (Chrome, Edge, Firefox, Safari) | IN PROGRESS | Chromium local + Chromium/Firefox/WebKit in GitHub Actions CI on Node 20 (ADR-009); S-1 36/36 e2e green; PO real-browser checks pending |
+| D1 | Browser app (Chrome, Edge, Firefox, Safari) | IN PROGRESS | Chromium local + Chromium/Firefox/WebKit in GitHub Actions CI on Node 20 (ADR-009); S-1..S-3: 31 e2e per engine green (93 total); PO real-browser checks pending |
 | D2 | Local run from README, no paid accounts/keys/cloud | IN PROGRESS | Clean `npm ci` copy: test, build, dev, preview all work (qa-reports/sprint-0.md) |
 | D3 | Live URL (optional, in addition to local run) | OPEN | Decided at Stage 10 |
-| D4 | Correctness: every Implemented story matches its ACs | IN PROGRESS | S-1, S-2 accepted (qa-reports/S-1.md, S-2.md) |
-| D5 | Error handling: clear messages, no crash or wrong result | OPEN | |
+| D4 | Correctness: every Implemented story matches its ACs | IN PROGRESS | S-1, S-2, S-3 accepted (qa-reports/S-1..S-3.md) |
+| D5 | Error handling: clear messages, no crash or wrong result | IN PROGRESS | S-3 accepted: 13 error messages, 179-check edge sweep, 0 defects; Sprint 2 hardening sweep pending |
 | D6 | UI quality: design spec, 375px+, light/dark, WCAG 2.2 AA | IN PROGRESS | ui-design.md + mockup.html approved Gate 4; build + visual review pending |
 | D7 | AI writes the code | IN PROGRESS | All files so far written by Claude Code |
 | D8 | Hand changes listed in README (or "None") | OPEN | |
@@ -84,3 +84,7 @@ Derived from commit timestamps (start = previous gate approval, end = this gate'
 | 7 | ux-ui-designer | S-2 visual review | PASS, 0 issues (cosmetic orphan noted for Sprint 2) | Accepted |
 | 7 | qa-engineer | S-2 verification | PASS 8/8, 300 random inputs 0 mismatches | Accepted; QA caught that the Orchestrator's screenshot push cancelled CI on the code commit (concurrency) — process changed: screenshots commit with the QA report |
 | 7 | PO | S-2 acceptance | Accepted (DEC-15) | Merged --no-ff |
+| 7 | developer | S-3 on feat/S-3, tests first | Done: 131 unit, 31 e2e | Accepted |
+| 7 | ux-ui-designer | S-3 visual review (screenshots kept out of repo until QA done) | PASS; V-3.1 cosmetic "-5" spacing → Sprint 2 polish | Accepted |
+| 7 | qa-engineer | S-3 verification | PASS 8/8, 179 checks, 0 defects | Accepted |
+| 7 | PO | S-3 acceptance | Accepted (DEC-16) | Merged --no-ff |
