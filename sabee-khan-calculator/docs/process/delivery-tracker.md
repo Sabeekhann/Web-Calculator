@@ -16,7 +16,7 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 | D8 | Hand changes listed in README (or "None") | OPEN | |
 | D9 | Transcripts of every session + raw logs | OPEN | PO exports (see Q-3) |
 | D10 | Source without node_modules/dist/coverage/reports | IN PROGRESS | `.gitignore` in place |
-| D11 | Package README covers every brief item | IN PROGRESS | Headings only |
+| D11 | Package README covers every brief item | IN PROGRESS | Headings only; choice + reasons ready in product-brief.md |
 | D12 | docs/app-roles.md | OPEN | Placeholder |
 | D13 | docs/jobs-to-be-done.md | OPEN | Placeholder |
 | D14 | docs/user-stories.md | OPEN | Placeholder |
@@ -27,7 +27,7 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 | D19 | Repo public, verified signed out | IN PROGRESS | Repo already public (REST API, 2026-10-08) |
 | D20 | Submission email | OPEN | |
 | D21 | Accuracy of README and docs | OPEN | |
-| D22 | Open questions asked or assumed in README | IN PROGRESS | decision-log.md |
+| D22 | Open questions asked or assumed in README | IN PROGRESS | decision-log.md: Q-5..Q-12, A-1..A-8 pending PO |
 | D23 | Walkthrough notes (private) | OPEN | |
 
 ## Time log (UTC)
@@ -36,6 +36,7 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 |-------|-------|-----|---------|
 | Preflight | 08:08 | 08:12 | 4 |
 | 1 Fresh start & initiation | 08:12 | 08:17 | 5 |
+| 2 Discovery | 08:17 | 08:55 | |
 
 ## Session log
 
@@ -49,3 +50,5 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 |-------|-------|------|--------|---------------------|
 | 1 | Orchestrator | Preflight, fresh start, structure, CLAUDE.md (282 lines), 7 agent files | Done | Brought CLAUDE.md up from 256 to 282 lines and release-auditor.md up from 47 to 52, adding content each needed |
 | 1 | docs-writer | Draft HR acknowledgement `.private/hr-ack-email.md` | Done: 85-word body, 4 placeholders (Q-1) | Accepted, no invented facts; file confirmed gitignored |
+| 2 | product-analyst | Propose 3 calculator options + recommendation | Done: A Quiz score recommended | Accepted; PO chose A (DEC-6) |
+| 2 | product-analyst | Product brief, DEC-6, Q-5..Q-12, A-1..A-8 | Done: 102-line brief | Accepted; Orchestrator updated stale CLAUDE.md §1 line; flagged Q-6/Q-7 display-vs-verdict conflict to PO |

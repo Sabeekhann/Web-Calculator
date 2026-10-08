@@ -5,8 +5,8 @@ Read this file at the start of every session and after every context reset. Thes
 ## 1. Project overview
 - KnowledgeCity take-home: build a calculator web app with an AI coding tool, plus 3 product docs and full session transcripts.
 - The AI writes the code; Sabee Khan (PO) directs, reviews, tests, corrects and accepts.
-- Calculator choice: TBD at Gate 2 (Stage 2 proposes 3 doable options; PO chooses).
-- Target users: defined in Stage 2 / `docs/app-roles.md`.
+- Calculator choice: Quiz score and pass-mark calculator (DEC-6, Stage 2). See `docs/process/product-brief.md`.
+- Target users: learners checking a quiz result and instructors marking assessments; final roles in `docs/app-roles.md`.
 - Time budget: about 2–4 hours. A small app that fully works and looks polished beats a big one that doesn't.
 - Repo: https://github.com/Sabeekhann/Web-Calculator (public, default branch `main`). Never create another repo.
 - Package path: `sabee-khan-calculator/`. All npm commands run inside it.
