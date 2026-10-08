@@ -6,7 +6,7 @@ import { MESSAGES } from '../../src/messages';
 // Sprint 2 hardening (D6, WCAG 2.2 AA): axe-core scan of every result state, in light and dark themes.
 // Runs on Chromium, Firefox and WebKit like every other spec.
 
-const WCAG_TAGS = ['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'];
+const WCAG_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 
 /**
  * @axe-core/playwright ships its own newer playwright-core typings, so our @playwright/test Page differs from
@@ -38,7 +38,7 @@ async function fillState(page: Page, values: StateCase['values']): Promise<void>
 
 for (const colorScheme of ['light', 'dark'] as const) {
   for (const state of STATES) {
-    test(`a11y: ${state.name} state, ${colorScheme} theme has no WCAG 2.2 AA violations`, async ({ page }) => {
+    test(`E-A11Y.1 axe: ${state.name} state, ${colorScheme} theme has no WCAG 2.2 AA violations`, async ({ page }) => {
       await page.emulateMedia({ colorScheme });
       await page.goto('./');
       await fillState(page, state.values);
