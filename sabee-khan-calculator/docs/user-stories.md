@@ -1,6 +1,6 @@
 # User Stories with Acceptance Criteria
 
-Each story serves a job in `jobs-to-be-done.md`; rules follow A-1..A-9 (approved) and A-10..A-17 (approved, DEC-9) in `process/decision-log.md`.
+Each story serves a job in `jobs-to-be-done.md`; rules follow assumptions A-1..A-18, all approved (A-10..A-17 at DEC-9; A-18 at Gate 5, DEC-12: a field holding only "." is treated as empty, a lone "-" gets the can't-be-negative message), in `process/decision-log.md`.
 
 ## Traceability
 
@@ -138,7 +138,7 @@ Priority: Should · Size: S
 **S-4.4** Given "Marks earned can't be more than the total marks possible." is shown for "23.5" of "23", when I activate "Next learner", then the message disappears, marks earned is empty, total is still "23" and the result area shows "Enter marks earned and total marks possible to see the score.".
 **S-4.5** Given the pass mark was changed to "65" and the total is "40" with marks earned "30", when I activate "Next learner" and type "26", then the pass mark is still "65" (not reset to "70") and I see "65.0%", "Pass" and "Exactly on the pass mark".
 
-## S-5 — Copy the outcome as one line (future)
+## S-5 — Copy the outcome as one line
 
 **S-5 (serves J-5, Not implemented).** As an Instructor, I want to copy a learner's outcome as one line of text, so that I can paste it into my gradebook without retyping it.
 
@@ -147,7 +147,7 @@ Priority: Could · Size: S
 **S-5.1** Given "17.5" of "23" with pass mark "70", when I activate "Copy outcome", then the clipboard holds "17.5 of 23 marks: 76.0%, Pass, 1.4 marks above the pass mark" and I see "Outcome copied.".
 **S-5.2** Given marks earned is empty, or any field shows an error message, or the pass mark is empty, when I look at "Copy outcome", then it is disabled and activating it copies nothing.
 
-## S-6 — Marks needed to pass (future)
+## S-6 — Marks needed to pass
 
 **S-6 (serves J-2, Not implemented).** As a Learner, I want to see how many marks the pass mark equals for my quiz's total, so that I know the target to aim for when I sit it again.
 
