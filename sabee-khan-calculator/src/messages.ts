@@ -65,3 +65,16 @@ export const MESSAGES = {
 
 /** The key name at the end of M-40, shown in a <kbd> element. */
 export const ESC_KEY_LABEL = 'Esc';
+
+/** The unit after a score ("76.0%"): the same percent sign as M-38. */
+export const SCORE_UNIT = MESSAGES['M-38'];
+
+/** A score as read out: "76.0" → "76.0%". */
+export function scoreText(score: string): string {
+  return `${score}${SCORE_UNIT}`;
+}
+
+/** Joins the parts of a screen-reader announcement (ui-design.md §Accessibility): "76.0%, Pass". */
+export function announcementText(parts: ReadonlyArray<string>): string {
+  return parts.join(', ');
+}
