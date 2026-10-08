@@ -6,10 +6,10 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 
 | ID | Deliverable | Status | Evidence / note |
 |----|-------------|--------|-----------------|
-| D1 | Browser app (Chrome, Edge, Firefox, Safari) | IN PROGRESS | Chromium e2e green; Firefox/WebKit blocked by environment network policy (PO asked to allow hosts) |
+| D1 | Browser app (Chrome, Edge, Firefox, Safari) | IN PROGRESS | Chromium local + Chromium/Firefox/WebKit in GitHub Actions CI on Node 20 (ADR-009); S-1 36/36 e2e green; PO real-browser checks pending |
 | D2 | Local run from README, no paid accounts/keys/cloud | IN PROGRESS | Clean `npm ci` copy: test, build, dev, preview all work (qa-reports/sprint-0.md) |
 | D3 | Live URL (optional, in addition to local run) | OPEN | Decided at Stage 10 |
-| D4 | Correctness: every Implemented story matches its ACs | OPEN | |
+| D4 | Correctness: every Implemented story matches its ACs | IN PROGRESS | S-1 accepted (qa-reports/S-1.md) |
 | D5 | Error handling: clear messages, no crash or wrong result | OPEN | |
 | D6 | UI quality: design spec, 375px+, light/dark, WCAG 2.2 AA | IN PROGRESS | ui-design.md + mockup.html approved Gate 4; build + visual review pending |
 | D7 | AI writes the code | IN PROGRESS | All files so far written by Claude Code |
@@ -75,3 +75,8 @@ Derived from commit timestamps (start = previous gate approval, end = this gate'
 | 6 | ux-ui-designer | Sprint 0 visual review | 0 issues; 0-pixel diff vs mockup (a) | Accepted |
 | 6 | qa-engineer | Sprint 0 verification → qa-reports/sprint-0.md | PASS (Chromium); Firefox/WebKit NOT RUN (environment) | Accepted |
 | 6 | docs-writer | Sprint 0 entry in sprint-log.md | Done | Accepted |
+| 6 | developer | CI workflow (ADR-009) + per-engine annotations | Done: first CI run 12/12 e2e on 3 engines, Node 20 | Accepted; Orchestrator found logs/artifacts blocked (blob host) → annotations |
+| 7 | developer | S-1 on feat/S-1, tests first | Done: 58 unit, 12 e2e | Accepted; Orchestrator merged main into branch for CI annotations |
+| 7 | ux-ui-designer | S-1 visual review | PASS, 0 issues | Accepted |
+| 7 | qa-engineer | S-1 verification (first attempt cut off by account rate limit; retried) | PASS all 8 ACs, 3 engines, edge sweep 23/23 | Accepted |
+| 7 | PO | S-1 acceptance | Accepted; manual checks deferred (DEC-14) | Merged --no-ff |

@@ -19,13 +19,14 @@ Decisions (DEC-x), open questions (Q-x) and assumptions (A-x). An assumption goe
 | DEC-11 | 2026-10-08 | Design spec and mockup approved: fields stacked at every width, card max 520px, reserved space for errors/result (no layout shift); new UI strings N-1..N-11 approved (to be catalogued as M-30..M-40). | PO | Gate 4 approval |
 | DEC-12 | 2026-10-08 | Plan approved: backlog (Sprint 0 → S-1, S-2, S-3 → S-4 + hardening), technical design ADR-001..008 (incl. Vite 6, axe devDependency), test plan. Q-13 answered: a field holding only "." is treated as empty; a lone "-" shows the can't-be-negative message. Code freeze lifted. | PO | Gate 5 approval |
 | DEC-13 | 2026-10-08 | Gate 6 approved; ADR-005 amendment (Vitest 4.1.11) accepted. Firefox/WebKit hosts will not be unblocked here, so the 3-engine e2e runs in GitHub Actions CI (ADR-009); local QA stays on Chromium. | PO | Gate 6 approval |
+| DEC-14 | 2026-10-08 | S-1 accepted on QA PASS (3 engines via CI run 37764220926) and visual review; PO real-browser manual checks deferred to the live URL / local run before release (option 1). | PO | S-1 acceptance |
 
 ## Open questions
 
 | ID | Raised | Question | Owner | Status |
 |----|--------|----------|-------|--------|
 | Q-1 | Stage 1 | Role applied for, HR contact name/email, deadline and expected submission date (for D18 and D20). | PO | Open |
-| Q-2 | Stage 1 | The session's git proxy returns HTTP 403 for tag pushes and branch deletions. Archive tag `archive/pre-fresh-start` (→ `fe7cc3f`), deleting `feat/S-1..3`, and the `v1.0.0` tag in Stage 9 must be done by the PO in the GitHub web UI, or the plan must change. | PO | Open |
+| Q-2 | Stage 1 | The session's git proxy returns HTTP 403 for tag pushes and branch deletions. Archive tag `archive/pre-fresh-start` (→ `fe7cc3f`), deleting `feat/S-1..3`, and the `v1.0.0` tag in Stage 9 must be done by the PO in the GitHub web UI, or the plan must change. | PO | Resolved 2026-10-08: PO created tag archive/pre-fresh-start (→ fe7cc3f) and deleted old feat/S-1..3 in the web UI; v1.0.0 tag still needs the PO at Stage 9 |
 | Q-3 | Stage 1 | Transcripts (D9): this container's raw logs in `~/.claude/projects/` disappear when the session ends. The PO must run `/export` before then; the Orchestrator may copy the raw log files unchanged into `transcripts/` only with PO approval. | PO | Open |
 | Q-4 | Stage 1 | `localhost` dev-server URLs can't be reached from the PO's browser. PO checks run via a GitHub Pages URL or a local run on the PO's machine; agents use headless Chromium screenshots. | PO | Open |
 | Q-5 | Stage 2 | Pass rule: is it a pass when the score is greater than or equal to the pass mark (exactly 70% with a 70% pass mark passes)? **Recommended:** yes, score ≥ pass mark. | PO | Answered at Gate 2: recommended answer accepted |
