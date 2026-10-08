@@ -1,6 +1,6 @@
 # Technical Design
 
-Stage 5, solution-architect. Binding inputs: CLAUDE.md §11, `docs/user-stories.md` (S-1..S-4, M-1..M-40), A-1..A-17, approved `ui-design.md`.
+Stage 5, solution-architect. Binding inputs: CLAUDE.md §11, `docs/user-stories.md` (S-1..S-3 built; S-4 cut, DEC-17; M-1..M-40), A-1..A-17, approved `ui-design.md`.
 
 ## Stack
 - Node 20 LTS (`.nvmrc` `20`, `engines` `">=20"`); the build container runs Node 22, which satisfies it.
@@ -20,10 +20,11 @@ Stage 5, solution-architect. Binding inputs: CLAUDE.md §11, `docs/user-stories.
 | `src/validation/validate.ts` | validation | `validateInputs({earned,total,pass})` → per-field results with range and cross-field (M-15) checks, A-15 order |
 | `src/messages.ts` | — | M-1..M-40 verbatim, `errorText(field, code)`, `gapText(gap)` (fills `{n}`, singular when h = 100) |
 | `src/ui/view-model.ts` | ui (pure) | `toViewModel(raw)` → `{state, fieldErrors, score, verdict, gapText, announcement}`; no DOM, unit-tested |
+| `src/ui/dom.ts` | ui | `el`/`svgEl` element helpers used by render |
 | `src/ui/render.ts` | ui | builds the card once from `messages.ts`; `apply(vm)` sets text, `aria-invalid`, classes; never calculates |
-| `src/ui/app.ts` | ui | events (`input`, `keydown` Escape, button `click`, form `submit` prevented), focus, 500 ms announcement debounce |
+| `src/ui/app.ts` | ui | events (`input`, form `submit` prevented), focus, 500 ms announcement debounce |
 | `src/main.ts` | entry | imports the 3 CSS files, `mountApp(document.getElementById('app'))` |
-| `src/styles/tokens.css` · `base.css` · `components.css` | styles | tokens from ui-design.md (light `:root`, dark media query) · reset, page, type · card, field, error, result, verdict, gap, button |
+| `src/styles/tokens.css` · `base.css` · `components.css` | styles | tokens from ui-design.md (light `:root`, dark media query) · reset, page, type · card, field, error, result, verdict, gap |
 | `index.html` | entry | `lang="en"`, viewport, `color-scheme` meta, `<title>` = M-30 (e2e asserts it equals `messages.ts`), `<div id="app">` |
 
 Dependency direction: `ui → validation → logic`, `ui → messages`. Logic and validation never import from `ui` or touch `document`.
@@ -91,14 +92,14 @@ Accepted text after `trim()`: `^-?(\d+\.?\d*|\.\d+)$`; empty after trim → `val
 | pass-mark-empty | earned + total valid, pass empty | score + M-2 in the verdict slot; no gap (A-12) | no messages |
 | result | all three valid | score + verdict block (M-4/M-5) + gap line (M-6..M-11) | no messages |
 
-Transitions: idle → result/pass-mark-empty as the last value becomes valid · result → error on any invalid edit · error → recovery: the message clears on the edit that makes the field valid (M-15 re-checks when total changes) and the result returns at once (S-3.8) · any state → idle on Next learner / Escape. Reload → initial state (earned "", total "", pass "70"); inputs carry `autocomplete="off"` so Firefox does not restore values.
+Transitions: idle → result/pass-mark-empty as the last value becomes valid · result → error on any invalid edit · error → recovery: the message clears on the edit that makes the field valid (M-15 re-checks when total changes) and the result returns at once (S-3.8) · (future S-4, not built: any state → idle on Next learner / Escape, DEC-17). Reload → initial state (earned "", total "", pass "70"); inputs carry `autocomplete="off"` so Firefox does not restore values.
 
 ## Interaction and accessibility
 - Inputs: `type="text" inputmode="decimal" autocomplete="off" spellcheck="false"` (ADR-003), `<label for>`, `aria-describedby` → error slot (always present), `aria-invalid` only while in error.
 - Live update on every `input` event (typing, paste, cut, autofill); no Calculate button (A-7). Visual update is immediate.
 - **Announcements:** accept the designer's 500 ms debounce, for the visually hidden `role="status"` node only; it announces only when the text differs from the last one. Content per ui-design.md §Accessibility. e2e waits with auto-retrying assertions, so tests stay deterministic.
-- Enter: the `<form>` `submit` is prevented and the button is `type="button"`, so Enter never reloads or changes values.
-- Next learner (A-17): click or Escape in marks earned only → earned = "", recompute (clears M-15 and any earned message), focus earned, announce M-1. Idempotent, so rapid clicks are safe. Escape in other fields does nothing. Button has `aria-keyshortcuts="Escape"`.
+- Enter: the `<form>` `submit` is prevented, so Enter never reloads or changes values.
+- Next learner (A-17): **future S-4, not built (DEC-17).** No button or Esc hint in the UI. If built: click or Escape in marks earned → earned = "", recompute, focus earned, announce M-1; idempotent; `aria-keyshortcuts="Escape"`.
 - WCAG 2.2 AA: tokens from ui-design.md (contrast computed there), 44 × 44 targets, visible focus ring, icon + text for errors and verdict, `prefers-reduced-motion`, no horizontal scroll at 320 px; axe in e2e (ADR-006).
 
 ## Architecture decisions (ADRs, proposed for PO approval at Gate 5)
@@ -113,6 +114,8 @@ Transitions: idle → result/pass-mark-empty as the last value becomes valid · 
 | ADR-007 | Own deterministic number formatter (comma every 3 digits via string regex) | `toLocaleString`, `Intl.NumberFormat('en-US')` | Output must be identical in every browser and OS locale; integers are already exact, so formatting is a 5-line pure function |
 | ADR-008 | Zero runtime dependencies; Vite `base: './'` | Absolute base `/Web-Calculator/`; CDN-hosted libraries | Works from a local preview and any Pages sub-path without change; nothing to fetch at runtime (D2) |
 | ADR-009 | Firefox + WebKit e2e (and Node 20) run in GitHub Actions `.github/workflows/ci.yml` on every push/PR: ubuntu-latest, Node from `.nvmrc`, `npm ci` → `npm audit` → `npm test` → `npm run build` → `npx playwright install --with-deps chromium firefox webkit` → `npx playwright test`, HTML report uploaded as an artifact. Local QA in the build container stays Chromium (DEC-13, PO-approved) | apt Firefox/WebKitGTK; another e2e tool (WebDriver); manual-only browser testing; paid cloud browser grid | Container proxy returns 403 for Playwright's browser hosts and the PO will not unblock them; Playwright can only drive its own patched builds, so stock apt browsers fail; WebDriver is new tooling, its drivers also need downloads and Linux has no Safari engine; manual-only is not repeatable (PO checks stay in addition); paid grids break the no-paid-services rule. Actions is free for public repos, needs no secrets, and runs the same pinned Playwright 1.56.1 |
+
+| ADR-010 | GitHub Pages deploy via `.github/workflows/pages.yml`: on push to `main` (and manual dispatch), `npm ci` + `npm run build` in `sabee-khan-calculator/`, upload `dist/` (`base: './'`, ADR-008), `actions/deploy-pages`; D3 live URL in addition to the local run (DEC-17) | Local run only; Netlify/Vercel; `gh-pages` branch pushed by hand | Free for public repos, no secrets or third-party accounts, same Node 20 from `.nvmrc`; gives the PO real-browser checks (Q-4) |
 
 - **ADR-005 amended 2026-10-08 (Sprint 0):** Vitest 3 → **4.1.11**.
   - Reason: `npm audit` on Vitest 3.2.7 reports 2 critical advisories (tinypool ≤ 2.1.0 / < 2.1.2 prototype-pollution gadget → RCE via worker/run options) and 1 moderate (`@vitest/mocker` path traversal, fixed in vitest ≥ 4.1.11). Vitest 4.1.11 supports Node ^20 || ^22 || >=24 and Vite ^6, so the Node 20 target and Vite 6 still hold. Dev-only dependency; nothing ships at runtime (ADR-008 unchanged).
