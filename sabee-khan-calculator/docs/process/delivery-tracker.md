@@ -11,7 +11,7 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 | D3 | Live URL (optional, in addition to local run) | OPEN | Decided at Stage 10 |
 | D4 | Correctness: every Implemented story matches its ACs | OPEN | |
 | D5 | Error handling: clear messages, no crash or wrong result | OPEN | |
-| D6 | UI quality: design spec, 375px+, light/dark, WCAG 2.2 AA | OPEN | |
+| D6 | UI quality: design spec, 375px+, light/dark, WCAG 2.2 AA | IN PROGRESS | ui-design.md + mockup.html; awaiting Gate 4 |
 | D7 | AI writes the code | IN PROGRESS | All files so far written by Claude Code |
 | D8 | Hand changes listed in README (or "None") | OPEN | |
 | D9 | Transcripts of every session + raw logs | OPEN | PO exports (see Q-3) |
@@ -60,3 +60,4 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 | 3b | product-analyst | Jobs to be done (D13) | Done: 5 jobs (2 Learner, 3 Instructor), purity check 5/5 PASS | Accepted; Orchestrator aligned CLAUDE.md §8 job-tag format to "J-n (R-n Role)" |
 | 3c | product-analyst | User stories + ACs (D14–D16), A-10..A-17 | Done: 6 stories, 34 ACs, 29 messages, 147 lines | Accepted; Orchestrator re-ran 10 boundary calculations independently — all match |
 | 4 | ux-ui-designer | 2 design directions + side-by-side preview (directions.html, 375/1280 screenshots) | Done: A Ledger (recommended), B Spotlight; all contrast pairs pass | Accepted; Orchestrator noted A's small verdict pill and B's mobile result-below-button issue for the PO |
+| 4 | ux-ui-designer | Full spec (201 lines) + mockup.html (states a–e, light/dark, 375/1280) | Done: 19 contrast pairs pass, 78 message texts match, no layout shift measured | Accepted; Orchestrator reviewed Pass, Fail, error and pass-mark-empty states in fresh screenshots; recorded DEC-10 |

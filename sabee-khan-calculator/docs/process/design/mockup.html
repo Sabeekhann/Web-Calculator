@@ -1,2 +1,443 @@
 <!doctype html>
-<!-- Placeholder: static design mockup, written in Stage 4 by ux-ui-designer. Design file only, no app logic. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Quiz score — design mockup</title>
+<!-- Stage 4 design file only (ux-ui-designer). Static HTML + CSS: no scripts, no external assets, no app logic.
+     Generated from the token names in docs/process/ui-design.md; message texts copied from the catalogue in docs/user-stories.md.
+     data-m attributes mark catalogue texts for the copy check; they are not part of the app. -->
+<style>
+/* ===== Design tokens (names as in ui-design.md). Light = default; dark = prefers-color-scheme in the app.
+   In this mockup each .theme container sets its own values so both themes are visible at once. ===== */
+.theme {
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --text-xs: 12px; --text-sm: 13px; --text-base: 15px; --text-md: 17px; --text-lg: 20px; --text-verdict: 40px; --text-score: 64px;
+  --weight-light: 300; --weight-regular: 400; --weight-medium: 500; --weight-semibold: 600;
+  --leading-none: 1; --leading-heading: 1.25; --leading-tight: 1.4; --leading-normal: 1.5;
+  --tracking-eyebrow: 0.12em; --tracking-score: -0.03em; --tracking-verdict: -0.01em;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px; --space-12: 48px;
+  --radius-sm: 4px; --radius-md: 6px;
+  --control-h: 44px; --border-w: 1px; --focus-w: 2px; --focus-offset: 2px;
+  --icon-sm: 16px; --icon-verdict: 40px;
+  --card-max: 520px; --input-max-wide: 240px; --space-field-gap: var(--space-3); --error-slot-h: calc(2 * var(--text-sm) * var(--leading-tight));
+  --result-min-h: 196px;
+  --duration-fast: 150ms; --duration-base: 200ms; --ease-out: cubic-bezier(0.2, 0, 0, 1);
+}
+.theme--light { color-scheme: light;
+  --color-bg: #F5F3EE; --color-surface: #FFFFFF; --color-text: #1B1F24; --color-muted: #5A6069;
+  --color-accent: #1F4E79; --color-accent-tint: #E9EFF6; --color-border: #DDD8CD; --color-field-border: #8A9099; --color-field-border-hover: #5A6069;
+  --color-focus: #1F4E79; --color-pass: #1D6B3A; --color-pass-tint: #E6F2E9; --color-fail: #A8322D; --color-fail-tint: #FBE9E7; --color-error: #A8322D;
+  --shadow-card: 0 1px 2px rgba(27,31,36,.06), 0 8px 24px rgba(27,31,36,.06); }
+.theme--dark { color-scheme: dark;
+  --color-bg: #111316; --color-surface: #1B1E23; --color-text: #ECEAE4; --color-muted: #A4A9B1;
+  --color-accent: #8EB9E8; --color-accent-tint: #22303F; --color-border: #353A42; --color-field-border: #6E747E; --color-field-border-hover: #A4A9B1;
+  --color-focus: #8EB9E8; --color-pass: #6FCF97; --color-pass-tint: #16301F; --color-fail: #F2958D; --color-fail-tint: #3A1E1C; --color-error: #F2958D;
+  --shadow-card: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.3); }
+
+/* ===== Mockup page chrome (not part of the app) ===== */
+* { box-sizing: border-box; }
+body { margin: 0; background: #E4E5E8; color: #1A1D21; font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.5; }
+.page { max-width: 1280px; margin: 0 auto; padding: 32px 16px 56px; }
+.page-head { max-width: 80ch; margin-bottom: 24px; }
+.page-head .kicker { margin: 0; font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #4A5058; }
+.page-head h1 { margin: 4px 0 8px; font-size: 28px; line-height: 1.2; }
+.page-head p { margin: 0 0 6px; font-size: 15px; }
+.part { margin-top: 40px; }
+.part-title { margin: 0 0 4px; font-size: 22px; border-top: 2px solid #1A1D21; padding-top: 12px; }
+.part-note { margin: 0 0 16px; font-size: 14px; color: #4A5058; }
+.state { margin-top: 28px; }
+.state-title, .strip-title { margin: 0; font-size: 17px; }
+.state-letter { color: #4A5058; font-variant-numeric: tabular-nums; }
+.state-note { margin: 2px 0 10px; font-size: 14px; color: #4A5058; }
+.pair { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+@media (min-width: 1000px) { .pair { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.theme-label { margin: 0 0 4px; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #4A5058; }
+.viewport { container: app / inline-size; background: var(--color-bg); border: 1px solid #C9CBD0; border-radius: 10px; overflow: hidden; }
+.strip-title { margin-top: 24px; }
+.devices { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 10px; }
+.device-fig { margin: 0; width: 375px; max-width: 100%; }
+.device-cap { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.device { width: 100%; }
+
+/* ===== App styles: components use tokens only ===== */
+.app { padding: var(--space-6) var(--space-4) var(--space-8); font-family: var(--font-sans); color: var(--color-text); }
+@container app (min-width: 600px) { .app { padding: var(--space-12) var(--space-10); } }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.card { max-width: var(--card-max); margin: 0 auto; background: var(--color-surface); border: var(--border-w) solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-card); padding: var(--space-6) var(--space-5) var(--space-6); }
+@container app (min-width: 600px) { .card { padding: var(--space-8) var(--space-10) var(--space-10); } }
+.eyebrow { margin: 0; font-size: var(--text-xs); line-height: var(--leading-tight); font-weight: var(--weight-semibold); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--color-muted); }
+.title { margin: var(--space-1) 0 0; font-size: var(--text-lg); line-height: var(--leading-heading); font-weight: var(--weight-semibold); }
+.sub { margin: var(--space-1) 0 var(--space-6); font-size: var(--text-sm); line-height: var(--leading-tight); color: var(--color-muted); }
+
+/* fields: one column at every width; on wide windows inputs keep a ledger-like width and errors fit on one line */
+.fields { display: grid; grid-template-columns: minmax(0, 1fr); }
+@container app (min-width: 600px) {
+  .fields { --error-slot-h: calc(var(--text-sm) * var(--leading-tight)); --space-field-gap: var(--space-4); }
+  .input, .input-wrap { max-width: var(--input-max-wide); }
+}
+.label { display: block; margin-bottom: var(--space-2); font-size: var(--text-sm); line-height: var(--leading-tight); font-weight: var(--weight-medium); color: var(--color-muted); }
+.input { display: block; width: 100%; height: var(--control-h); margin: 0; padding: 0 var(--space-3); font: inherit; font-size: var(--text-md); font-variant-numeric: tabular-nums;
+  color: var(--color-text); background: var(--color-surface); border: var(--border-w) solid var(--color-field-border); border-radius: var(--radius-sm);
+  transition: border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out); }
+.input:hover, .input.is-hover { border-color: var(--color-field-border-hover); }
+.input:focus { outline: none; }
+.input:focus-visible, .input.is-focus { outline: var(--focus-w) solid var(--color-focus); outline-offset: var(--focus-offset); }
+.input[aria-invalid="true"] { border-color: var(--color-error); box-shadow: inset 0 0 0 var(--border-w) var(--color-error); }
+.input-wrap { position: relative; }
+.input-wrap .input { padding-right: var(--space-8); }
+.suffix { position: absolute; right: var(--space-3); top: 50%; transform: translateY(-50%); font-size: var(--text-base); line-height: var(--leading-none); color: var(--color-muted); pointer-events: none; }
+.field-error { display: flex; align-items: flex-start; gap: var(--space-2); min-height: var(--error-slot-h); margin: var(--space-1) 0 var(--space-field-gap);
+  font-size: var(--text-sm); line-height: var(--leading-tight); font-weight: var(--weight-medium); color: var(--color-error); }
+.alert-icon { flex: none; width: var(--icon-sm); height: var(--icon-sm); margin-top: calc((var(--text-sm) * var(--leading-tight) - var(--icon-sm)) / 2); fill: var(--color-error); }
+.alert-icon .alert-mark { fill: none; stroke: var(--color-surface); stroke-width: 1.8; stroke-linecap: round; }
+.alert-icon .alert-dot { fill: var(--color-surface); }
+
+.rule { border: 0; border-top: var(--border-w) solid var(--color-border); margin: var(--space-2) 0 var(--space-5); }
+
+/* result area: reserved height so nothing below moves */
+.result-body { margin-top: var(--space-2); min-height: var(--result-min-h); }
+@container app (min-width: 600px) { .result-body { --result-min-h: 112px; } }
+.result-msg { display: flex; align-items: flex-start; gap: var(--space-2); margin: 0; font-size: var(--text-base); line-height: var(--leading-normal); color: var(--color-muted); }
+.result-msg .alert-icon { margin-top: calc((var(--text-base) * var(--leading-normal) - var(--icon-sm)) / 2); }
+.outcome { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "score" "verdict" "gap"; row-gap: var(--space-3); justify-items: start; }
+@container app (min-width: 600px) {
+  .outcome { grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "score verdict" "gap gap"; column-gap: var(--space-6); align-items: center; }
+}
+.score { grid-area: score; margin: 0; font-size: var(--text-score); line-height: var(--leading-none); font-weight: var(--weight-light); letter-spacing: var(--tracking-score); font-variant-numeric: tabular-nums lining-nums; white-space: nowrap; }
+.score .pct { font-size: 0.5em; letter-spacing: 0; color: var(--color-muted); margin-left: 0.04em; }
+.verdict { grid-area: verdict; display: inline-flex; align-items: center; gap: var(--space-3); margin: 0; padding: var(--space-2) var(--space-5) var(--space-2) var(--space-2);
+  border: var(--border-w) solid currentColor; border-radius: var(--radius-md);
+  font-size: var(--text-verdict); line-height: var(--leading-none); font-weight: var(--weight-semibold); letter-spacing: var(--tracking-verdict); }
+.verdict--pass { color: var(--color-pass); background: var(--color-pass-tint); }
+.verdict--fail { color: var(--color-fail); background: var(--color-fail-tint); }
+.verdict-disc { display: inline-grid; place-items: center; width: var(--icon-verdict); height: var(--icon-verdict); border-radius: 50%; background: currentColor; flex: none; }
+.verdict-disc svg { width: 70%; height: 70%; }
+.verdict-disc .i-stroke { fill: none; stroke: var(--color-surface); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+.verdict-msg { grid-area: verdict; margin: 0; font-size: var(--text-base); line-height: var(--leading-normal); color: var(--color-muted); }
+.gap { grid-area: gap; display: flex; align-items: flex-start; gap: var(--space-2); margin: 0; font-size: var(--text-base); line-height: var(--leading-normal); font-variant-numeric: tabular-nums; color: var(--color-text); }
+.gap-icon { flex: none; width: var(--icon-sm); height: var(--icon-sm); margin-top: calc((var(--text-base) * var(--leading-normal) - var(--icon-sm)) / 2); }
+.gap-icon--pass { fill: var(--color-pass); }
+.gap-icon--fail { fill: var(--color-fail); }
+
+.actions { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-6); }
+.btn { min-height: var(--control-h); min-width: var(--control-h); padding: 0 var(--space-5); font: inherit; font-size: var(--text-base); font-weight: var(--weight-semibold);
+  color: var(--color-accent); background: transparent; border: var(--border-w) solid var(--color-accent); border-radius: var(--radius-sm); cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out); }
+.btn:hover, .btn.is-hover { background: var(--color-accent-tint); }
+.btn:focus { outline: none; }
+.btn:focus-visible, .btn.is-focus { outline: var(--focus-w) solid var(--color-focus); outline-offset: var(--focus-offset); }
+.btn:active, .btn.is-active { background: var(--color-accent); color: var(--color-surface); }
+.hint { font-size: var(--text-sm); line-height: var(--leading-tight); color: var(--color-muted); }
+kbd { font: inherit; font-size: var(--text-xs); padding: 0 var(--space-1); border: var(--border-w) solid var(--color-border); border-bottom-width: 2px; border-radius: var(--radius-sm); color: var(--color-muted); }
+
+@media (prefers-reduced-motion: reduce) { .input, .btn { transition: none; } }
+
+/* component-states panel (mockup only) */
+.states-card { max-width: none; }
+.demo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); column-gap: var(--space-6); }
+.demo-row { display: flex; flex-wrap: wrap; gap: var(--space-6); margin: var(--space-2) 0 var(--space-6); }
+.demo-cap { margin: 0 0 var(--space-1); font-size: var(--text-xs); line-height: var(--leading-tight); color: var(--color-muted); }
+.demo .gap + .gap { margin-top: var(--space-1); }
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="page-head">
+    <p class="kicker">Stage 4 · Quiz score and pass-mark calculator · Direction A "Ledger" + bigger verdict (DEC-10)</p>
+    <h1>Design mockup: every result state, light and dark</h1>
+    <p>Static picture of the spec in <code>ui-design.md</code>. Each frame stands in for a browser window; its card switches to the wide layout when the frame is at least 600px wide (the app uses the same 600px breakpoint on the viewport).</p>
+    <p>Pass and Fail always show an icon and the word. Error messages always show an icon and text under the field. The result area keeps the same height in every state.</p>
+  </header>
+
+  <section class="part" id="desktop">
+    <h2 class="part-title">Desktop and tablet (window 600px and wider, card max 520px)</h2>
+    <p class="part-note">States (a) to (e), light beside dark. Below 1000px of page width the pair stacks; below 600px each frame shows the mobile layout.</p>
+    <div class="state" id="desktop-idle"><h3 class="state-title"><span class="state-letter">(a)</span> Idle / empty</h3><p class="state-note">Page just opened: marks earned and total empty, pass mark pre-filled &quot;70&quot; (M-1).</p><div class="pair"><div class="theme-cell"><p class="theme-label">Light</p><div class="theme theme--light viewport"><div class="app"><article class="card" aria-labelledby="title-1">
+  <header class="card-head"><p class="eyebrow">Quiz score</p><h1 class="title" id="title-1">Check a quiz result</h1><p class="sub">A score at or above the pass mark is a pass.</p></header>
+  <div class="fields">
+    <div class="field field--earned"><label class="label" for="earned-3">Marks earned</label><input class="input" id="earned-3" type="text" inputmode="decimal" autocomplete="off" value="" aria-describedby="earned-3-error"><p class="field-error" id="earned-3-error"></p></div>
+    <div class="field field--total"><label class="label" for="total-4">Total marks possible</label><input class="input" id="total-4" type="text" inputmode="decimal" autocomplete="off" value="" aria-describedby="total-4-error"><p class="field-error" id="total-4-error"></p></div>
+    <div class="field field--passmark"><label class="label" for="passmark-5">Pass mark<span class="sr-only"> (percent)</span></label><div class="input-wrap"><input class="input" id="passmark-5" type="text" inputmode="decimal" autocomplete="off" value="70" aria-describedby="passmark-5-error"><span class="suffix" aria-hidden="true">%</span></div><p class="field-error" id="passmark-5-error"></p></div>
+  </div>
+  <hr class="rule">
+  <section class="result" aria-labelledby="score-label-2">
+    <p class="eyebrow" id="score-label-2">Score</p>
+    <div class="result-body"><p class="result-msg"><span data-m="M-1">Enter marks earned and total marks possible to see the score.</span></p></div>
+  </section>
+  <div class="actions"><button class="btn" type="button" aria-keyshortcuts="Escape"><span data-m="M-25">Next learner</span></button><span class="hint">or press <kbd>Esc</kbd></span></div>
+</article></div></div></div><div class="theme-cell"><p class="theme-label">Dark</p><div class="theme theme--dark viewport"><div class="app"><article class="card" aria-labelledby="title-6">
+  <header class="card-head"><p class="eyebrow">Quiz score</p><h1 class="title" id="title-6">Check a quiz result</h1><p class="sub">A score at or above the pass mark is a pass.</p></header>
+  <div class="fields">
+    <div class="field field--earned"><label class="label" for="earned-8">Marks earned</label><input class="input" id="earned-8" type="text" inputmode="decimal" autocomplete="off" value="" aria-describedby="earned-8-error"><p class="field-error" id="earned-8-error"></p></div>
+    <div class="field field--total"><label class="label" for="total-9">Total marks possible</label><input class="input" id="total-9" type="text" inputmode="decimal" autocomplete="off" value="" aria-describedby="total-9-error"><p class="field-error" id="total-9-error"></p></div>
+    <div class="field field--passmark"><label class="label" for="passmark-10">Pass mark<span class="sr-only"> (percent)</span></label><div class="input-wrap"><input class="input" id="passmark-10" type="text" inputmode="decimal" autocomplete="off" value="70" aria-describedby="passmark-10-error"><span class="suffix" aria-hidden="true">%</span></div><p class="field-error" id="passmark-10-error"></p></div>
+  </div>
+  <hr class="rule">
+  <section class="result" aria-labelledby="score-label-7">
+    <p class="eyebrow" id="score-label-7">Score</p>
+    <div class="result-body"><p class="result-msg"><span data-m="M-1">Enter marks earned and total marks possible to see the score.</span></p></div>
+  </section>
+  <div class="actions"><button class="btn" type="button" aria-keyshortcuts="Escape"><span data-m="M-25">Next learner</span></button><span class="hint">or press <kbd>Esc</kbd></span></div>
+</article></div></div></div></div></div><div class="state" id="desktop-pass"><h3 class="state-title"><span class="state-letter">(b)</span> Pass result</h3><p class="state-note">17.5 of 23, pass mark 70 → 76.0%, Pass, M-8. Cursor in marks earned (focus ring).</p><div class="pair"><div class="theme-cell"><p class="theme-label">Light</p><div class="theme theme--light viewport"><div class="app"><article class="card" aria-labelledby="title-11">
+  <header class="card-head"><p class="eyebrow">Quiz score</p><h1 class="title" id="title-11">Check a quiz result</h1><p class="sub">A score at or above the pass mark is a pass.</p></header>
+  <div class="fields">
+    <div class="field field--earned"><label class="label" for="earned-13">Marks earned</label><input class="input is-focus" id="earned-13" type="text" inputmode="decimal" autocomplete="off" value="17.5" aria-describedby="earned-13-error"><p class="field-error" id="earned-13-error"></p></div>
+    <div class="field field--total"><label class="label" for="total-14">Total marks possible</label><input class="input" id="total-14" type="text" inputmode="decimal" autocomplete="off" value="23" aria-describedby="total-14-error"><p class="field-error" id="total-14-error"></p></div>
+    <div class="field field--passmark"><label class="label" for="passmark-15">Pass mark<span class="sr-only"> (percent)</span></label><div class="input-wrap"><input class="input" id="passmark-15" type="text" inputmode="decimal" autocomplete="off" value="70" aria-describedby="passmark-15-error"><span class="suffix" aria-hidden="true">%</span></div><p class="field-error" id="passmark-15-error"></p></div>
+  </div>
+  <hr class="rule">
+  <section class="result" aria-labelledby="score-label-12">
+    <p class="eyebrow" id="score-label-12">Score</p>
+    <div class="result-body"><div class="outcome"><p class="score">76.0<span class="pct">%</span></p><p class="verdict verdict--pass"><span class="verdict-disc"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="i-stroke" d="M6.5 12.5l3.8 3.8 7.4-8.3"/></svg></span><span data-m="M-4">Pass</span></p><p class="gap"><svg class="gap-icon gap-icon--pass" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 3.5l5 7H3z"/></svg><span data-m="M-8">1.4 marks above the pass mark</span></p></div></div>
+  </section>
+  <div class="actions"><button class="btn" type="button" aria-keyshortcuts="Escape"><span data-m="M-25">Next learner</span></button><span class="hint">or press <kbd>Esc</kbd></span></div>
+</article></div></div></div><div class="theme-cell"><p class="theme-label">Dark</p><div class="theme theme--dark viewport"><div class="app"><article class="card" aria-labelledby="title-16">
+  <header class="card-head"><p class="eyebrow">Quiz score</p><h1 class="title" id="title-16">Check a quiz result</h1><p class="sub">A score at or above the pass mark is a pass.</p></header>
+  <div class="fields">
+    <div class="field field--earned"><label class="label" for="earned-18">Marks earned</label><input class="input is-focus" id="earned-18" type="text" inputmode="decimal" autocomplete="off" value="17.5" aria-describedby="earned-18-error"><p class="field-error" id="earned-18-error"></p></div>
+    <div class="field field--total"><label class="label" for="total-19">Total marks possible</label><input class="input" id="total-19" type="text" inputmode="decimal" autocomplete="off" value="23" aria-describedby="total-19-error"><p class="field-error" id="total-19-error"></p></div>
+    <div class="field field--passmark"><label class="label" for="passmark-20">Pass mark<span class="sr-only"> (percent)</span></label><div class="input-wrap"><input class="input" id="passmark-20" type="text" inputmode="decimal" autocomplete="off" value="70" aria-describedby="passmark-20-error"><span class="suffix" aria-hidden="true">%</span></div><p class="field-error" id="passmark-20-error"></p></div>
+  </div>
+  <hr class="rule">
+  <section class="result" aria-labelledby="score-label-17">
+    <p class="eyebrow" id="score-label-17">Score</p>
+    <div class="result-body"><div class="outcome"><p class="score">76.0<span class="pct">%</span></p><p class="verdict verdict--pass"><span class="verdict-disc"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="i-stroke" d="M6.5 12.5l3.8 3.8 7.4-8.3"/></svg></span><span data-m="M-4">Pass</span></p><p class="gap"><svg class="gap-icon gap-icon--pass" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 3.5l5 7H3z"/></svg><span data-m="M-8">1.4 marks above the pass mark</span></p></div></div>
+  </section>
+  <div class="actions"><button class="btn" type="button" aria-keyshortcuts="Escape"><span data-m="M-25">Next learner</span></button><span class="hint">or press <kbd>Esc</kbd></span></div>
+</article></div></div></div></div></div><div class="state" id="desktop-fail"><h3 class="state-title"><span class="state-letter">(c)</span> Fail result</h3><p class="state-note">15.5 of 23, pass mark 70 → 67.3%, Fail, M-6.</p><div class="pair"><div class="theme-cell"><p class="theme-label">Light</p><div class="theme theme--light viewport"><div class="app"><article class="card" aria-labelledby="title-21">
+  <header class="card-head"><p class="eyebrow">Quiz score</p><h1 class="title" id="title-21">Check a quiz result</h1><p class="sub">A score at or above the pass mark is a pass.</p></header>
+  <div class="fields">
+    <div class="field field--earned"><label class="label" for="earned-23">Marks earned</label><input class="input" id="earned-23" type="text" inputmode="decimal" autocomplete="off" value="15.5" aria-describedby="earned-23-error"><p class="field-error" id="earned-23-error"></p></div>
+    <div class="field field--total"><label class="label" for="total-24">Total marks possible</label><input class="input" id="total-24" type="text" inputmode="decimal" autocomplete="off" value="23" aria-describedby="total-24-error"><p class="field-error" id="total-24-error"></p></div>
+    <div class="field field--passmark"><label class="label" for="passmark-25">Pass mark<span class="sr-only"> (percent)</span></label><div class="input-wrap"><input class="input" id="passmark-25" type="text" inputmode="decimal" autocomplete="off" value="70" aria-describedby="passmark-25-error"><span class="suffix" aria-hidden="true">%</span></div><p class="field-error" id="passmark-25-error"></p></div>
+  </div>
+  <hr class="rule">
+  <section class="result" aria-labelledby="score-label-22">
+    <p class="eyebrow" id="score-label-22">Score</p>
+    <div class="result-body"><div class="outcome"><p class="score">67.3<span class="pct">%</span></p><p class="verdict verdict--fail"><span class="verdict-disc"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="i-stroke" d="M8 8l8 8M16 8l-8 8"/></svg></span><span data-m="M-5">Fail</span></p><p class="gap"><svg class="gap-icon gap-icon--fail" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 12.5l5-7H3z"/></svg><span data-m="M-6">0.6 marks short of the pass mark</span></p></div></div>
+  </section>
+  <div class="actions"><button class="btn" type="button" aria-keyshortcuts="Escape"><span data-m="M-25">Next learner</span></button><span class="hint">or press <kbd>Esc</kbd></span></div>
+</article></div></div></div><div class="theme-cell"><p class="theme-label">Dark</p><div class="theme theme--dark viewport"><div class="app"><article class="card" aria-labelledby="title-26">
+  <header class="card-head"><p class="eyebrow">Quiz score</p><h1 class="title" id="title-26">Check a quiz result</h1><p class="sub">A score at or above the pass mark is a pass.</p></header>
+  <div class="fields">
+    <div class="field field--earned"><label class="label" for="earned-28">Marks earned</label><input class="input" id="earned-28" type="text" inputmode="decimal" autocomplete="off" value="15.5" aria-describedby="earned-28-error"><p class="field-error" id="earned-28-error"></p></div>
+    <div class="field field--total"><label class="label" for="total-29">Total marks possible</label><input class="input" id="total-29" type="text" inputmode="decimal" autocomplete="off" value="23" aria-describedby="total-29-error"><p class="field-error" id="total-29-error"></p></div>
+    <div class="field field--passmark"><label class="label" for="passmark-30">Pass mark<span class="sr-only"> (percent)</span></label><div class="input-wrap"><input class="input" id="passmark-30" type="text" inputmode="decimal" autocomplete="off" value="70" aria-describedby="passmark-30-error"><span class="suffix" aria-hidden="true">%</span></div><p class="field-error" id="passmark-30-error"></p></div>
+  </div>
+  <hr class="rule">
+  <section class="result" aria-labelledby="score-label-27">
+    <p class="eyebrow" id="score-label-27">Score</p>
+    <div class="result-body"><div class="outcome"><p class="score">67.3<span class="pct">%</span></p><p class="verdict verdict--fail"><span class="verdict-disc"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="i-stroke" d="M8 8l8 8M16 8l-8 8"/></svg></span><span data-m="M-5">Fail</span></p><p class="gap"><svg class="gap-icon gap-icon--fail" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 12.5l5-7H3z"/></svg><span data-m="M-6">0.6 marks short of the pass mark</span></p></div></div>
+  </section>
+  <div class="actions"><button class="btn" type="button" aria-keyshortcuts="Escape"><span data-m="M-25">Next learner</span></button><span class="hint">or press <kbd>Esc</kbd></span></div>
+</article></div></div></div></div></div><div class="state" id="desktop-error"><h3 class="state-title"><span class="state-letter">(d)</span> Error</h3><p class="state-note">23.5 of 23 → M-15 under marks earned (aria-invalid), M-3 in the result area, no score.</p><div class="pair"><div class="theme-cell"><p class="theme-label">Light</p><div class="theme theme--light viewport"><div class="app"><article class="card" aria-labelledby="title-31">
+  <header class="card-head"><p class="eyebrow">Quiz score</p><h1 class="title" id="title-31">Check a quiz result</h1><p class="sub">A score at or above the pass mark is a pass.</p></header>
+  <div class="fields">
+    <div class="field field--earned"><label class="label" for="earned-33">Marks earned</label><input class="input is-focus" id="earned-33" type="text" inputmode="decimal" autocomplete="off" value="23.5" aria-describedby="earned-33-error" aria-invalid="true"><p class="field-error" id="earned-33-error"><svg class="alert-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="7"/><path class="alert-mark" d="M8 4.4v4.4"/><circle class="alert-dot" cx="8" cy="11.4" r="1.05"/></svg><span data-m="M-15">Marks earned can't be more than the total marks possible.</span></p></div>
+    <div class="field field--total"><label class="label" for="total-34">Total marks possible</label><input class="input" id="total-34" type="text" inputmode="decimal" autocomplete="off" value="23" aria-describedby="total-34-error"><p class="field-error" id="total-34-error"></p></div>
+    <div class="field field--passmark"><label class="label" for="passmark-35">Pass mark<span class="sr-only"> (percent)</span></label><div class="input-wrap"><input class="input" id="passmark-35" type="text" inputmode="decimal" autocomplete="off" value="70" aria-describedby="passmark-35-error"><span class="suffix" aria-hidden="true">%</span></div><p class="field-error" id="passmark-35-error"></p></div>
+  </div>
+  <hr class="rule">
+  <section class="result" aria-labelledby="score-label-32">
+    <p class="eyebrow" id="score-label-32">Score</p>
+    <div class="result-body"><p class="result-msg result-msg--error"><svg class="alert-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="7"/><path class="alert-mark" d="M8 4.4v4.4"/><circle class="alert-dot" cx="8" cy="11.4" r="1.05"/></svg><span data-m="M-3">The score will appear once every entry is valid.</span></p></div>
+  </section>
+  <div class="actions"><button class="btn" type="button" aria-keyshortcuts="Escape"><span data-m="M-25">Next learner</span></button><span class="hint">or press <kbd>Esc</kbd></span></div>
+</article></div></div></div><div class="theme-cell"><p class="theme-label">Dark</p><div class="theme theme--dark viewport"><div class="app"><article class="card" aria-labelledby="title-36">
+  <header class="card-head"><p class="eyebrow">Quiz score</p><h1 class="title" id="title-36">Check a quiz result</h1><p class="sub">A score at or above the pass mark is a pass.</p></header>
+  <div class="fields">
+    <div class="field field--earned"><label class="label" for="earned-38">Marks earned</label><input class="input is-focus" id="earned-38" type="text" inputmode="decimal" autocomplete="off" value="23.5" aria-describedby="earned-38-error" aria-invalid="true"><p class="field-error" id="earned-38-error"><svg class="alert-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="7"/><path class="alert-mark" d="M8 4.4v4.4"/><circle class="alert-dot" cx="8" cy="11.4" r="1.05"/></svg><span data-m="M-15">Marks earned can't be more than the total marks possible.</span></p></div>
+    <div class="field field--total"><label class="label" for="total-39">Total marks possible</label><input class="input" id="total-39" type="text" inputmode="decimal" autocomplete="off" value="23" aria-describedby="total-39-error"><p class="field-error" id="total-39-error"></p></div>
+    <div class="field field--passmark"><label class="label" for="passmark-40">Pass mark<span class="sr-only"> (percent)</span></label><div class="input-wrap"><input class="input" id="passmark-40" type="text" inputmode="decimal" autocomplete="off" value="70" aria-describedby="passmark-40-error"><span class="suffix" aria-hidden="true">%</span></div><p class="field-error" id="passmark-40-error"></p></div>
+  </div>
+  <hr class="rule">
+  <section class="result" aria-labelledby="score-label-37">
+    <p class="eyebrow" id="score-label-37">Score</p>
+    <div class="result-body"><p class="result-msg result-msg--error"><svg class="alert-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="7"/><path class="alert-mark" d="M8 4.4v4.4"/><circle class="alert-dot" cx="8" cy="11.4" r="1.05"/></svg><span data-m="M-3">The score will appear once every entry is valid.</span></p></div>
+  </section>
+  <div class="actions"><button class="btn" type="button" aria-keyshortcuts="Escape"><span data-m="M-25">Next learner</span></button><span class="hint">or press <kbd>Esc</kbd></span></div>
+</article></div></div></div></div></div><div class="state" id="desktop-nopass"><h3 class="state-title"><span class="state-letter">(e)</span> Pass mark empty</h3><p class="state-note">17.5 of 23, pass mark cleared → score still shown, M-2 in the verdict slot, no gap line, no error.</p><div class="pair"><div class="theme-cell"><p class="theme-label">Light</p><div class="theme theme--light viewport"><div class="app"><article class="card" aria-labelledby="title-41">
+  <header class="card-head"><p class="eyebrow">Quiz score</p><h1 class="title" id="title-41">Check a quiz result</h1><p class="sub">A score at or above the pass mark is a pass.</p></header>
+  <div class="fields">
+    <div class="field field--earned"><label class="label" for="earned-43">Marks earned</label><input class="input" id="earned-43" type="text" inputmode="decimal" autocomplete="off" value="17.5" aria-describedby="earned-43-error"><p class="field-error" id="earned-43-error"></p></div>
+    <div class="field field--total"><label class="label" for="total-44">Total marks possible</label><input class="input" id="total-44" type="text" inputmode="decimal" autocomplete="off" value="23" aria-describedby="total-44-error"><p class="field-error" id="total-44-error"></p></div>
+    <div class="field field--passmark"><label class="label" for="passmark-45">Pass mark<span class="sr-only"> (percent)</span></label><div class="input-wrap"><input class="input" id="passmark-45" type="text" inputmode="decimal" autocomplete="off" value="" aria-describedby="passmark-45-error"><span class="suffix" aria-hidden="true">%</span></div><p class="field-error" id="passmark-45-error"></p></div>
+  </div>
+  <hr class="rule">
+  <section class="result" aria-labelledby="score-label-42">
+    <p class="eyebrow" id="score-label-42">Score</p>
+    <div class="result-body"><div class="outcome"><p class="score">76.0<span class="pct">%</span></p><p class="verdict-msg"><span data-m="M-2">Enter a pass mark to see whether this is a pass or a fail.</span></p></div></div>
+  </section>
+  <div class="actions"><button class="btn" type="button" aria-keyshortcuts="Escape"><span data-m="M-25">Next learner</span></button><span class="hint">or press <kbd>Esc</kbd></span></div>
+</article></div></div></div><div class="theme-cell"><p class="theme-label">Dark</p><div class="theme theme--dark viewport"><div class="app"><article class="card" aria-labelledby="title-46">
+  <header class="card-head"><p class="eyebrow">Quiz score</p><h1 class="title" id="title-46">Check a quiz result</h1><p class="sub">A score at or above the pass mark is a pass.</p></header>
+  <div class="fields">
+    <div class="field field--earned"><label class="label" for="earned-48">Marks earned</label><input class="input" id="earned-48" type="text" inputmode="decimal" autocomplete="off" value="17.5" aria-describedby="earned-48-error"><p class="field-error" id="earned-48-error"></p></div>
+    <div class="field field--total"><label class="label" for="total-49">Total marks possible</label><input class="input" id="total-49" type="text" inputmode="decimal" autocomplete="off" value="23" aria-describedby="total-49-error"><p class="field-error" id="total-49-error"></p></div>
+    <div class="field field--passmark"><label class="label" for="passmark-50">Pass mark<span class="sr-only"> (percent)</span></label><div class="input-wrap"><input class="input" id="passmark-50" type="text" inputmode="decimal" autocomplete="off" value="" aria-describedby="passmark-50-error"><span class="suffix" aria-hidden="true">%</span></div><p class="field-error" id="passmark-50-error"></p></div>
+  </div>
+  <hr class="rule">
+  <section class="result" aria-labelledby="score-label-47">
+    <p class="eyebrow" id="score-label-47">Score</p>
+    <div class="result-body"><div class="outcome"><p class="score">76.0<span class="pct">%</span></p><p class="verdict-msg"><span data-m="M-2">Enter a pass mark to see whether this is a pass or a fail.</span></p></div></div>
+  </section>
+  <div class="actions"><button class="btn" type="button" aria-keyshortcuts="Escape"><span data-m="M-25">Next learner</span></button><span class="hint">or press <kbd>Esc</kbd></span></div>
+</article></div></div></div></div></div>
+  </section>
+
+  <section class="part" id="mobile">
+    <h2 class="part-title">Mobile (375px window)</h2>
+    <p class="part-note">Same states at phone width: fields stacked, verdict directly under the score.</p>
+    <h3 class="strip-title">Mobile, light theme</h3><div class="devices"><figure class="device-fig"><figcaption class="device-cap"><span class="state-letter">(a)</span> Idle / empty · light</figcaption><div class="theme theme--light viewport device"><div class="app"><article class="card" aria-labelledby="title-51">
+  <header class="card-head"><p class="eyebrow">Quiz score</p><h1 class="title" id="title-51">Check a quiz result</h1><p class="sub">A score at or above the pass mark is a pass.</p></header>
+  <div class="fields">
+    <div class="field field--earned"><label class="label" for="earned-53">Marks earned</label><input class="input" id="earned-53" type="text" inputmode="decimal" autocomplete="off" value="" aria-describedby="earned-53-error"><p class="field-error" id="earned-53-error"></p></div>
+    <div class="field field--total"><label class="label" for="total-54">Total marks possible</label><input class="input" id="total-54" type="text" inputmode="decimal" autocomplete="off" value="" aria-describedby="total-54-error"><p class="field-error" id="total-54-error"></p></div>
+    <div class="field field--passmark"><label class="label" for="passmark-55">Pass mark<span class="sr-only"> (percent)</span></label><div class="input-wrap"><input class="input" id="passmark-55" type="text" inputmode="decimal" autocomplete="off" value="70" aria-describedby="passmark-55-error"><span class="suffix" aria-hidden="true">%</span></div><p class="field-error" id="passmark-55-error"></p></div>
+  </div>
+  <hr class="rule">
+  <section class="result" aria-labelledby="score-label-52">
+    <p class="eyebrow" id="score-label-52">Score</p>
+    <div class="result-body"><p class="result-msg"><span data-m="M-1">Enter marks earned and total marks possible to see the score.</span></p></div>
+  </section>
+  <div class="actions"><button class="btn" type="button" aria-keyshortcuts="Escape"><span data-m="M-25">Next learner</span></button><span class="hint">or press <kbd>Esc</kbd></span></div>
+</article></div></div></figure><figure class="device-fig"><figcaption class="device-cap"><span class="state-letter">(b)</span> Pass result · light</figcaption><div class="theme theme--light viewport device"><div class="app"><article class="card" aria-labelledby="title-56">
+  <header class="card-head"><p class="eyebrow">Quiz score</p><h1 class="title" id="title-56">Check a quiz result</h1><p class="sub">A score at or above the pass mark is a pass.</p></header>
+  <div class="fields">
+    <div class="field field--earned"><label class="label" for="earned-58">Marks earned</label><input class="input is-focus" id="earned-58" type="text" inputmode="decimal" autocomplete="off" value="17.5" aria-describedby="earned-58-error"><p class="field-error" id="earned-58-error"></p></div>
+    <div class="field field--total"><label class="label" for="total-59">Total marks possible</label><input class="input" id="total-59" type="text" inputmode="decimal" autocomplete="off" value="23" aria-describedby="total-59-error"><p class="field-error" id="total-59-error"></p></div>
+    <div class="field field--passmark"><label class="label" for="passmark-60">Pass mark<span class="sr-only"> (percent)</span></label><div class="input-wrap"><input class="input" id="passmark-60" type="text" inputmode="decimal" autocomplete="off" value="70" aria-describedby="passmark-60-error"><span class="suffix" aria-hidden="true">%</span></div><p class="field-error" id="passmark-60-error"></p></div>
+  </div>
+  <hr class="rule">
+  <section class="result" aria-labelledby="score-label-57">
+    <p class="eyebrow" id="score-label-57">Score</p>
+    <div class="result-body"><div class="outcome"><p class="score">76.0<span class="pct">%</span></p><p class="verdict verdict--pass"><span class="verdict-disc"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="i-stroke" d="M6.5 12.5l3.8 3.8 7.4-8.3"/></svg></span><span data-m="M-4">Pass</span></p><p class="gap"><svg class="gap-icon gap-icon--pass" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 3.5l5 7H3z"/></svg><span data-m="M-8">1.4 marks above the pass mark</span></p></div></div>
+  </section>
+  <div class="actions"><button class="btn" type="button" aria-keyshortcuts="Escape"><span data-m="M-25">Next learner</span></button><span class="hint">or press <kbd>Esc</kbd></span></div>
+</article></div></div></figure><figure class="device-fig"><figcaption class="device-cap"><span class="state-letter">(c)</span> Fail result · light</figcaption><div class="theme theme--light viewport device"><div class="app"><article class="card" aria-labelledby="title-61">
+  <header class="card-head"><p class="eyebrow">Quiz score</p><h1 class="title" id="title-61">Check a quiz result</h1><p class="sub">A score at or above the pass mark is a pass.</p></header>
+  <div class="fields">
+    <div class="field field--earned"><label class="label" for="earned-63">Marks earned</label><input class="input" id="earned-63" type="text" inputmode="decimal" autocomplete="off" value="15.5" aria-describedby="earned-63-error"><p class="field-error" id="earned-63-error"></p></div>
+    <div class="field field--total"><label class="label" for="total-64">Total marks possible</label><input class="input" id="total-64" type="text" inputmode="decimal" autocomplete="off" value="23" aria-describedby="total-64-error"><p class="field-error" id="total-64-error"></p></div>
+    <div class="field field--passmark"><label class="label" for="passmark-65">Pass mark<span class="sr-only"> (percent)</span></label><div class="input-wrap"><input class="input" id="passmark-65" type="text" inputmode="decimal" autocomplete="off" value="70" aria-describedby="passmark-65-error"><span class="suffix" aria-hidden="true">%</span></div><p class="field-error" id="passmark-65-error"></p></div>
+  </div>
+  <hr class="rule">
+  <section class="result" aria-labelledby="score-label-62">
+    <p class="eyebrow" id="score-label-62">Score</p>
+    <div class="result-body"><div class="outcome"><p class="score">67.3<span class="pct">%</span></p><p class="verdict verdict--fail"><span class="verdict-disc"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="i-stroke" d="M8 8l8 8M16 8l-8 8"/></svg></span><span data-m="M-5">Fail</span></p><p class="gap"><svg class="gap-icon gap-icon--fail" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 12.5l5-7H3z"/></svg><span data-m="M-6">0.6 marks short of the pass mark</span></p></div></div>
+  </section>
+  <div class="actions"><button class="btn" type="button" aria-keyshortcuts="Escape"><span data-m="M-25">Next learner</span></button><span class="hint">or press <kbd>Esc</kbd></span></div>
+</article></div></div></figure><figure class="device-fig"><figcaption class="device-cap"><span class="state-letter">(d)</span> Error · light</figcaption><div class="theme theme--light viewport device"><div class="app"><article class="card" aria-labelledby="title-66">
+  <header class="card-head"><p class="eyebrow">Quiz score</p><h1 class="title" id="title-66">Check a quiz result</h1><p class="sub">A score at or above the pass mark is a pass.</p></header>
+  <div class="fields">
+    <div class="field field--earned"><label class="label" for="earned-68">Marks earned</label><input class="input is-focus" id="earned-68" type="text" inputmode="decimal" autocomplete="off" value="23.5" aria-describedby="earned-68-error" aria-invalid="true"><p class="field-error" id="earned-68-error"><svg class="alert-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="7"/><path class="alert-mark" d="M8 4.4v4.4"/><circle class="alert-dot" cx="8" cy="11.4" r="1.05"/></svg><span data-m="M-15">Marks earned can't be more than the total marks possible.</span></p></div>
+    <div class="field field--total"><label class="label" for="total-69">Total marks possible</label><input class="input" id="total-69" type="text" inputmode="decimal" autocomplete="off" value="23" aria-describedby="total-69-error"><p class="field-error" id="total-69-error"></p></div>
+    <div class="field field--passmark"><label class="label" for="passmark-70">Pass mark<span class="sr-only"> (percent)</span></label><div class="input-wrap"><input class="input" id="passmark-70" type="text" inputmode="decimal" autocomplete="off" value="70" aria-describedby="passmark-70-error"><span class="suffix" aria-hidden="true">%</span></div><p class="field-error" id="passmark-70-error"></p></div>
+  </div>
+  <hr class="rule">
+  <section class="result" aria-labelledby="score-label-67">
+    <p class="eyebrow" id="score-label-67">Score</p>
+    <div class="result-body"><p class="result-msg result-msg--error"><svg class="alert-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="7"/><path class="alert-mark" d="M8 4.4v4.4"/><circle class="alert-dot" cx="8" cy="11.4" r="1.05"/></svg><span data-m="M-3">The score will appear once every entry is valid.</span></p></div>
+  </section>
+  <div class="actions"><button class="btn" type="button" aria-keyshortcuts="Escape"><span data-m="M-25">Next learner</span></button><span class="hint">or press <kbd>Esc</kbd></span></div>
+</article></div></div></figure><figure class="device-fig"><figcaption class="device-cap"><span class="state-letter">(e)</span> Pass mark empty · light</figcaption><div class="theme theme--light viewport device"><div class="app"><article class="card" aria-labelledby="title-71">
+  <header class="card-head"><p class="eyebrow">Quiz score</p><h1 class="title" id="title-71">Check a quiz result</h1><p class="sub">A score at or above the pass mark is a pass.</p></header>
+  <div class="fields">
+    <div class="field field--earned"><label class="label" for="earned-73">Marks earned</label><input class="input" id="earned-73" type="text" inputmode="decimal" autocomplete="off" value="17.5" aria-describedby="earned-73-error"><p class="field-error" id="earned-73-error"></p></div>
+    <div class="field field--total"><label class="label" for="total-74">Total marks possible</label><input class="input" id="total-74" type="text" inputmode="decimal" autocomplete="off" value="23" aria-describedby="total-74-error"><p class="field-error" id="total-74-error"></p></div>
+    <div class="field field--passmark"><label class="label" for="passmark-75">Pass mark<span class="sr-only"> (percent)</span></label><div class="input-wrap"><input class="input" id="passmark-75" type="text" inputmode="decimal" autocomplete="off" value="" aria-describedby="passmark-75-error"><span class="suffix" aria-hidden="true">%</span></div><p class="field-error" id="passmark-75-error"></p></div>
+  </div>
+  <hr class="rule">
+  <section class="result" aria-labelledby="score-label-72">
+    <p class="eyebrow" id="score-label-72">Score</p>
+    <div class="result-body"><div class="outcome"><p class="score">76.0<span class="pct">%</span></p><p class="verdict-msg"><span data-m="M-2">Enter a pass mark to see whether this is a pass or a fail.</span></p></div></div>
+  </section>
+  <div class="actions"><button class="btn" type="button" aria-keyshortcuts="Escape"><span data-m="M-25">Next learner</span></button><span class="hint">or press <kbd>Esc</kbd></span></div>
+</article></div></div></figure></div><h3 class="strip-title">Mobile, dark theme</h3><div class="devices"><figure class="device-fig"><figcaption class="device-cap"><span class="state-letter">(a)</span> Idle / empty · dark</figcaption><div class="theme theme--dark viewport device"><div class="app"><article class="card" aria-labelledby="title-76">
+  <header class="card-head"><p class="eyebrow">Quiz score</p><h1 class="title" id="title-76">Check a quiz result</h1><p class="sub">A score at or above the pass mark is a pass.</p></header>
+  <div class="fields">
+    <div class="field field--earned"><label class="label" for="earned-78">Marks earned</label><input class="input" id="earned-78" type="text" inputmode="decimal" autocomplete="off" value="" aria-describedby="earned-78-error"><p class="field-error" id="earned-78-error"></p></div>
+    <div class="field field--total"><label class="label" for="total-79">Total marks possible</label><input class="input" id="total-79" type="text" inputmode="decimal" autocomplete="off" value="" aria-describedby="total-79-error"><p class="field-error" id="total-79-error"></p></div>
+    <div class="field field--passmark"><label class="label" for="passmark-80">Pass mark<span class="sr-only"> (percent)</span></label><div class="input-wrap"><input class="input" id="passmark-80" type="text" inputmode="decimal" autocomplete="off" value="70" aria-describedby="passmark-80-error"><span class="suffix" aria-hidden="true">%</span></div><p class="field-error" id="passmark-80-error"></p></div>
+  </div>
+  <hr class="rule">
+  <section class="result" aria-labelledby="score-label-77">
+    <p class="eyebrow" id="score-label-77">Score</p>
+    <div class="result-body"><p class="result-msg"><span data-m="M-1">Enter marks earned and total marks possible to see the score.</span></p></div>
+  </section>
+  <div class="actions"><button class="btn" type="button" aria-keyshortcuts="Escape"><span data-m="M-25">Next learner</span></button><span class="hint">or press <kbd>Esc</kbd></span></div>
+</article></div></div></figure><figure class="device-fig"><figcaption class="device-cap"><span class="state-letter">(b)</span> Pass result · dark</figcaption><div class="theme theme--dark viewport device"><div class="app"><article class="card" aria-labelledby="title-81">
+  <header class="card-head"><p class="eyebrow">Quiz score</p><h1 class="title" id="title-81">Check a quiz result</h1><p class="sub">A score at or above the pass mark is a pass.</p></header>
+  <div class="fields">
+    <div class="field field--earned"><label class="label" for="earned-83">Marks earned</label><input class="input is-focus" id="earned-83" type="text" inputmode="decimal" autocomplete="off" value="17.5" aria-describedby="earned-83-error"><p class="field-error" id="earned-83-error"></p></div>
+    <div class="field field--total"><label class="label" for="total-84">Total marks possible</label><input class="input" id="total-84" type="text" inputmode="decimal" autocomplete="off" value="23" aria-describedby="total-84-error"><p class="field-error" id="total-84-error"></p></div>
+    <div class="field field--passmark"><label class="label" for="passmark-85">Pass mark<span class="sr-only"> (percent)</span></label><div class="input-wrap"><input class="input" id="passmark-85" type="text" inputmode="decimal" autocomplete="off" value="70" aria-describedby="passmark-85-error"><span class="suffix" aria-hidden="true">%</span></div><p class="field-error" id="passmark-85-error"></p></div>
+  </div>
+  <hr class="rule">
+  <section class="result" aria-labelledby="score-label-82">
+    <p class="eyebrow" id="score-label-82">Score</p>
+    <div class="result-body"><div class="outcome"><p class="score">76.0<span class="pct">%</span></p><p class="verdict verdict--pass"><span class="verdict-disc"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="i-stroke" d="M6.5 12.5l3.8 3.8 7.4-8.3"/></svg></span><span data-m="M-4">Pass</span></p><p class="gap"><svg class="gap-icon gap-icon--pass" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 3.5l5 7H3z"/></svg><span data-m="M-8">1.4 marks above the pass mark</span></p></div></div>
+  </section>
+  <div class="actions"><button class="btn" type="button" aria-keyshortcuts="Escape"><span data-m="M-25">Next learner</span></button><span class="hint">or press <kbd>Esc</kbd></span></div>
+</article></div></div></figure><figure class="device-fig"><figcaption class="device-cap"><span class="state-letter">(c)</span> Fail result · dark</figcaption><div class="theme theme--dark viewport device"><div class="app"><article class="card" aria-labelledby="title-86">
+  <header class="card-head"><p class="eyebrow">Quiz score</p><h1 class="title" id="title-86">Check a quiz result</h1><p class="sub">A score at or above the pass mark is a pass.</p></header>
+  <div class="fields">
+    <div class="field field--earned"><label class="label" for="earned-88">Marks earned</label><input class="input" id="earned-88" type="text" inputmode="decimal" autocomplete="off" value="15.5" aria-describedby="earned-88-error"><p class="field-error" id="earned-88-error"></p></div>
+    <div class="field field--total"><label class="label" for="total-89">Total marks possible</label><input class="input" id="total-89" type="text" inputmode="decimal" autocomplete="off" value="23" aria-describedby="total-89-error"><p class="field-error" id="total-89-error"></p></div>
+    <div class="field field--passmark"><label class="label" for="passmark-90">Pass mark<span class="sr-only"> (percent)</span></label><div class="input-wrap"><input class="input" id="passmark-90" type="text" inputmode="decimal" autocomplete="off" value="70" aria-describedby="passmark-90-error"><span class="suffix" aria-hidden="true">%</span></div><p class="field-error" id="passmark-90-error"></p></div>
+  </div>
+  <hr class="rule">
+  <section class="result" aria-labelledby="score-label-87">
+    <p class="eyebrow" id="score-label-87">Score</p>
+    <div class="result-body"><div class="outcome"><p class="score">67.3<span class="pct">%</span></p><p class="verdict verdict--fail"><span class="verdict-disc"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="i-stroke" d="M8 8l8 8M16 8l-8 8"/></svg></span><span data-m="M-5">Fail</span></p><p class="gap"><svg class="gap-icon gap-icon--fail" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 12.5l5-7H3z"/></svg><span data-m="M-6">0.6 marks short of the pass mark</span></p></div></div>
+  </section>
+  <div class="actions"><button class="btn" type="button" aria-keyshortcuts="Escape"><span data-m="M-25">Next learner</span></button><span class="hint">or press <kbd>Esc</kbd></span></div>
+</article></div></div></figure><figure class="device-fig"><figcaption class="device-cap"><span class="state-letter">(d)</span> Error · dark</figcaption><div class="theme theme--dark viewport device"><div class="app"><article class="card" aria-labelledby="title-91">
+  <header class="card-head"><p class="eyebrow">Quiz score</p><h1 class="title" id="title-91">Check a quiz result</h1><p class="sub">A score at or above the pass mark is a pass.</p></header>
+  <div class="fields">
+    <div class="field field--earned"><label class="label" for="earned-93">Marks earned</label><input class="input is-focus" id="earned-93" type="text" inputmode="decimal" autocomplete="off" value="23.5" aria-describedby="earned-93-error" aria-invalid="true"><p class="field-error" id="earned-93-error"><svg class="alert-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="7"/><path class="alert-mark" d="M8 4.4v4.4"/><circle class="alert-dot" cx="8" cy="11.4" r="1.05"/></svg><span data-m="M-15">Marks earned can't be more than the total marks possible.</span></p></div>
+    <div class="field field--total"><label class="label" for="total-94">Total marks possible</label><input class="input" id="total-94" type="text" inputmode="decimal" autocomplete="off" value="23" aria-describedby="total-94-error"><p class="field-error" id="total-94-error"></p></div>
+    <div class="field field--passmark"><label class="label" for="passmark-95">Pass mark<span class="sr-only"> (percent)</span></label><div class="input-wrap"><input class="input" id="passmark-95" type="text" inputmode="decimal" autocomplete="off" value="70" aria-describedby="passmark-95-error"><span class="suffix" aria-hidden="true">%</span></div><p class="field-error" id="passmark-95-error"></p></div>
+  </div>
+  <hr class="rule">
+  <section class="result" aria-labelledby="score-label-92">
+    <p class="eyebrow" id="score-label-92">Score</p>
+    <div class="result-body"><p class="result-msg result-msg--error"><svg class="alert-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="7"/><path class="alert-mark" d="M8 4.4v4.4"/><circle class="alert-dot" cx="8" cy="11.4" r="1.05"/></svg><span data-m="M-3">The score will appear once every entry is valid.</span></p></div>
+  </section>
+  <div class="actions"><button class="btn" type="button" aria-keyshortcuts="Escape"><span data-m="M-25">Next learner</span></button><span class="hint">or press <kbd>Esc</kbd></span></div>
+</article></div></div></figure><figure class="device-fig"><figcaption class="device-cap"><span class="state-letter">(e)</span> Pass mark empty · dark</figcaption><div class="theme theme--dark viewport device"><div class="app"><article class="card" aria-labelledby="title-96">
+  <header class="card-head"><p class="eyebrow">Quiz score</p><h1 class="title" id="title-96">Check a quiz result</h1><p class="sub">A score at or above the pass mark is a pass.</p></header>
+  <div class="fields">
+    <div class="field field--earned"><label class="label" for="earned-98">Marks earned</label><input class="input" id="earned-98" type="text" inputmode="decimal" autocomplete="off" value="17.5" aria-describedby="earned-98-error"><p class="field-error" id="earned-98-error"></p></div>
+    <div class="field field--total"><label class="label" for="total-99">Total marks possible</label><input class="input" id="total-99" type="text" inputmode="decimal" autocomplete="off" value="23" aria-describedby="total-99-error"><p class="field-error" id="total-99-error"></p></div>
+    <div class="field field--passmark"><label class="label" for="passmark-100">Pass mark<span class="sr-only"> (percent)</span></label><div class="input-wrap"><input class="input" id="passmark-100" type="text" inputmode="decimal" autocomplete="off" value="" aria-describedby="passmark-100-error"><span class="suffix" aria-hidden="true">%</span></div><p class="field-error" id="passmark-100-error"></p></div>
+  </div>
+  <hr class="rule">
+  <section class="result" aria-labelledby="score-label-97">
+    <p class="eyebrow" id="score-label-97">Score</p>
+    <div class="result-body"><div class="outcome"><p class="score">76.0<span class="pct">%</span></p><p class="verdict-msg"><span data-m="M-2">Enter a pass mark to see whether this is a pass or a fail.</span></p></div></div>
+  </section>
+  <div class="actions"><button class="btn" type="button" aria-keyshortcuts="Escape"><span data-m="M-25">Next learner</span></button><span class="hint">or press <kbd>Esc</kbd></span></div>
+</article></div></div></figure></div>
+  </section>
+
+  <section class="part" id="components">
+    <h2 class="part-title">Component states</h2>
+    <p class="part-note">Hover, focus-visible and active are drawn with stand-in classes so they show in a still picture.</p>
+    <div class="pair"><div class="theme-cell"><p class="theme-label">Light</p><div class="theme theme--light viewport"><div class="app"><div class="card states-card">
+  <div class="demo-grid"><div class="demo"><p class="demo-cap">Input · default (empty)</p><div class="field field--demo"><label class="label" for="demo-101">Marks earned</label><input class="input" id="demo-101" type="text" inputmode="decimal" autocomplete="off" value="" aria-describedby="demo-101-error"><p class="field-error" id="demo-101-error"></p></div></div><div class="demo"><p class="demo-cap">Input · hover</p><div class="field field--demo"><label class="label" for="demo-102">Marks earned</label><input class="input is-hover" id="demo-102" type="text" inputmode="decimal" autocomplete="off" value="" aria-describedby="demo-102-error"><p class="field-error" id="demo-102-error"></p></div></div><div class="demo"><p class="demo-cap">Input · focus-visible</p><div class="field field--demo"><label class="label" for="demo-103">Marks earned</label><input class="input is-focus" id="demo-103" type="text" inputmode="decimal" autocomplete="off" value="17.5" aria-describedby="demo-103-error"><p class="field-error" id="demo-103-error"></p></div></div><div class="demo"><p class="demo-cap">Input · filled</p><div class="field field--demo"><label class="label" for="demo-104">Total marks possible</label><input class="input" id="demo-104" type="text" inputmode="decimal" autocomplete="off" value="23" aria-describedby="demo-104-error"><p class="field-error" id="demo-104-error"></p></div></div><div class="demo"><p class="demo-cap">Input · error (M-12)</p><div class="field field--demo"><label class="label" for="demo-105">Marks earned</label><input class="input" id="demo-105" type="text" inputmode="decimal" autocomplete="off" value="abc" aria-describedby="demo-105-error" aria-invalid="true"><p class="field-error" id="demo-105-error"><svg class="alert-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="7"/><path class="alert-mark" d="M8 4.4v4.4"/><circle class="alert-dot" cx="8" cy="11.4" r="1.05"/></svg><span data-m="M-12">Marks earned must be a number, like 17.5.</span></p></div></div><div class="demo"><p class="demo-cap">Input · suffix</p><div class="field field--demo"><label class="label" for="demo-106">Pass mark<span class="sr-only"> (percent)</span></label><div class="input-wrap"><input class="input" id="demo-106" type="text" inputmode="decimal" autocomplete="off" value="70" aria-describedby="demo-106-error"><span class="suffix" aria-hidden="true">%</span></div><p class="field-error" id="demo-106-error"></p></div></div></div>
+  <div class="demo-row"><div class="demo"><p class="demo-cap">Button · default</p><button class="btn " type="button"><span data-m="M-25">Next learner</span></button></div><div class="demo"><p class="demo-cap">Button · hover</p><button class="btn is-hover" type="button"><span data-m="M-25">Next learner</span></button></div><div class="demo"><p class="demo-cap">Button · focus-visible</p><button class="btn is-focus" type="button"><span data-m="M-25">Next learner</span></button></div><div class="demo"><p class="demo-cap">Button · active</p><button class="btn is-active" type="button"><span data-m="M-25">Next learner</span></button></div></div>
+  <div class="demo-row demo-row--verdicts"><div class="demo"><p class="demo-cap">Verdict · Pass</p><p class="verdict verdict--pass"><span class="verdict-disc"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="i-stroke" d="M6.5 12.5l3.8 3.8 7.4-8.3"/></svg></span><span data-m="M-4">Pass</span></p></div><div class="demo"><p class="demo-cap">Verdict · Fail</p><p class="verdict verdict--fail"><span class="verdict-disc"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="i-stroke" d="M8 8l8 8M16 8l-8 8"/></svg></span><span data-m="M-5">Fail</span></p></div></div>
+  <div class="demo"><p class="demo-cap">Gap line · M-8, M-9, M-6, M-7, M-10, M-11</p><p class="gap"><svg class="gap-icon gap-icon--pass" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 3.5l5 7H3z"/></svg><span data-m="M-8">1.4 marks above the pass mark</span></p><p class="gap"><svg class="gap-icon gap-icon--pass" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 3.5l5 7H3z"/></svg><span data-m="M-9">1 mark above the pass mark</span></p><p class="gap"><svg class="gap-icon gap-icon--fail" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 12.5l5-7H3z"/></svg><span data-m="M-6">0.6 marks short of the pass mark</span></p><p class="gap"><svg class="gap-icon gap-icon--fail" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 12.5l5-7H3z"/></svg><span data-m="M-7">1 mark short of the pass mark</span></p><p class="gap"><svg class="gap-icon gap-icon--pass" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M3 5.5h10v2H3zM3 9.5h10v2H3z"/></svg><span data-m="M-10">Exactly on the pass mark</span></p><p class="gap"><svg class="gap-icon gap-icon--pass" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 3.5l5 7H3z"/></svg><span data-m="M-11">Less than 0.01 marks above the pass mark</span></p></div>
+</div></div></div></div><div class="theme-cell"><p class="theme-label">Dark</p><div class="theme theme--dark viewport"><div class="app"><div class="card states-card">
+  <div class="demo-grid"><div class="demo"><p class="demo-cap">Input · default (empty)</p><div class="field field--demo"><label class="label" for="demo-107">Marks earned</label><input class="input" id="demo-107" type="text" inputmode="decimal" autocomplete="off" value="" aria-describedby="demo-107-error"><p class="field-error" id="demo-107-error"></p></div></div><div class="demo"><p class="demo-cap">Input · hover</p><div class="field field--demo"><label class="label" for="demo-108">Marks earned</label><input class="input is-hover" id="demo-108" type="text" inputmode="decimal" autocomplete="off" value="" aria-describedby="demo-108-error"><p class="field-error" id="demo-108-error"></p></div></div><div class="demo"><p class="demo-cap">Input · focus-visible</p><div class="field field--demo"><label class="label" for="demo-109">Marks earned</label><input class="input is-focus" id="demo-109" type="text" inputmode="decimal" autocomplete="off" value="17.5" aria-describedby="demo-109-error"><p class="field-error" id="demo-109-error"></p></div></div><div class="demo"><p class="demo-cap">Input · filled</p><div class="field field--demo"><label class="label" for="demo-110">Total marks possible</label><input class="input" id="demo-110" type="text" inputmode="decimal" autocomplete="off" value="23" aria-describedby="demo-110-error"><p class="field-error" id="demo-110-error"></p></div></div><div class="demo"><p class="demo-cap">Input · error (M-12)</p><div class="field field--demo"><label class="label" for="demo-111">Marks earned</label><input class="input" id="demo-111" type="text" inputmode="decimal" autocomplete="off" value="abc" aria-describedby="demo-111-error" aria-invalid="true"><p class="field-error" id="demo-111-error"><svg class="alert-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="7"/><path class="alert-mark" d="M8 4.4v4.4"/><circle class="alert-dot" cx="8" cy="11.4" r="1.05"/></svg><span data-m="M-12">Marks earned must be a number, like 17.5.</span></p></div></div><div class="demo"><p class="demo-cap">Input · suffix</p><div class="field field--demo"><label class="label" for="demo-112">Pass mark<span class="sr-only"> (percent)</span></label><div class="input-wrap"><input class="input" id="demo-112" type="text" inputmode="decimal" autocomplete="off" value="70" aria-describedby="demo-112-error"><span class="suffix" aria-hidden="true">%</span></div><p class="field-error" id="demo-112-error"></p></div></div></div>
+  <div class="demo-row"><div class="demo"><p class="demo-cap">Button · default</p><button class="btn " type="button"><span data-m="M-25">Next learner</span></button></div><div class="demo"><p class="demo-cap">Button · hover</p><button class="btn is-hover" type="button"><span data-m="M-25">Next learner</span></button></div><div class="demo"><p class="demo-cap">Button · focus-visible</p><button class="btn is-focus" type="button"><span data-m="M-25">Next learner</span></button></div><div class="demo"><p class="demo-cap">Button · active</p><button class="btn is-active" type="button"><span data-m="M-25">Next learner</span></button></div></div>
+  <div class="demo-row demo-row--verdicts"><div class="demo"><p class="demo-cap">Verdict · Pass</p><p class="verdict verdict--pass"><span class="verdict-disc"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="i-stroke" d="M6.5 12.5l3.8 3.8 7.4-8.3"/></svg></span><span data-m="M-4">Pass</span></p></div><div class="demo"><p class="demo-cap">Verdict · Fail</p><p class="verdict verdict--fail"><span class="verdict-disc"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="i-stroke" d="M8 8l8 8M16 8l-8 8"/></svg></span><span data-m="M-5">Fail</span></p></div></div>
+  <div class="demo"><p class="demo-cap">Gap line · M-8, M-9, M-6, M-7, M-10, M-11</p><p class="gap"><svg class="gap-icon gap-icon--pass" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 3.5l5 7H3z"/></svg><span data-m="M-8">1.4 marks above the pass mark</span></p><p class="gap"><svg class="gap-icon gap-icon--pass" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 3.5l5 7H3z"/></svg><span data-m="M-9">1 mark above the pass mark</span></p><p class="gap"><svg class="gap-icon gap-icon--fail" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 12.5l5-7H3z"/></svg><span data-m="M-6">0.6 marks short of the pass mark</span></p><p class="gap"><svg class="gap-icon gap-icon--fail" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 12.5l5-7H3z"/></svg><span data-m="M-7">1 mark short of the pass mark</span></p><p class="gap"><svg class="gap-icon gap-icon--pass" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M3 5.5h10v2H3zM3 9.5h10v2H3z"/></svg><span data-m="M-10">Exactly on the pass mark</span></p><p class="gap"><svg class="gap-icon gap-icon--pass" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 3.5l5 7H3z"/></svg><span data-m="M-11">Less than 0.01 marks above the pass mark</span></p></div>
+</div></div></div></div></div>
+  </section>
+</main>
+</body>
+</html>
