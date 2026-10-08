@@ -1,8 +1,11 @@
 /**
  * The single catalogue of user-facing text (M-1..M-40, docs/user-stories.md).
  * UI code never hard-codes text: it reads it from here.
- * Templates keep their placeholders ({n}, {total}, …); later stories fill them.
+ * Templates keep their placeholders ({n}, {total}, …); helpers below fill them.
  */
+
+import { formatMarks } from './logic/format';
+import type { Gap } from './logic/gap';
 
 export const MESSAGE_IDS = [
   'M-1', 'M-2', 'M-3', 'M-4', 'M-5', 'M-6', 'M-7', 'M-8', 'M-9', 'M-10',
@@ -77,4 +80,21 @@ export function scoreText(score: string): string {
 /** Joins the parts of a screen-reader announcement (ui-design.md §Accessibility): "76.0%, Pass". */
 export function announcementText(parts: ReadonlyArray<string>): string {
   return parts.join(', ');
+}
+
+/** One mark, in hundredths: the only value that takes the singular "mark" (A-11). */
+const ONE_MARK = 100;
+
+/** The gap line (M-6..M-11) for a gap, with {n} filled by `formatMarks` (A-10, A-11). */
+export function gapText(gap: Gap): string {
+  switch (gap.kind) {
+    case 'exact':
+      return MESSAGES['M-10'];
+    case 'aboveTiny':
+      return MESSAGES['M-11'];
+    case 'short':
+      return gap.h === ONE_MARK ? MESSAGES['M-7'] : MESSAGES['M-6'].replace('{n}', formatMarks(gap.h));
+    case 'above':
+      return gap.h === ONE_MARK ? MESSAGES['M-9'] : MESSAGES['M-8'].replace('{n}', formatMarks(gap.h));
+  }
 }

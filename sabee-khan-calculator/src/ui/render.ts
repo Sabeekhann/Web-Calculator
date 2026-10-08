@@ -1,6 +1,6 @@
 import { ESC_KEY_LABEL, MESSAGES, SCORE_UNIT } from '../messages';
 import { el, svgEl } from './dom';
-import type { Verdict, ViewModel } from './view-model';
+import type { GapKind, Verdict, ViewModel } from './view-model';
 
 export type FieldName = 'earned' | 'total' | 'pass';
 
@@ -80,6 +80,25 @@ function verdictNode(verdict: Verdict, text: string): HTMLParagraphElement {
   ]);
 }
 
+/** Gap-line arrows from the mockup on a 16 × 16 grid: ▲ above, ▼ short, "=" exactly on. */
+const GAP_ICONS: Readonly<Record<GapKind, { readonly tone: Verdict; readonly path: string }>> = {
+  above: { tone: 'pass', path: 'M8 3.5l5 7H3z' },
+  aboveTiny: { tone: 'pass', path: 'M8 3.5l5 7H3z' },
+  exact: { tone: 'pass', path: 'M3 5.5h10v2H3zM3 9.5h10v2H3z' },
+  short: { tone: 'fail', path: 'M8 12.5l5-7H3z' },
+};
+
+/** Gap line: decorative arrow + the words, which carry the meaning (never colour alone). */
+function gapNode(kind: GapKind, text: string): HTMLParagraphElement {
+  const icon = GAP_ICONS[kind];
+  const glyph = svgEl(
+    'svg',
+    { class: `gap-icon gap-icon--${icon.tone}`, viewBox: '0 0 16 16', 'aria-hidden': 'true', focusable: 'false' },
+    [svgEl('path', { d: icon.path })],
+  );
+  return el('p', { class: 'gap' }, [glyph, el('span', {}, [text])]);
+}
+
 /** Renders the result body for a view model. Displays only; never calculates. */
 export function renderResult(resultBody: HTMLElement, vm: ViewModel): void {
   switch (vm.state) {
@@ -93,7 +112,11 @@ export function renderResult(resultBody: HTMLElement, vm: ViewModel): void {
       return;
     case 'result':
       resultBody.replaceChildren(
-        el('div', { class: 'outcome' }, [scoreNode(vm.score), verdictNode(vm.verdict, vm.verdictText)]),
+        el('div', { class: 'outcome' }, [
+          scoreNode(vm.score),
+          verdictNode(vm.verdict, vm.verdictText),
+          gapNode(vm.gapKind, vm.gapText),
+        ]),
       );
       return;
   }
