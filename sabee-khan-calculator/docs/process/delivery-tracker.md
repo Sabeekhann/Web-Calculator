@@ -27,7 +27,7 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 | D19 | Repo public, verified signed out | IN PROGRESS | Repo already public (REST API, 2026-10-08) |
 | D20 | Submission email | OPEN | |
 | D21 | Accuracy of README and docs | OPEN | |
-| D22 | Open questions asked or assumed in README | IN PROGRESS | decision-log.md: Q-5..Q-12, A-1..A-8 pending PO |
+| D22 | Open questions asked or assumed in README | IN PROGRESS | decision-log.md: Q-5..Q-12 answered, A-1..A-8 approved (DEC-7) |
 | D23 | Walkthrough notes (private) | OPEN | |
 
 ## Time log (UTC)
@@ -36,7 +36,8 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 |-------|-------|-----|---------|
 | Preflight | 08:08 | 08:12 | 4 |
 | 1 Fresh start & initiation | 08:12 | 08:17 | 5 |
-| 2 Discovery | 08:17 | 08:55 | |
+| 2 Discovery | 08:17 | 08:55 | 38 |
+| 3a App roles | 08:55 | | |
 
 ## Session log
 
