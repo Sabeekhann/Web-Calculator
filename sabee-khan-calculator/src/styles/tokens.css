@@ -1,0 +1,137 @@
+/* Design tokens (docs/process/ui-design.md, Direction A "Ledger" + bigger verdict).
+   The only file that holds raw colours, sizes and shadows. Light on :root, dark via prefers-color-scheme. */
+
+:root {
+  color-scheme: light;
+
+  /* Colour — light */
+  --color-bg: #F5F3EE;
+  --color-surface: #FFFFFF;
+  --color-text: #1B1F24;
+  --color-muted: #5A6069;
+  --color-accent: #1F4E79;
+  --color-accent-tint: #E9EFF6;
+  --color-border: #DDD8CD;
+  --color-field-border: #8A9099;
+  --color-field-border-hover: #5A6069;
+  --color-focus: #1F4E79;
+  --color-pass: #1D6B3A;
+  --color-pass-tint: #E6F2E9;
+  --color-fail: #A8322D;
+  --color-fail-tint: #FBE9E7;
+  --color-error: #A8322D;
+  --shadow-card: 0 1px 2px rgba(27, 31, 36, 0.06), 0 8px 24px rgba(27, 31, 36, 0.06);
+
+  /* Type */
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-base: 15px;
+  --text-md: 17px;
+  --text-lg: 20px;
+  --text-verdict: 40px;
+  --text-score: 64px;
+  --text-score-unit: 0.5em;
+  --weight-light: 300;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --leading-none: 1;
+  --leading-heading: 1.25;
+  --leading-tight: 1.4;
+  --leading-normal: 1.5;
+  --tracking-eyebrow: 0.12em;
+  --tracking-score: -0.03em;
+  --tracking-verdict: -0.01em;
+  --tracking-none: 0;
+  --score-unit-gap: 0.04em;
+
+  /* Spacing (4 px base) */
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* Sizes */
+  --control-h: 44px;
+  --icon-sm: 16px;
+  --icon-verdict: 40px;
+  --icon-glyph-scale: 70%;
+  --icon-stroke-alert: 1.8;
+  --icon-stroke-verdict: 3.2;
+  --card-max: 520px;
+  --input-max-wide: 240px;
+  --border-w: 1px;
+  --kbd-border-bottom-w: 2px;
+  --focus-w: 2px;
+  --focus-offset: 2px;
+
+  /* Radii */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-round: 50%;
+
+  /* Motion */
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);
+
+  /* Layout — narrow (< 600 px) */
+  --page-pad-top: var(--space-6);
+  --page-pad-x: var(--space-4);
+  --page-pad-bottom: var(--space-8);
+  --card-pad-top: var(--space-6);
+  --card-pad-x: var(--space-5);
+  --card-pad-bottom: var(--space-6);
+  --field-gap: var(--space-3);
+  --error-slot-lines: 2;
+  --error-slot-h: calc(var(--error-slot-lines) * var(--text-sm) * var(--leading-tight));
+  --input-max: none;
+  --result-min-h: 196px;
+}
+
+/* Layout — wide (≥ 600 px): one breakpoint; 768 and 1280 show the same card. */
+@media (min-width: 600px) {
+  :root {
+    --page-pad-top: var(--space-12);
+    --page-pad-x: var(--space-10);
+    --page-pad-bottom: var(--space-12);
+    --card-pad-top: var(--space-8);
+    --card-pad-x: var(--space-10);
+    --card-pad-bottom: var(--space-10);
+    --field-gap: var(--space-4);
+    --error-slot-lines: 1;
+    --input-max: var(--input-max-wide);
+    --result-min-h: 112px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+
+    /* Colour — dark */
+    --color-bg: #111316;
+    --color-surface: #1B1E23;
+    --color-text: #ECEAE4;
+    --color-muted: #A4A9B1;
+    --color-accent: #8EB9E8;
+    --color-accent-tint: #22303F;
+    --color-border: #353A42;
+    --color-field-border: #6E747E;
+    --color-field-border-hover: #A4A9B1;
+    --color-focus: #8EB9E8;
+    --color-pass: #6FCF97;
+    --color-pass-tint: #16301F;
+    --color-fail: #F2958D;
+    --color-fail-tint: #3A1E1C;
+    --color-error: #F2958D;
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.3);
+  }
+}

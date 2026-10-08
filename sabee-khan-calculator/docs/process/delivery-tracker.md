@@ -6,8 +6,8 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 
 | ID | Deliverable | Status | Evidence / note |
 |----|-------------|--------|-----------------|
-| D1 | Browser app (Chrome, Edge, Firefox, Safari) | OPEN | |
-| D2 | Local run from README, no paid accounts/keys/cloud | OPEN | |
+| D1 | Browser app (Chrome, Edge, Firefox, Safari) | IN PROGRESS | Chromium e2e green; Firefox/WebKit blocked by environment network policy (PO asked to allow hosts) |
+| D2 | Local run from README, no paid accounts/keys/cloud | IN PROGRESS | Clean `npm ci` copy: test, build, dev, preview all work (qa-reports/sprint-0.md) |
 | D3 | Live URL (optional, in addition to local run) | OPEN | Decided at Stage 10 |
 | D4 | Correctness: every Implemented story matches its ACs | OPEN | |
 | D5 | Error handling: clear messages, no crash or wrong result | OPEN | |
@@ -15,14 +15,14 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 | D7 | AI writes the code | IN PROGRESS | All files so far written by Claude Code |
 | D8 | Hand changes listed in README (or "None") | OPEN | |
 | D9 | Transcripts of every session + raw logs | OPEN | PO exports (see Q-3) |
-| D10 | Source without node_modules/dist/coverage/reports | IN PROGRESS | `.gitignore` in place |
+| D10 | Source without node_modules/dist/coverage/reports | IN PROGRESS | `.gitignore` verified by QA (check-ignore); zero runtime deps |
 | D11 | Package README covers every brief item | IN PROGRESS | Headings only; choice + reasons ready in product-brief.md |
 | D12 | docs/app-roles.md | DONE | R-1 Learner, R-2 Instructor + needs table; approved Gate 3a |
 | D13 | docs/jobs-to-be-done.md | DONE | J-1..J-5, purity check PASS; approved Gate 3b |
 | D14 | docs/user-stories.md | IN PROGRESS | S-1..S-6 approved Gate 3c; statuses updated at release |
 | D15 | Acceptance criteria (Given/When/Then, edges) | DONE | 34 ACs, edge coverage table, arithmetic checked twice (analyst + Orchestrator) |
 | D16 | Status per story | IN PROGRESS | All Not implemented |
-| D17 | Package layout `sabee-khan-calculator/` | IN PROGRESS | Folders created |
+| D17 | Package layout `sabee-khan-calculator/` | IN PROGRESS | README, src/, docs/, transcripts/ present |
 | D18 | HR acknowledgement | IN PROGRESS | Draft in `.private/hr-ack-email.md` (needs Q-1) |
 | D19 | Repo public, verified signed out | IN PROGRESS | Repo already public (REST API, 2026-10-08) |
 | D20 | Submission email | OPEN | |
@@ -65,3 +65,10 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 | 4 | ux-ui-designer | Full spec (201 lines) + mockup.html (states a–e, light/dark, 375/1280) | Done: 19 contrast pairs pass, 78 message texts match, no layout shift measured | Accepted; Orchestrator reviewed Pass, Fail, error and pass-mark-empty states in fresh screenshots; recorded DEC-10 |
 | 5 | product-analyst | Catalogue UI strings N-1..N-11 as M-30..M-40 | Done: 11 rows, all match ui-design.md | Accepted; note: Orchestrator's brief asked for a Bash check outside the role's tool list — agent flagged it; brief wording to be fixed in future delegations |
 | 5 | solution-architect | backlog.md, technical-design.md (ADR-001..008), test-plan.md, Q-13 | Done: 29/29 ACs mapped, 30/30 AC numbers verified with integer formulas | Accepted; Orchestrator recommends a different answer to Q-13 (lone "." treated as empty) for PO |
+| 6 | developer | Sprint 0 scaffold, design system, shell, tests first | Done: 5 unit + 4 e2e (Chromium) | Accepted after fix loop 1 |
+| 6 | Orchestrator | npm audit review | 2 critical + 1 moderate in Vitest 3 dev deps; registry check → Vitest 4.1.11 | Sent back as D-0.1 |
+| 6 | developer | D-0.1 Vitest 4.1.11 upgrade | Done: 0 vulnerabilities | Accepted; Orchestrator verified plain `npm install` on npm 10 in a fresh copy |
+| 6 | solution-architect | ADR-005 amendment | Done (72c6927) | Accepted; facts match registry |
+| 6 | ux-ui-designer | Sprint 0 visual review | 0 issues; 0-pixel diff vs mockup (a) | Accepted |
+| 6 | qa-engineer | Sprint 0 verification → qa-reports/sprint-0.md | PASS (Chromium); Firefox/WebKit NOT RUN (environment) | Accepted |
+| 6 | docs-writer | Sprint 0 entry in sprint-log.md | Done | Accepted |

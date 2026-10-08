@@ -1,0 +1,364 @@
+/* Components and their states (docs/process/ui-design.md §Components and states). Tokens only. */
+
+/* ---- Card ---- */
+.card {
+  max-width: var(--card-max);
+  margin: var(--space-0) auto;
+  padding: var(--card-pad-top) var(--card-pad-x) var(--card-pad-bottom);
+  background: var(--color-surface);
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+.eyebrow {
+  font-size: var(--text-xs);
+  line-height: var(--leading-tight);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.title {
+  margin-top: var(--space-1);
+  font-size: var(--text-lg);
+  line-height: var(--leading-heading);
+  font-weight: var(--weight-semibold);
+}
+
+.sub {
+  margin: var(--space-1) var(--space-0) var(--space-6);
+  font-size: var(--text-sm);
+  line-height: var(--leading-tight);
+  font-weight: var(--weight-regular);
+  color: var(--color-muted);
+}
+
+/* ---- Fields: stacked at every width ---- */
+.fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.label {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-size: var(--text-sm);
+  line-height: var(--leading-tight);
+  font-weight: var(--weight-medium);
+  color: var(--color-muted);
+}
+
+/* Text input — default / filled (same look) */
+.input {
+  display: block;
+  width: 100%;
+  max-width: var(--input-max);
+  height: var(--control-h);
+  margin: var(--space-0);
+  padding: var(--space-0) var(--space-3);
+  font-size: var(--text-md);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: var(--border-w) solid var(--color-field-border);
+  border-radius: var(--radius-sm);
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+/* hover */
+.input:hover {
+  border-color: var(--color-field-border-hover);
+}
+
+/* focus-visible: inputs always match :focus-visible, so the ring shows on mouse focus too */
+.input:focus {
+  outline: none;
+}
+
+.input:focus-visible {
+  outline: var(--focus-w) solid var(--color-focus);
+  outline-offset: var(--focus-offset);
+}
+
+/* error: thicker look without a size change; set by aria-invalid (or the class) */
+.input[aria-invalid="true"],
+.input--error {
+  border-color: var(--color-error);
+  box-shadow: inset 0 0 0 var(--border-w) var(--color-error);
+}
+
+/* Pass mark "%" suffix inside the input */
+.input-wrap {
+  position: relative;
+  max-width: var(--input-max);
+}
+
+.input-wrap .input {
+  padding-right: var(--space-8);
+}
+
+.suffix {
+  position: absolute;
+  right: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: var(--text-base);
+  line-height: var(--leading-none);
+  color: var(--color-muted);
+  pointer-events: none;
+}
+
+/* Inline error slot: always present, keeps its height when empty */
+.field-error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  min-height: var(--error-slot-h);
+  margin: var(--space-1) var(--space-0) var(--field-gap);
+  font-size: var(--text-sm);
+  line-height: var(--leading-tight);
+  font-weight: var(--weight-medium);
+  color: var(--color-error);
+}
+
+.alert-icon {
+  flex: none;
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+  margin-top: calc((var(--text-sm) * var(--leading-tight) - var(--icon-sm)) / 2);
+  fill: var(--color-error);
+}
+
+.alert-icon .alert-mark {
+  fill: none;
+  stroke: var(--color-surface);
+  stroke-width: var(--icon-stroke-alert);
+  stroke-linecap: round;
+}
+
+.alert-icon .alert-dot {
+  fill: var(--color-surface);
+}
+
+/* ---- Divider ---- */
+.rule {
+  margin: var(--space-2) var(--space-0) var(--space-5);
+  border: 0;
+  border-top: var(--border-w) solid var(--color-border);
+}
+
+/* ---- Result area: reserved height so nothing below moves ---- */
+.result-body {
+  margin-top: var(--space-2);
+  min-height: var(--result-min-h);
+}
+
+/* idle (M-1) and error (M-3) message */
+.result-msg {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--color-muted);
+}
+
+.result-msg .alert-icon {
+  margin-top: calc((var(--text-base) * var(--leading-normal) - var(--icon-sm)) / 2);
+}
+
+/* result: score + verdict (+ gap line); verdict under the score when narrow, beside it when wide */
+.outcome {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "score" "verdict" "gap";
+  row-gap: var(--space-3);
+  justify-items: start;
+}
+
+@media (min-width: 600px) {
+  .outcome {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas: "score verdict" "gap gap";
+    column-gap: var(--space-6);
+    align-items: center;
+  }
+}
+
+.score {
+  grid-area: score;
+  font-size: var(--text-score);
+  line-height: var(--leading-none);
+  font-weight: var(--weight-light);
+  letter-spacing: var(--tracking-score);
+  font-variant-numeric: tabular-nums lining-nums;
+  white-space: nowrap;
+}
+
+.score-unit {
+  margin-left: var(--score-unit-gap);
+  font-size: var(--text-score-unit);
+  letter-spacing: var(--tracking-none);
+  color: var(--color-muted);
+}
+
+/* Verdict block: word + tick/cross disc, never colour alone, never a pill */
+.verdict {
+  grid-area: verdict;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-5) var(--space-2) var(--space-2);
+  border: var(--border-w) solid currentColor;
+  border-radius: var(--radius-md);
+  font-size: var(--text-verdict);
+  line-height: var(--leading-none);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-verdict);
+}
+
+.verdict--pass {
+  color: var(--color-pass);
+  background: var(--color-pass-tint);
+}
+
+.verdict--fail {
+  color: var(--color-fail);
+  background: var(--color-fail-tint);
+}
+
+.verdict-disc {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: var(--icon-verdict);
+  height: var(--icon-verdict);
+  border-radius: var(--radius-round);
+  background: currentColor;
+}
+
+.verdict-disc svg {
+  width: var(--icon-glyph-scale);
+  height: var(--icon-glyph-scale);
+}
+
+.verdict-disc .i-stroke {
+  fill: none;
+  stroke: var(--color-surface);
+  stroke-width: var(--icon-stroke-verdict);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* pass mark empty: M-2 in the verdict slot */
+.verdict-msg {
+  grid-area: verdict;
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--color-muted);
+}
+
+/* Gap line: icon is decorative, the words carry the meaning */
+.gap {
+  grid-area: gap;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text);
+}
+
+.gap-icon {
+  flex: none;
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+  margin-top: calc((var(--text-base) * var(--leading-normal) - var(--icon-sm)) / 2);
+}
+
+.gap-icon--pass {
+  fill: var(--color-pass);
+}
+
+.gap-icon--fail {
+  fill: var(--color-fail);
+}
+
+/* ---- Actions ---- */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+/* "Next learner" — default */
+.btn {
+  min-width: var(--control-h);
+  min-height: var(--control-h);
+  padding: var(--space-0) var(--space-5);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--color-accent);
+  background: transparent;
+  border: var(--border-w) solid var(--color-accent);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+/* hover */
+.btn:hover {
+  background: var(--color-accent-tint);
+}
+
+/* focus-visible */
+.btn:focus {
+  outline: none;
+}
+
+.btn:focus-visible {
+  outline: var(--focus-w) solid var(--color-focus);
+  outline-offset: var(--focus-offset);
+}
+
+/* active: inverted */
+.btn:active {
+  background: var(--color-accent);
+  color: var(--color-surface);
+}
+
+.hint {
+  font-size: var(--text-sm);
+  line-height: var(--leading-tight);
+  font-weight: var(--weight-regular);
+  color: var(--color-muted);
+}
+
+kbd {
+  padding: var(--space-0) var(--space-1);
+  font: inherit;
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+  border: var(--border-w) solid var(--color-border);
+  border-bottom-width: var(--kbd-border-bottom-w);
+  border-radius: var(--radius-sm);
+}
+
+/* ---- Reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
