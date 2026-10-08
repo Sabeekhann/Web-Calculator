@@ -25,10 +25,10 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 | D17 | Package layout `sabee-khan-calculator/` | IN PROGRESS | Stage 9: README.md, src/, docs/app-roles.md, jobs-to-be-done.md, user-stories.md, transcripts/ present; transcripts/session-01.md … pending Stage 10 |
 | D18 | HR acknowledgement | IN PROGRESS | Draft in `.private/hr-ack-email.md` (needs Q-1); PO sends |
 | D19 | Repo public, verified signed out | IN PROGRESS | REST API visibility "public"; unauthenticated fetch of github.com/Sabeekhann/Web-Calculator returns 200 (Stage 9); full signed-out content check at Stage 11 |
-| D20 | Submission email | OPEN | Stage 11 (needs Q-1) |
+| D20 | Submission email | IN PROGRESS | Draft in `.private/submission-email.md`; PO sends |
 | D21 | Accuracy of README and docs | DONE | Stage 9: README claims checked against the app and CI (131 unit, 51 e2e per engine, spec table counts 4/8/9/10/10/10, no runtime deps, Node 20 in CI, retries 0, "None." hand changes, quick check steps 1–7 PASS on dev and preview); no untrue claim found; minor findings in release-audit.md |
 | D22 | Open questions asked or assumed in README | DONE | Q-5..Q-13 answered (DEC-7, DEC-12); A-1..A-18 PO-approved and all listed in README; Q-1..Q-3 are PO admin items, not product questions |
-| D23 | Walkthrough notes (private) | OPEN | `.private/walkthrough-notes.md` does not exist yet (only hr-ack-email.md) |
+| D23 | Walkthrough notes (private) | DONE | `.private/walkthrough-notes.md` (gitignored) |
 
 ## Time log (UTC)
 
@@ -47,7 +47,8 @@ Derived from commit timestamps (start = previous gate approval, end = this gate'
 | 6 Sprint 0 | 10:00 | 10:23 | 23 |
 | 7 Sprint 1 | 10:23 | 15:17 | 294 (incl. a pause until the account rate limit reset) |
 | 8 Sprint 2 | 15:17 | 15:47 | incl. PO real-browser checks |
-| 9 Release | 15:47 | | |
+| 9 Release | 15:47 | 16:04 | |
+| 10 Submission prep | 16:04 | | |
 
 ## Session log
 

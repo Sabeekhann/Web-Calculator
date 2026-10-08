@@ -24,12 +24,13 @@ Decisions (DEC-x), open questions (Q-x) and assumptions (A-x). An assumption goe
 | DEC-16 | 2026-10-08 | S-3 accepted on QA PASS (3 engines via CI run 37797412005 on ea4b301; 179-check edge sweep) and visual review; manual checks deferred as for S-1. | PO | S-3 acceptance |
 | DEC-17 | 2026-10-08 | Gate 7 approved. Sprint 2 scope (b): S-4 cut (stays Not implemented; its "Next learner" button and Esc hint removed from the UI until built) — polish + hardening only, then release. GitHub Pages live URL enabled now (D3) so the PO can do real-browser checks. | PO | Time budget exceeded; MVP meets the brief; rule "cut Should stories, never quality" |
 | DEC-18 | 2026-10-08 | Gate 8 approved. PO ran the 14-step real-browser checklist (qa-reports/sprint-2.md) on the live URL in Chrome, Edge, Firefox, Safari and a phone: all pass (after a hard refresh — an earlier report of a non-working Next learner button/Esc came from the cached pre-Sprint-2 deploy 90a3a96). S-1..S-3 may now be marked Implemented. | PO | Gate 8 approval |
+| DEC-19 | 2026-10-08 | Gate 9 approved; PO created tag v1.0.0 → a69e274 in the web UI. Role applied for: Product Engineer. PO sends the HR acknowledgement and submission email personally. | PO | Gate 9 approval |
 
 ## Open questions
 
 | ID | Raised | Question | Owner | Status |
 |----|--------|----------|-------|--------|
-| Q-1 | Stage 1 | Role applied for, HR contact name/email, deadline and expected submission date (for D18 and D20). | PO | Open |
+| Q-1 | Stage 1 | Role applied for, HR contact name/email, deadline and expected submission date (for D18 and D20). | PO | Partly answered: role = Product Engineer; PO sends HR emails personally (HR name/email/deadline kept by PO) |
 | Q-2 | Stage 1 | The session's git proxy returns HTTP 403 for tag pushes and branch deletions. Archive tag `archive/pre-fresh-start` (→ `fe7cc3f`), deleting `feat/S-1..3`, and the `v1.0.0` tag in Stage 9 must be done by the PO in the GitHub web UI, or the plan must change. | PO | Resolved 2026-10-08: PO created tag archive/pre-fresh-start (→ fe7cc3f) and deleted old feat/S-1..3 in the web UI; v1.0.0 tag still needs the PO at Stage 9 |
 | Q-3 | Stage 1 | Transcripts (D9): this container's raw logs in `~/.claude/projects/` disappear when the session ends. The PO must run `/export` before then; the Orchestrator may copy the raw log files unchanged into `transcripts/` only with PO approval. | PO | Open |
 | Q-4 | Stage 1 | `localhost` dev-server URLs can't be reached from the PO's browser. PO checks run via a GitHub Pages URL or a local run on the PO's machine; agents use headless Chromium screenshots. | PO | Resolved: GitHub Pages live URL (DEC-17, ADR-010); PO checks done there (DEC-18) |
