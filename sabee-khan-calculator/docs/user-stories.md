@@ -1,14 +1,14 @@
 # User Stories with Acceptance Criteria
 
-Each story serves a job in `jobs-to-be-done.md`; rules follow A-1..A-9 (approved) and A-10..A-17 (pending) in `process/decision-log.md`.
+Each story serves a job in `jobs-to-be-done.md`; rules follow A-1..A-9 (approved) and A-10..A-17 (approved, DEC-9) in `process/decision-log.md`.
 
 ## Traceability
 
 | Story | Title | Job(s) | Role(s) | Priority (MoSCoW) | Size (S/M/L) | Status |
 |-------|-------|--------|---------|-------------------|--------------|--------|
-| S-1 | Score and pass/fail verdict | J-1, J-3 | R-1 Learner, R-2 Instructor | Must | M | Not implemented |
-| S-2 | Marks short of or above the pass mark | J-2 | R-1 Learner | Must | M | Not implemented |
-| S-3 | Clear message for an invalid or impossible entry | J-4 | R-2 Instructor | Must | M | Not implemented |
+| S-1 | Score and pass/fail verdict | J-1, J-3 | R-1 Learner, R-2 Instructor | Must | M | Implemented |
+| S-2 | Marks short of or above the pass mark | J-2 | R-1 Learner | Must | M | Implemented |
+| S-3 | Clear message for an invalid or impossible entry | J-4 | R-2 Instructor | Must | M | Implemented |
 | S-4 | Next learner in one step | J-5 | R-2 Instructor | Should | S | Not implemented |
 | S-5 | Copy the outcome as one line | J-5 | R-2 Instructor | Could | S | Not implemented |
 | S-6 | Marks needed to pass | J-2 | R-1 Learner | Could | S | Not implemented |
@@ -83,7 +83,7 @@ Every job has at least one story (J-1: S-1 · J-2: S-2, S-6 · J-3: S-1 · J-4: 
 
 ## S-1 — Score and pass/fail verdict
 
-**S-1 (serves J-1, J-3, Not implemented).** As a Learner or an Instructor, I want to see the marks as a percentage score and a Pass or Fail verdict, so that I know for certain whether the pass mark was reached, judged by the same rule on the exact marks every time.
+**S-1 (serves J-1, J-3, Implemented).** As a Learner or an Instructor, I want to see the marks as a percentage score and a Pass or Fail verdict, so that I know for certain whether the pass mark was reached, judged by the same rule on the exact marks every time.
 
 Priority: Must · Size: M
 
@@ -98,7 +98,7 @@ Priority: Must · Size: M
 
 ## S-2 — Marks short of or above the pass mark
 
-**S-2 (serves J-2, Not implemented).** As a Learner, I want to see how many marks I am short of or above the pass mark, so that I can judge how much more study I need before a resit.
+**S-2 (serves J-2, Implemented).** As a Learner, I want to see how many marks I am short of or above the pass mark, so that I can judge how much more study I need before a resit.
 
 Priority: Must · Size: M
 
@@ -113,7 +113,7 @@ Priority: Must · Size: M
 
 ## S-3 — Clear message for an invalid or impossible entry
 
-**S-3 (serves J-4, Not implemented).** As an Instructor, I want a clear message naming what to fix whenever an entry is mistyped or impossible, with no score shown until it is fixed, so that a slip never becomes a recorded outcome.
+**S-3 (serves J-4, Implemented).** As an Instructor, I want a clear message naming what to fix whenever an entry is mistyped or impossible, with no score shown until it is fixed, so that a slip never becomes a recorded outcome.
 
 Priority: Must · Size: M
 

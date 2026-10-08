@@ -13,15 +13,15 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 | D5 | Error handling: clear messages, no crash or wrong result | IN PROGRESS | S-3 accepted; edge sweep automated (E-EDGE.0–9) on 3 engines; Sprint 2 QA PASS; PO real-browser checks PASS (DEC-18) |
 | D6 | UI quality: design spec, 375px+, light/dark, WCAG 2.2 AA | IN PROGRESS | ui-design.md + mockup.html approved Gate 4; Shell, S-1, S-2, S-3 pass visual review; 0 axe violations; Sprint 2 polish done; axe e2e 0 violations on 3 engines |
 | D7 | AI writes the code | IN PROGRESS | All files so far written by Claude Code |
-| D8 | Hand changes listed in README (or "None") | OPEN | |
+| D8 | Hand changes listed in README (or "None") | DONE | README: "None." |
 | D9 | Transcripts of every session + raw logs | OPEN | PO exports (see Q-3) |
 | D10 | Source without node_modules/dist/coverage/reports | IN PROGRESS | `.gitignore` verified by QA (check-ignore); zero runtime deps |
-| D11 | Package README covers every brief item | IN PROGRESS | Headings only; choice + reasons ready in product-brief.md |
+| D11 | Package README covers every brief item | IN PROGRESS | Full README written and commands verified by docs-writer; audit pending |
 | D12 | docs/app-roles.md | DONE | R-1 Learner, R-2 Instructor + needs table; approved Gate 3a |
 | D13 | docs/jobs-to-be-done.md | DONE | J-1..J-5, purity check PASS; approved Gate 3b |
-| D14 | docs/user-stories.md | IN PROGRESS | S-1..S-6 approved Gate 3c; statuses updated at release |
+| D14 | docs/user-stories.md | DONE | S-1..S-6 with job, ACs and status |
 | D15 | Acceptance criteria (Given/When/Then, edges) | DONE | 34 ACs, edge coverage table, arithmetic checked twice (analyst + Orchestrator) |
-| D16 | Status per story | IN PROGRESS | All Not implemented |
+| D16 | Status per story | DONE | S-1..S-3 Implemented (QA PASS + PO checks, DEC-18); S-4 cut, S-5/S-6 future: Not implemented |
 | D17 | Package layout `sabee-khan-calculator/` | IN PROGRESS | README, src/, docs/, transcripts/ present |
 | D18 | HR acknowledgement | IN PROGRESS | Draft in `.private/hr-ack-email.md` (needs Q-1) |
 | D19 | Repo public, verified signed out | IN PROGRESS | Repo already public (REST API, 2026-10-08) |
@@ -96,3 +96,4 @@ Derived from commit timestamps (start = previous gate approval, end = this gate'
 | 8 | solution-architect | Test plan / technical design (ADR-010) / backlog aligned with DEC-17 | Done | Accepted; 2 of its claims (CSS missing, Q-13 open) checked and rejected by Orchestrator; its missing-edge-tests finding acted on |
 | 8 | qa-engineer | Sprint 2 final hardening | PASS, 51/engine, H-1..H-15, 0 defects | Accepted |
 | 8 | docs-writer | Sprint 2 review + retro | Done | Accepted |
+| 9 | docs-writer | Story statuses S-1..S-3 Implemented; package + root README | Done; all README commands run in a fresh copy | Accepted; Orchestrator fixed one stale word in user-stories.md intro ("pending" → "approved, DEC-9") |
