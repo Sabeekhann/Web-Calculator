@@ -1,5 +1,6 @@
-import { ESC_KEY_LABEL, MESSAGES } from '../messages';
-import { el } from './dom';
+import { ESC_KEY_LABEL, MESSAGES, SCORE_UNIT } from '../messages';
+import { el, svgEl } from './dom';
+import type { Verdict, ViewModel } from './view-model';
 
 export type FieldName = 'earned' | 'total' | 'pass';
 
@@ -52,9 +53,50 @@ function createField(
   ]);
 }
 
-/** The idle result body: M-1 in muted text, no score. */
-export function idleResult(): HTMLParagraphElement {
-  return el('p', { class: 'result-msg' }, [MESSAGES['M-1']]);
+/** A muted message in the result body, e.g. the idle prompt M-1; no score. */
+function resultMessage(text: string): HTMLParagraphElement {
+  return el('p', { class: 'result-msg' }, [text]);
+}
+
+/** Tick (Pass) and cross (Fail) glyphs from the mockup, drawn on a 24 × 24 grid. */
+const VERDICT_GLYPHS: Readonly<Record<Verdict, string>> = {
+  pass: 'M6.5 12.5l3.8 3.8 7.4-8.3',
+  fail: 'M8 8l8 8M16 8l-8 8',
+};
+
+/** Score "76.0" with the half-size muted "%" unit. */
+function scoreNode(score: string): HTMLParagraphElement {
+  return el('p', { class: 'score' }, [score, el('span', { class: 'score-unit' }, [SCORE_UNIT])]);
+}
+
+/** Verdict block: decorative tick/cross disc + the word, so the verdict never relies on colour alone. */
+function verdictNode(verdict: Verdict, text: string): HTMLParagraphElement {
+  const glyph = svgEl('svg', { viewBox: '0 0 24 24', 'aria-hidden': 'true', focusable: 'false' }, [
+    svgEl('path', { class: 'i-stroke', d: VERDICT_GLYPHS[verdict] }),
+  ]);
+  return el('p', { class: `verdict verdict--${verdict}` }, [
+    el('span', { class: 'verdict-disc' }, [glyph]),
+    el('span', {}, [text]),
+  ]);
+}
+
+/** Renders the result body for a view model. Displays only; never calculates. */
+export function renderResult(resultBody: HTMLElement, vm: ViewModel): void {
+  switch (vm.state) {
+    case 'idle':
+      resultBody.replaceChildren(resultMessage(vm.message));
+      return;
+    case 'pass-mark-empty':
+      resultBody.replaceChildren(
+        el('div', { class: 'outcome' }, [scoreNode(vm.score), el('p', { class: 'verdict-msg' }, [vm.verdictMessage])]),
+      );
+      return;
+    case 'result':
+      resultBody.replaceChildren(
+        el('div', { class: 'outcome' }, [scoreNode(vm.score), verdictNode(vm.verdict, vm.verdictText)]),
+      );
+      return;
+  }
 }
 
 /** Builds the static card once from messages.ts and mounts it into `root`. Never calculates. */
@@ -62,7 +104,7 @@ export function renderShell(root: HTMLElement): ShellElements {
   const inputs = { earned: createInput('earned'), total: createInput('total'), pass: createInput('pass') };
   const errors = { earned: createErrorSlot('earned'), total: createErrorSlot('total'), pass: createErrorSlot('pass') };
 
-  const resultBody = el('div', { class: 'result-body' }, [idleResult()]);
+  const resultBody = el('div', { class: 'result-body' }, [resultMessage(MESSAGES['M-1'])]);
   const status = el('div', { class: 'sr-only', role: 'status', 'aria-live': 'polite', 'aria-atomic': 'true' });
   const nextLearner = el('button', { class: 'btn', type: 'button', 'aria-keyshortcuts': 'Escape' }, [MESSAGES['M-25']]);
 
