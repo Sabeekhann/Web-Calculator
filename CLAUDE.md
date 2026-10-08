@@ -276,7 +276,7 @@ Auto-approving gates · skipping or disabling tests · marking unverified storie
 | Install | `npm ci` (or `npm install` the first time) |
 | Dev server (background) | `npm run dev -- --host 127.0.0.1 --port 5173` |
 | Unit tests | `npm test` |
-| Playwright browsers (once) | `npx playwright install` (this cloud container: Chromium preinstalled; Firefox/WebKit blocked → run in CI, ADR-009) |
+| Playwright browsers (once) | `npx playwright install --with-deps` (Linux; plain `npx playwright install` on Windows/macOS). This cloud container: Chromium preinstalled; Firefox/WebKit blocked → run in CI, ADR-009) |
 | E2E tests | `npm run test:e2e` |
 | Build / preview | `npm run build` · `npm run preview` |
 | Clean-clone audit | `git clone https://github.com/Sabeekhann/Web-Calculator.git /tmp/audit && cd /tmp/audit/sabee-khan-calculator && npm ci && npm test && npm run test:e2e && npm run build` |

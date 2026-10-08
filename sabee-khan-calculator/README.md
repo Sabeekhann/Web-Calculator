@@ -52,9 +52,11 @@ npm test
 **End-to-end tests (Playwright)**: 51 tests per engine, on Chromium, Firefox and WebKit, run against the production build (Playwright builds it and starts `vite preview` itself).
 
 ```bash
-npx playwright install    # one time: downloads the Playwright browsers
+npx playwright install --with-deps    # one time: downloads the Playwright browsers
 npm run test:e2e
 ```
+
+`--with-deps` also installs the system libraries Firefox and WebKit need on Linux, so it may ask for an admin (sudo) password; this is the same step CI runs. On Windows and macOS, plain `npx playwright install` is enough.
 
 | Spec file (`tests/e2e/`) | Tests | Covers |
 |-----------|-------|--------|
@@ -65,7 +67,7 @@ npm run test:e2e
 | `a11y.spec.ts` | 10 | axe scan for WCAG 2.2 AA in 5 states (idle, Pass, Fail, error, pass mark empty), light and dark |
 | `edge.spec.ts` | 10 | Edge sweep: spaces, lone "." or "-", 400-digit input, pasted text, Enter key, reload, key-by-key typing, never NaN/Infinity/undefined/blank |
 
-**CI:** [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) runs on every push and pull request, on Node 20: `npm ci`, `npm audit`, unit tests, build, then the e2e suite on all three engines. Playwright never retries a failed test (`retries: 0`). No coverage tool is configured.
+**CI:** [`.github/workflows/ci.yml`](https://github.com/Sabeekhann/Web-Calculator/blob/main/.github/workflows/ci.yml) runs on every push and pull request, on Node 20: `npm ci`, `npm audit`, unit tests, build, then the e2e suite on all three engines. Playwright never retries a failed test (`retries: 0`). No coverage tool is configured.
 
 ## Reviewer quick check
 
@@ -83,7 +85,7 @@ Run `npm run dev`, open the page, and try (the pass mark starts at 70):
 
 Claude Code (cloud session, launched from the desktop app), Claude Opus 5.5, with 7 subagents defined in `.claude/agents/` at the repo root (DEC-4).
 
-How the product owner directed the work (rules in [CLAUDE.md](../CLAUDE.md), every decision in the [decision log](docs/process/decision-log.md)):
+How the product owner directed the work (rules in [CLAUDE.md](https://github.com/Sabeekhann/Web-Calculator/blob/main/CLAUDE.md), every decision in the [decision log](docs/process/decision-log.md)):
 
 - **Gated stages:** nothing moved to the next stage until the PO approved it at a gate.
 - **Documentation first:** roles → jobs → stories with acceptance criteria → design → plan → code.
@@ -143,7 +145,7 @@ How this was checked:
 
 <https://sabeekhann.github.io/Web-Calculator/>
 
-This is in addition to the local run, not instead of it. It is deployed from `main` by [`.github/workflows/pages.yml`](../.github/workflows/pages.yml).
+This is in addition to the local run, not instead of it. It is deployed from `main` by [`.github/workflows/pages.yml`](https://github.com/Sabeekhann/Web-Calculator/blob/main/.github/workflows/pages.yml).
 
 ## Docs index
 

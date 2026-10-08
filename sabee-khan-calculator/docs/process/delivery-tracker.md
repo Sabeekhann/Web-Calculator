@@ -97,3 +97,5 @@ Derived from commit timestamps (start = previous gate approval, end = this gate'
 | 8 | qa-engineer | Sprint 2 final hardening | PASS, 51/engine, H-1..H-15, 0 defects | Accepted |
 | 8 | docs-writer | Sprint 2 review + retro | Done | Accepted |
 | 9 | docs-writer | Story statuses S-1..S-3 Implemented; package + root README | Done; all README commands run in a fresh copy | Accepted; Orchestrator fixed one stale word in user-stories.md intro ("pending" → "approved, DEC-9") |
+| 9 | release-auditor | Clean-clone audit, hygiene, traceability, docs vs app (24 ACs + README quick check), D1–D23 table | PASS; 5 minor findings (RA-1..RA-5) | Accepted; RA-1/RA-2 → docs-writer, RA-3/RA-4 → product-analyst, RA-5 info only |
+| 9 | docs-writer / product-analyst | Fix RA-1..RA-4 | Done | Accepted; Orchestrator aligned CLAUDE.md §17 with --with-deps |
