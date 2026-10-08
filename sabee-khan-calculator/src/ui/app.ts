@@ -1,4 +1,4 @@
-import { renderResult, renderShell, type ShellElements } from './render';
+import { renderFieldErrors, renderResult, renderShell, type ShellElements } from './render';
 import { toViewModel, type RawInputs } from './view-model';
 
 /** Screen-reader status text is set this long after the last input, so "17.5" is read once (ui-design.md). */
@@ -30,7 +30,8 @@ export function mountApp(root: HTMLElement | null): ShellElements | null {
 
   const update = (): void => {
     const vm = toViewModel(readInputs(shell));
-    renderResult(shell.resultBody, vm); // visual update is immediate
+    renderFieldErrors(shell, vm.fieldErrors); // visual update is immediate
+    renderResult(shell.resultBody, vm);
     announce(vm.announcement);
   };
 
