@@ -6,11 +6,11 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 
 | ID | Deliverable | Status | Evidence / note |
 |----|-------------|--------|-----------------|
-| D1 | Browser app (Chrome, Edge, Firefox, Safari) | IN PROGRESS | Chromium local + Chromium/Firefox/WebKit in GitHub Actions CI on Node 20 (ADR-009); main 10af8a8: 51 e2e per engine green (153 total) incl. axe + edge sweep; PO real-browser checks pending |
+| D1 | Browser app (Chrome, Edge, Firefox, Safari) | IN PROGRESS | Chromium local + Chromium/Firefox/WebKit in GitHub Actions CI on Node 20 (ADR-009); main 10af8a8: 51 e2e per engine green (153 total) incl. axe + edge sweep; PO real-browser checks PASS in Chrome, Edge, Firefox, Safari, phone (DEC-18) |
 | D2 | Local run from README, no paid accounts/keys/cloud | IN PROGRESS | Clean `npm ci` copy: test, build, dev, preview all work (qa-reports/sprint-0.md) |
-| D3 | Live URL (optional, in addition to local run) | IN PROGRESS | https://sabeekhann.github.io/Web-Calculator/ deployed from main (Pages run on 10af8a8 success); PO to open it — github.io unreachable from container |
+| D3 | Live URL (optional, in addition to local run) | IN PROGRESS | https://sabeekhann.github.io/Web-Calculator/ deployed from main (Pages run on 10af8a8 success); PO opened and checked it (DEC-18) |
 | D4 | Correctness: every Implemented story matches its ACs | IN PROGRESS | S-1, S-2, S-3 accepted (qa-reports/S-1..S-3.md) |
-| D5 | Error handling: clear messages, no crash or wrong result | IN PROGRESS | S-3 accepted; edge sweep automated (E-EDGE.0–9) on 3 engines; Sprint 2 QA PASS; PO real-browser check pending |
+| D5 | Error handling: clear messages, no crash or wrong result | IN PROGRESS | S-3 accepted; edge sweep automated (E-EDGE.0–9) on 3 engines; Sprint 2 QA PASS; PO real-browser checks PASS (DEC-18) |
 | D6 | UI quality: design spec, 375px+, light/dark, WCAG 2.2 AA | IN PROGRESS | ui-design.md + mockup.html approved Gate 4; Shell, S-1, S-2, S-3 pass visual review; 0 axe violations; Sprint 2 polish done; axe e2e 0 violations on 3 engines |
 | D7 | AI writes the code | IN PROGRESS | All files so far written by Claude Code |
 | D8 | Hand changes listed in README (or "None") | OPEN | |
@@ -46,7 +46,8 @@ Derived from commit timestamps (start = previous gate approval, end = this gate'
 | 5 Planning | 09:52 | 10:00 | 8 |
 | 6 Sprint 0 | 10:00 | 10:23 | 23 |
 | 7 Sprint 1 | 10:23 | 15:17 | 294 (incl. a pause until the account rate limit reset) |
-| 8 Sprint 2 | 15:17 | 15:43 | |
+| 8 Sprint 2 | 15:17 | 15:47 | incl. PO real-browser checks |
+| 9 Release | 15:47 | | |
 
 ## Session log
 
