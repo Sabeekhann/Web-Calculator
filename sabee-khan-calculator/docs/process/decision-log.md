@@ -34,6 +34,7 @@ Decisions (DEC-x), open questions (Q-x) and assumptions (A-x). An assumption goe
 | Q-10 | Stage 2 | Is the pass mark optional with a default, and what range? **Recommended:** pre-filled with 70 and editable; allowed 0 to 100 inclusive, up to 1 decimal place; if cleared, the score still shows and the verdict asks for a pass mark. | PO | Answered at Gate 2: recommended answer accepted |
 | Q-11 | Stage 2 | Live update or a Calculate button? **Recommended:** live update as the user types; the result clears while any input is invalid and returns as soon as all inputs are valid. | PO | Answered at Gate 2: recommended answer accepted |
 | Q-12 | Stage 2 | Marks earned greater than total possible (bonus marks)? **Recommended:** not allowed; show an error message and no score. | PO | Answered at Gate 2: recommended answer accepted |
+| Q-13 | Stage 5 | No AC covers a field holding only "." or "-" (passed through while typing ".5" or "-5"). A-13 needs digits, but its reason is "typing never flashes an error mid-number". Show that field's not-a-number message, or treat it like an empty field (no error, M-1 / M-2)? No AC changes either way. **Recommended:** not-a-number, the literal A-13 rule (a "-5" is an error anyway; the 500 ms announcement debounce keeps a brief "." from being read out). Design default until answered: not-a-number. | PO | Open |
 
 ## Assumptions (PO-approved assumptions are copied to the README)
 

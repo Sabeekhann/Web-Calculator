@@ -50,6 +50,17 @@ Every job has at least one story (J-1: S-1 · J-2: S-2, S-6 · J-3: S-1 · J-4: 
 | M-27 | Confirmation after copying (S-5, future) | "Outcome copied." |
 | M-28 | Copied text (S-5, future) | "{earned} of {total} marks: {score}, {verdict}, {gap line}" |
 | M-29 | Under the result (S-6, future) | "Marks needed to pass: {n} of {total}" |
+| M-30 | Page title, browser tab (UI text, DEC-11) | "Quiz score and pass-mark calculator" |
+| M-31 | Eyebrow above the card heading (UI text, DEC-11) | "Quiz score" |
+| M-32 | Card heading (UI text, DEC-11) | "Check a quiz result" |
+| M-33 | Subheading under the card heading (UI text, DEC-11) | "A score at or above the pass mark is a pass." |
+| M-34 | Field label, marks earned (UI text, DEC-11) | "Marks earned" |
+| M-35 | Field label, total marks possible (UI text, DEC-11) | "Total marks possible" |
+| M-36 | Field label, pass mark (UI text, DEC-11) | "Pass mark" |
+| M-37 | Pass mark label suffix, screen readers only (UI text, DEC-11) | " (percent)" |
+| M-38 | Pass mark suffix, visible (UI text, DEC-11) | "%" |
+| M-39 | Result eyebrow (UI text, DEC-11) | "Score" |
+| M-40 | Hint beside the Next learner button (UI text, DEC-11) | "or press Esc" |
 
 ## Edge coverage
 
