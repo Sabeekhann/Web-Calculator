@@ -59,3 +59,4 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 | 3a | product-analyst | App roles (D12) | Done: 2 roles, needs table, 24 lines | Accepted; checked D12 form, scope, no widget wording; margin-unit question raised to PO |
 | 3b | product-analyst | Jobs to be done (D13) | Done: 5 jobs (2 Learner, 3 Instructor), purity check 5/5 PASS | Accepted; Orchestrator aligned CLAUDE.md §8 job-tag format to "J-n (R-n Role)" |
 | 3c | product-analyst | User stories + ACs (D14–D16), A-10..A-17 | Done: 6 stories, 34 ACs, 29 messages, 147 lines | Accepted; Orchestrator re-ran 10 boundary calculations independently — all match |
+| 4 | ux-ui-designer | 2 design directions + side-by-side preview (directions.html, 375/1280 screenshots) | Done: A Ledger (recommended), B Spotlight; all contrast pairs pass | Accepted; Orchestrator noted A's small verdict pill and B's mobile result-below-button issue for the PO |
