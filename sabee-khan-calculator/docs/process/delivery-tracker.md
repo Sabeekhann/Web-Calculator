@@ -17,7 +17,7 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 | D9 | Transcripts of every session + raw logs | OPEN | PO exports (see Q-3) |
 | D10 | Source without node_modules/dist/coverage/reports | IN PROGRESS | `.gitignore` in place |
 | D11 | Package README covers every brief item | IN PROGRESS | Headings only; choice + reasons ready in product-brief.md |
-| D12 | docs/app-roles.md | OPEN | Placeholder |
+| D12 | docs/app-roles.md | IN PROGRESS | R-1 Learner, R-2 Instructor + needs table; awaiting Gate 3a |
 | D13 | docs/jobs-to-be-done.md | OPEN | Placeholder |
 | D14 | docs/user-stories.md | OPEN | Placeholder |
 | D15 | Acceptance criteria (Given/When/Then, edges) | OPEN | |
@@ -53,3 +53,4 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 | 1 | docs-writer | Draft HR acknowledgement `.private/hr-ack-email.md` | Done: 85-word body, 4 placeholders (Q-1) | Accepted, no invented facts; file confirmed gitignored |
 | 2 | product-analyst | Propose 3 calculator options + recommendation | Done: A Quiz score recommended | Accepted; PO chose A (DEC-6) |
 | 2 | product-analyst | Product brief, DEC-6, Q-5..Q-12, A-1..A-8 | Done: 102-line brief | Accepted; Orchestrator updated stale CLAUDE.md §1 line; flagged Q-6/Q-7 display-vs-verdict conflict to PO |
+| 3a | product-analyst | App roles (D12) | Done: 2 roles, needs table, 24 lines | Accepted; checked D12 form, scope, no widget wording; margin-unit question raised to PO |
