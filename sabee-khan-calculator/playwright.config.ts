@@ -10,7 +10,10 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: isCI,
   retries: 0, // never mask failures with retries, locally or in CI
-  reporter: isCI ? [['list'], ['html', { open: 'never' }]] : 'list',
+  // CI also writes a JSON report; scripts/ci-summary.mjs turns it into per-engine check annotations.
+  reporter: isCI
+    ? [['list'], ['html', { open: 'never' }], ['json', { outputFile: 'test-results/e2e-results.json' }]]
+    : 'list',
   use: {
     baseURL: BASE_URL,
     trace: 'retain-on-failure',
