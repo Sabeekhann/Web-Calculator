@@ -234,17 +234,21 @@ test('E-S3.8 M-15 for "23.5" of "23" clears when total → "25" ("94.0%", Pass, 
 
 test('S-3 supporting: no layout shift between result and error states; focus stays in the field', async ({ page }) => {
   const c = card(page);
-  const button = page.getByRole('button', { name: MESSAGES['M-25'] });
+  // The card's bottom edge is the anchor: nothing in or below the card moves between states.
+  const cardBottom = async (): Promise<number | undefined> => {
+    const box = await page.locator('.card').boundingBox();
+    return box ? box.y + box.height : undefined;
+  };
   await enter(c, '17.5', '23');
   await expect(c.score).toHaveText('76.0%');
-  const resultTop = (await button.boundingBox())?.y;
+  const resultTop = await cardBottom();
 
   await c.inputs.earned.fill('23.5');
   await expect(c.result).toContainText(M3);
   await expect(c.inputs.earned).toBeFocused();
-  expect((await button.boundingBox())?.y).toBe(resultTop);
+  expect(await cardBottom()).toBe(resultTop);
 
   await c.inputs.total.fill('0');
   await expect(c.result).toContainText(M3);
-  expect((await button.boundingBox())?.y).toBe(resultTop);
+  expect(await cardBottom()).toBe(resultTop);
 });

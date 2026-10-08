@@ -138,9 +138,13 @@ test('E-S2.8 after "0.6 marks short …", earned "16.1" → "70.0%" Pass M-10; t
 
 test('S-2 supporting: no gap line in idle or pass-mark-empty states, and no layout shift when it appears', async ({ page }) => {
   const c = card(page);
-  const button = page.getByRole('button', { name: MESSAGES['M-25'] });
+  // The card's bottom edge is the anchor: nothing in or below the card moves when the gap line appears.
+  const cardBottom = async (): Promise<number | undefined> => {
+    const box = await page.locator('.card').boundingBox();
+    return box ? box.y + box.height : undefined;
+  };
   await expect(c.gap).toHaveCount(0);
-  const idleTop = (await button.boundingBox())?.y;
+  const idleTop = await cardBottom();
 
   await enter(c, '17.5', '23', '');
   await expect(c.result).toContainText(MESSAGES['M-2']);
@@ -148,7 +152,7 @@ test('S-2 supporting: no gap line in idle or pass-mark-empty states, and no layo
 
   await c.pass.fill('70');
   await expectGap(c, '1.4 marks above the pass mark', 'pass');
-  expect((await button.boundingBox())?.y).toBe(idleTop);
+  expect(await cardBottom()).toBe(idleTop);
 
   await c.total.fill('');
   await expect(c.gap).toHaveCount(0);
