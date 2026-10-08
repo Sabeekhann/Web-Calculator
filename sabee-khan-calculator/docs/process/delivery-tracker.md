@@ -32,17 +32,20 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 
 ## Time log (UTC)
 
+Derived from commit timestamps (start = previous gate approval, end = this gate's approval commit); includes PO review time. Corrected at Stage 7 start: earlier rows from Stage 3a onwards had been estimated by the Orchestrator instead of read from the clock.
+
 | Stage | Start | End | Minutes |
 |-------|-------|-----|---------|
 | Preflight | 08:08 | 08:12 | 4 |
 | 1 Fresh start & initiation | 08:12 | 08:17 | 5 |
-| 2 Discovery | 08:17 | 08:55 | 38 |
-| 3a App roles | 08:55 | 09:10 | 15 |
-| 3b Jobs to be done | 09:10 | 09:25 | 15 |
-| 3c User stories | 09:25 | 09:45 | 20 |
-| 4 UX/UI design | 09:45 | 10:25 | 40 |
-| 5 Planning | 10:25 | 10:55 | 30 |
-| 6 Sprint 0 | 10:55 | | |
+| 2 Discovery | 08:17 | 09:21 | 64 |
+| 3a App roles | 09:21 | 09:26 | 5 |
+| 3b Jobs to be done | 09:26 | 09:30 | 4 |
+| 3c User stories | 09:30 | 09:36 | 6 |
+| 4 UX/UI design | 09:36 | 09:52 | 16 |
+| 5 Planning | 09:52 | 10:00 | 8 |
+| 6 Sprint 0 | 10:00 | 10:23 | 23 |
+| 7 Sprint 1 | 10:23 | | |
 
 ## Session log
 
