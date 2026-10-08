@@ -45,7 +45,7 @@ Derived from commit timestamps (start = previous gate approval, end = this gate'
 | 4 UX/UI design | 09:36 | 09:52 | 16 |
 | 5 Planning | 09:52 | 10:00 | 8 |
 | 6 Sprint 0 | 10:00 | 10:23 | 23 |
-| 7 Sprint 1 | 10:23 | 15:17 | 294 (incl. ~45 min paused by the account rate limit) |
+| 7 Sprint 1 | 10:23 | 15:17 | 294 (incl. a pause until the account rate limit reset) |
 
 ## Session log
 
