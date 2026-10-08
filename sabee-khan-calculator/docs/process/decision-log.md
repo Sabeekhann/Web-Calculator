@@ -17,6 +17,7 @@ Decisions (DEC-x), open questions (Q-x) and assumptions (A-x). An assumption goe
 | DEC-9 | 2026-10-08 | User stories S-1..S-6 approved (Must S-1..S-3, Should S-4, Could S-5..S-6); assumptions A-10..A-17 approved. | PO | Gate 3c approval |
 | DEC-10 | 2026-10-08 | Design direction: A "Ledger" with a bigger verdict (large tick/cross + word, as prominent as the score) instead of a small pill. | PO | Learner's main question is the verdict; keeps A's calm, official look |
 | DEC-11 | 2026-10-08 | Design spec and mockup approved: fields stacked at every width, card max 520px, reserved space for errors/result (no layout shift); new UI strings N-1..N-11 approved (to be catalogued as M-30..M-40). | PO | Gate 4 approval |
+| DEC-12 | 2026-10-08 | Plan approved: backlog (Sprint 0 → S-1, S-2, S-3 → S-4 + hardening), technical design ADR-001..008 (incl. Vite 6, axe devDependency), test plan. Q-13 answered: a field holding only "." is treated as empty; a lone "-" shows the can't-be-negative message. Code freeze lifted. | PO | Gate 5 approval |
 
 ## Open questions
 
@@ -34,7 +35,7 @@ Decisions (DEC-x), open questions (Q-x) and assumptions (A-x). An assumption goe
 | Q-10 | Stage 2 | Is the pass mark optional with a default, and what range? **Recommended:** pre-filled with 70 and editable; allowed 0 to 100 inclusive, up to 1 decimal place; if cleared, the score still shows and the verdict asks for a pass mark. | PO | Answered at Gate 2: recommended answer accepted |
 | Q-11 | Stage 2 | Live update or a Calculate button? **Recommended:** live update as the user types; the result clears while any input is invalid and returns as soon as all inputs are valid. | PO | Answered at Gate 2: recommended answer accepted |
 | Q-12 | Stage 2 | Marks earned greater than total possible (bonus marks)? **Recommended:** not allowed; show an error message and no score. | PO | Answered at Gate 2: recommended answer accepted |
-| Q-13 | Stage 5 | No AC covers a field holding only "." or "-" (passed through while typing ".5" or "-5"). A-13 needs digits, but its reason is "typing never flashes an error mid-number". Show that field's not-a-number message, or treat it like an empty field (no error, M-1 / M-2)? No AC changes either way. **Recommended:** not-a-number, the literal A-13 rule (a "-5" is an error anyway; the 500 ms announcement debounce keeps a brief "." from being read out). Design default until answered: not-a-number. | PO | Open |
+| Q-13 | Stage 5 | No AC covers a field holding only "." or "-" (passed through while typing ".5" or "-5"). A-13 needs digits, but its reason is "typing never flashes an error mid-number". Show that field's not-a-number message, or treat it like an empty field (no error, M-1 / M-2)? No AC changes either way. **Recommended:** not-a-number, the literal A-13 rule (a "-5" is an error anyway; the 500 ms announcement debounce keeps a brief "." from being read out). Design default until answered: not-a-number. | PO | Answered at Gate 5: lone "." = empty (A-18); lone "-" = negative message |
 
 ## Assumptions (PO-approved assumptions are copied to the README)
 
@@ -57,3 +58,4 @@ Decisions (DEC-x), open questions (Q-x) and assumptions (A-x). An assumption goe
 | A-15 | Checks per field run in order: not a number → negative → too many decimals → range (total > 0 and ≤ 1,000,000; pass mark ≤ 100); then marks earned ≤ total, checked only when both are otherwise valid. Each field shows at most one message, under that field; several invalid fields each show their own. | Stage 3c (S-3) | Yes, Gate 3c |
 | A-16 | While any field shows an error, the result area shows "The score will appear once every entry is valid." instead of a score, verdict or gap (never blank). | Stage 3c (S-3) | Yes, Gate 3c |
 | A-17 | "Next learner" (and Escape in marks earned) clears only marks earned and its message, keeps total and pass mark as they are, and puts the cursor back in marks earned. | Stage 3c (S-4) | Yes, Gate 3c |
+| A-18 | A field holding only "." (after trimming spaces) is treated as empty, so no error flashes while typing ".5"; a lone "-" gets the can't-be-negative message. | Stage 5 (Q-13) | Yes, Gate 5 |

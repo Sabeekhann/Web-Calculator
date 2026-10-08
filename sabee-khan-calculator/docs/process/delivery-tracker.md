@@ -41,7 +41,8 @@ Updated at every gate. Status: OPEN · IN PROGRESS · DONE · N/A (PO-approved o
 | 3b Jobs to be done | 09:10 | 09:25 | 15 |
 | 3c User stories | 09:25 | 09:45 | 20 |
 | 4 UX/UI design | 09:45 | 10:25 | 40 |
-| 5 Planning | 10:25 | | |
+| 5 Planning | 10:25 | 10:55 | 30 |
+| 6 Sprint 0 | 10:55 | | |
 
 ## Session log
 
