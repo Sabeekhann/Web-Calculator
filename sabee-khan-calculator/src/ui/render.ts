@@ -1,8 +1,7 @@
-import { ESC_KEY_LABEL, MESSAGES, SCORE_UNIT } from '../messages';
+import { ESC_KEY_LABEL, MESSAGES, SCORE_UNIT, type FieldName } from '../messages';
 import { el, svgEl } from './dom';
-import type { GapKind, Verdict, ViewModel } from './view-model';
+import type { FieldErrors, GapKind, Verdict, ViewModel } from './view-model';
 
-export type FieldName = 'earned' | 'total' | 'pass';
 
 export interface ShellElements {
   readonly inputs: Readonly<Record<FieldName, HTMLInputElement>>;
@@ -58,6 +57,20 @@ function resultMessage(text: string): HTMLParagraphElement {
   return el('p', { class: 'result-msg' }, [text]);
 }
 
+/** The "!" disc from the mockup on a 16 × 16 grid; decorative, the words carry the meaning. */
+function alertIcon(): SVGSVGElement {
+  return svgEl('svg', { class: 'alert-icon', viewBox: '0 0 16 16', 'aria-hidden': 'true', focusable: 'false' }, [
+    svgEl('circle', { cx: '8', cy: '8', r: '7' }),
+    svgEl('path', { class: 'alert-mark', d: 'M8 4.4v4.4' }),
+    svgEl('circle', { class: 'alert-dot', cx: '8', cy: '11.4', r: '1.05' }),
+  ]);
+}
+
+/** M-3 in the result body while any field is in error: icon + muted text, never colour alone. */
+function errorResultMessage(text: string): HTMLParagraphElement {
+  return el('p', { class: 'result-msg result-msg--error' }, [alertIcon(), el('span', {}, [text])]);
+}
+
 /** Tick (Pass) and cross (Fail) glyphs from the mockup, drawn on a 24 × 24 grid. */
 const VERDICT_GLYPHS: Readonly<Record<Verdict, string>> = {
   pass: 'M6.5 12.5l3.8 3.8 7.4-8.3',
@@ -105,6 +118,9 @@ export function renderResult(resultBody: HTMLElement, vm: ViewModel): void {
     case 'idle':
       resultBody.replaceChildren(resultMessage(vm.message));
       return;
+    case 'error':
+      resultBody.replaceChildren(errorResultMessage(vm.message));
+      return;
     case 'pass-mark-empty':
       resultBody.replaceChildren(
         el('div', { class: 'outcome' }, [scoreNode(vm.score), el('p', { class: 'verdict-msg' }, [vm.verdictMessage])]),
@@ -119,6 +135,25 @@ export function renderResult(resultBody: HTMLElement, vm: ViewModel): void {
         ]),
       );
       return;
+  }
+}
+
+/**
+ * Fills or empties each field's error slot and sets `aria-invalid` only while that field is in error.
+ * The slot is always present (aria-describedby points at it) and keeps its height when empty.
+ */
+export function renderFieldErrors(shell: ShellElements, fieldErrors: FieldErrors): void {
+  for (const field of Object.keys(fieldErrors) as FieldName[]) {
+    const text = fieldErrors[field];
+    const slot = shell.errors[field];
+    const input = shell.inputs[field];
+    if (text === null) {
+      if (slot.hasChildNodes()) slot.replaceChildren();
+      input.removeAttribute('aria-invalid');
+    } else {
+      if (slot.textContent !== text) slot.replaceChildren(alertIcon(), el('span', {}, [text]));
+      input.setAttribute('aria-invalid', 'true');
+    }
   }
 }
 

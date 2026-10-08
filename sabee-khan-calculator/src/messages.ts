@@ -6,6 +6,7 @@
 
 import { formatMarks } from './logic/format';
 import type { Gap } from './logic/gap';
+import type { EarnedCode, PassCode, TotalCode } from './validation/validate';
 
 export const MESSAGE_IDS = [
   'M-1', 'M-2', 'M-3', 'M-4', 'M-5', 'M-6', 'M-7', 'M-8', 'M-9', 'M-10',
@@ -80,6 +81,34 @@ export function scoreText(score: string): string {
 /** Joins the parts of a screen-reader announcement (ui-design.md §Accessibility): "76.0%, Pass". */
 export function announcementText(parts: ReadonlyArray<string>): string {
   return parts.join(', ');
+}
+
+/** Error codes per field (technical-design.md §Validation). */
+export interface FieldCodes {
+  readonly earned: EarnedCode;
+  readonly total: TotalCode;
+  readonly pass: PassCode;
+}
+
+export type FieldName = keyof FieldCodes;
+
+type ErrorMessageTable = { readonly [F in FieldName]: Readonly<Record<FieldCodes[F], MessageId>> };
+
+/** (field, code) → the one message shown under that field (M-12..M-24, technical-design.md §Validation). */
+export const ERROR_MESSAGE_IDS: ErrorMessageTable = {
+  earned: { NOT_NUMBER: 'M-12', NEGATIVE: 'M-13', TOO_MANY_DP: 'M-14', OVER_TOTAL: 'M-15' },
+  total: { NOT_NUMBER: 'M-16', NEGATIVE: 'M-17', TOO_MANY_DP: 'M-18', ZERO: 'M-19', TOO_LARGE: 'M-20' },
+  pass: { NOT_NUMBER: 'M-21', NEGATIVE: 'M-22', TOO_MANY_DP: 'M-23', TOO_LARGE: 'M-24' },
+};
+
+/** The text shown under `field` for an error `code`. */
+export function errorText<F extends FieldName>(field: F, code: FieldCodes[F]): string {
+  return MESSAGES[ERROR_MESSAGE_IDS[field][code]];
+}
+
+/** The error-state announcement: each field's message, then M-3 (ui-design.md §Accessibility). They are sentences. */
+export function errorAnnouncementText(fieldMessages: ReadonlyArray<string>): string {
+  return [...fieldMessages, MESSAGES['M-3']].join(' ');
 }
 
 /** One mark, in hundredths: the only value that takes the singular "mark" (A-11). */
